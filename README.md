@@ -6,7 +6,7 @@
 |:------:|:----------------:|
 |   语言   |    Go、Python     |
 |  底层存储  |      MySQL       |
-| Orm框架  |       grom       |
+| Orm框架  |       gorm       |
 |  注册服务  |     protobuf     |
 | RPC框架  |       gRPC       |
 | Http框架 | Gin、Django、Nginx |
