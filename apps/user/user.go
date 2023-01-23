@@ -10,10 +10,15 @@ type Service interface {
 	Login(ctx context.Context, request *LoginAndRegisterRequest) (*Token, error)
 }
 
+func NewUser() *User {
+	return &User{}
+}
+
 // User 模型的定义
 type User struct {
 	ID            int64  `json:"id"`
 	Name          string `json:"name"`
+	Password      string `json:"password"`
 	FollowCount   int64  `json:"follow_count"`
 	FollowerCount int64  `json:"follower_count"`
 	IsFollow      bool   `json:"is_follow"`
@@ -23,6 +28,10 @@ type User struct {
 type Token struct {
 	UserId int64  `json:"user_id"`
 	Token  string `json:"token"`
+}
+
+func NewLoginAndRegisterRequest() *LoginAndRegisterRequest {
+	return &LoginAndRegisterRequest{}
 }
 
 // LoginAndRegisterRequest 登录和注册的请求模型

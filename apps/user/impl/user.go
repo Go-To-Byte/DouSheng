@@ -7,6 +7,8 @@ import (
 )
 
 func (i *UserServiceImpl) CreateUser(ctx context.Context, request *user.LoginAndRegisterRequest) (*user.Token, error) {
+	i.l.Debug("创建用户")
+	i.l.Debugf("创建用户：%s", request.Username)
 	return nil, nil
 }
 
