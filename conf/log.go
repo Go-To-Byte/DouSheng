@@ -13,6 +13,6 @@ const (
 type LogTo string
 
 const (
-	ToFile    = LogTo("file")   // 文件
-	ToStdoutL = LogTo("stdout") // 标准输出
+	ToFile   = LogTo("file")   // 文件
+	ToStdout = LogTo("stdout") // 标准输出
 )
