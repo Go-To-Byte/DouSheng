@@ -26,3 +26,10 @@ func LoadConfigFromEnv() error {
 	config = NewDefaultConfig()
 	return env.Parse(config)
 }
+
+// LoadGlobal 或者可以这样加载全局实例s
+func LoadGlobal() error {
+	var err error
+	db, err = config.MySQL.getDBConn()
+	return err
+}

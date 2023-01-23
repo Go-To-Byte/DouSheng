@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/caarlos0/env v3.5.0+incompatible
+	github.com/go-sql-driver/mysql v1.7.0
 	github.com/infraboard/mcube v1.9.6
 	github.com/stretchr/testify v1.7.0
 )

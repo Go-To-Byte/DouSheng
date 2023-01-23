@@ -2,6 +2,7 @@
 package conf_test
 
 import (
+	"fmt"
 	"github.com/Go-To-Byte/DouSheng/conf"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -28,4 +29,12 @@ func TestLoadConfigFromEnv(t *testing.T) {
 		should.Equal("unit_test", conf.C().MySQL.Database)
 	}
 
+}
+
+func TestMySQLGetDB(t *testing.T) {
+	should := assert.New(t)
+	err := conf.LoadConfigFromToml("../etc/dousheng.toml")
+	if should.NoError(err) {
+		fmt.Println(conf.C().MySQL.GetDB())
+	}
 }
