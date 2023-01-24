@@ -2,6 +2,7 @@
 package cmd
 
 import (
+	"github.com/Go-To-Byte/DouSheng/apps"
 	"github.com/Go-To-Byte/DouSheng/apps/user/http"
 	"github.com/Go-To-Byte/DouSheng/apps/user/impl"
 	"github.com/Go-To-Byte/DouSheng/conf"
@@ -25,12 +26,12 @@ var StartCmd = &cobra.Command{
 			panic(err)
 		}
 
-		// 2、加载Host Service 的实现类
-
-		service := impl.NewUserServiceImpl()
+		// 2、将User Service 的实现类注入IOC容器
+		apps.UserService = impl.NewUserServiceImpl()
 
 		// 3、通过Gin启动服务
-		api := http.NewUserHttpHandler(service)
+		api := http.NewUserHttpHandler()
+		api.Config()
 		g := gin.Default()
 		api.Registry(g)
 
