@@ -19,5 +19,5 @@ type Handler struct {
 
 // Registry 用于注册Handler所需要暴露的路由
 func (h *Handler) Registry(r gin.IRouter) {
-	r.POST("/douyin/user/register/")
+	r.POST("/douyin/user/register", h.RegisterUser)
 }
