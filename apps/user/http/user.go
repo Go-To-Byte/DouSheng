@@ -17,7 +17,7 @@ func (h *Handler) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	// 2、进行接口调用
+	// 2、进行接口调用git
 	token, err := h.service.CreateUser(c.Request.Context(), req)
 	if err != nil {
 		response.Failed(c.Writer, err)

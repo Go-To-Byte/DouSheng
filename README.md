@@ -1,6 +1,36 @@
 # DouSheng
 第五届青训营项目——抖声
 
+## 启动说明
+
+### 1、项目配置文件
+需要将`etc/dousheng.toml.template`配置模板文件复制粘贴为：`etc/dousheng.toml`，并且修改为自己的配置，如：
+```toml
+[app]
+name = "DouSheng"
+host = "0.0.0.0"
+port = "8050"
+
+[mysql]
+host = "127.0.0.1"
+port = "3306"
+username = "root"
+password = "root"
+database = "dou_sheng"
+
+[log]
+level = "debug"
+dir = "logs"
+format = "text"
+to = "stdout"
+```
+
+### 2、项目启动
+本项目采用了Makefile工程化便于开发，电脑需要额外安装`make`指令。
+* windows推荐安装教程：[推荐第二种方式，别忘记配置环境变量](https://tehub.com/a/aCYp1uw0tG)
+* 命令行键入`make run`启动项目
+* 当然，不想安装make指令，也可以直接键入`go run main.go start`启动项目
+
 
 ## 项目结构
 
