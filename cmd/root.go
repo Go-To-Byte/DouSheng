@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/version"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +18,7 @@ var RootCmd = &cobra.Command{
 	Example: "dousheng cmd",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if vers {
-			fmt.Println("0.0.1")
+			fmt.Println(version.FullVersion())
 		}
 		return nil
 	},
