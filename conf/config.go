@@ -3,12 +3,11 @@ package conf
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"sync"
 	"time"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 // 防止配置文件在运行时被更改，设置为私有的
@@ -59,7 +58,7 @@ func NewDefaultMySQL() *MySQL {
 	}
 }
 
-func (m *MySQL) GetDB() *sql.DB {
+func (m *MySQL) GetDB() *gorm.DB {
 	m.lock.Lock() // 锁住临界区，保证线程安全
 	defer m.lock.Unlock()
 
@@ -74,29 +73,32 @@ func (m *MySQL) GetDB() *sql.DB {
 	return db
 }
 
-// 获取数据库连接
-func (m *MySQL) getDBConn() (*sql.DB, error) {
+// gorm获取数据库连接
+func (m *MySQL) getDBConn() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&multiStatements=true",
 		m.UserName, m.Password, m.Host, m.Port, m.Database)
-	db, err := sql.Open("mysql", dsn)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("连接Mysql：%s，error：%s", dsn, err.Error())
 	}
-	db.SetMaxOpenConns(m.MaxOpenConn)
-	db.SetMaxIdleConns(m.MaxIdleConn)
-	db.SetConnMaxLifetime(time.Second * time.Duration(m.MaxLifeTime))
-	db.SetConnMaxIdleTime(time.Second * time.Duration(m.MaxIdleTime))
+
+	// 维护连接池
+	sqlDB, err := db.DB()
+	sqlDB.SetMaxOpenConns(m.MaxOpenConn)
+	sqlDB.SetMaxIdleConns(m.MaxIdleConn)
+	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(m.MaxLifeTime))
+	sqlDB.SetConnMaxIdleTime(time.Second * time.Duration(m.MaxIdleTime))
 
 	// 用于测试连接
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := db.PingContext(ctx); err != nil {
+	if err := sqlDB.PingContext(ctx); err != nil {
 		return nil, fmt.Errorf("ping mysql %s，error：%s", dsn, err.Error())
 	}
 	return db, nil
 }
 
-var db *sql.DB
+var db *gorm.DB
 
 // MySQL todo
 type MySQL struct {

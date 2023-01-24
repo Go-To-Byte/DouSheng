@@ -1,7 +1,14 @@
 // @Author: Ciusyan 2023/1/23
 package user
 
-import "context"
+import (
+	"context"
+	"github.com/go-playground/validator"
+)
+
+var (
+	validate = validator.New()
+)
 
 // Service 定义User Service 的接口
 type Service interface {
