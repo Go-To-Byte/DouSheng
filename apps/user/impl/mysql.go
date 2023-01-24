@@ -2,6 +2,7 @@
 package impl
 
 import (
+	"github.com/Go-To-Byte/DouSheng/apps"
 	"github.com/Go-To-Byte/DouSheng/apps/user"
 	"github.com/Go-To-Byte/DouSheng/conf"
 	"github.com/infraboard/mcube/logger"
@@ -9,8 +10,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// 检查是否满足接口约束
-var _ user.Service = (*UserServiceImpl)(nil)
+// 用于注入IOC中
+var userServiceImpl = &UserServiceImpl{}
 
 func NewUserServiceImpl() *UserServiceImpl {
 	return &UserServiceImpl{
@@ -25,4 +26,18 @@ type UserServiceImpl struct {
 	// 日志实例
 	l  logger.Logger
 	db *gorm.DB
+}
+
+func (u *UserServiceImpl) Config() {
+	u.l = zap.L().Named("User")
+	u.db = conf.C().MySQL.GetDB()
+}
+
+func (u *UserServiceImpl) Name() string {
+	return user.AppName
+}
+
+func init() {
+	// 将此UserService注入IOC中
+	apps.DependenceInject(userServiceImpl)
 }

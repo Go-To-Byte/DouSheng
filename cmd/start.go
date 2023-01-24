@@ -4,7 +4,7 @@ package cmd
 import (
 	"github.com/Go-To-Byte/DouSheng/apps"
 	"github.com/Go-To-Byte/DouSheng/apps/user/http"
-	"github.com/Go-To-Byte/DouSheng/apps/user/impl"
+	_ "github.com/Go-To-Byte/DouSheng/apps/user/impl"
 	"github.com/Go-To-Byte/DouSheng/conf"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
@@ -26,8 +26,10 @@ var StartCmd = &cobra.Command{
 			panic(err)
 		}
 
-		// 2、将User Service 的实现类注入IOC容器
-		apps.UserService = impl.NewUserServiceImpl()
+		// 2、类似于Mysql注入驱动的方式加载UserServiceImpl的 init方法，将依赖注入IOC
+		// _ "github.com/Go-To-Byte/DouSheng/apps/user/impl"
+		// 然后再初始化IOC容器里的服务
+		apps.Init()
 
 		// 3、通过Gin启动服务
 		api := http.NewUserHttpHandler()
