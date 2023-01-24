@@ -39,5 +39,5 @@ func (u *UserServiceImpl) Name() string {
 
 func init() {
 	// 将此UserService注入IOC中
-	apps.DependenceInject(userServiceImpl)
+	apps.DIServiceImpl(userServiceImpl)
 }

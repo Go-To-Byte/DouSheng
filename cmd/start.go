@@ -3,8 +3,7 @@ package cmd
 
 import (
 	"github.com/Go-To-Byte/DouSheng/apps"
-	"github.com/Go-To-Byte/DouSheng/apps/user/http"
-	_ "github.com/Go-To-Byte/DouSheng/apps/user/impl"
+	_ "github.com/Go-To-Byte/DouSheng/apps/all"
 	"github.com/Go-To-Byte/DouSheng/conf"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
@@ -27,15 +26,15 @@ var StartCmd = &cobra.Command{
 		}
 
 		// 2、类似于Mysql注入驱动的方式加载UserServiceImpl的 init方法，将依赖注入IOC
-		// _ "github.com/Go-To-Byte/DouSheng/apps/user/impl"
+		// _ "github.com/Go-To-Byte/DouSheng/apps/user/impl"【User模块的ServiceImpl服务注入IOC】
 		// 然后再初始化IOC容器里的服务
-		apps.Init()
+		apps.InitService()
 
 		// 3、通过Gin启动服务
-		api := http.NewUserHttpHandler()
-		api.Config()
+		// _ "github.com/Go-To-Byte/DouSheng/apps/user/http"【User模块的Gin服务注入IOC】
+		// 初始化Gin服务、还有注册Gin服务对象的路由
 		g := gin.Default()
-		api.Registry(g)
+		apps.InitGin(g)
 
 		return g.Run(conf.C().App.HttpAddr())
 	},

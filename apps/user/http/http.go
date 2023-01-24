@@ -7,6 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 用于注入IOC中
+var handler = &Handler{}
+
 func NewUserHttpHandler() *Handler {
 	return &Handler{}
 }
@@ -26,5 +29,15 @@ func (h *Handler) Config() {
 	if apps.UserService == nil {
 		panic("IOC中依赖为空：UserService")
 	}
-	h.service = apps.UserService
+	// 从IOC中获取UserServiceImpl实例
+	h.service = apps.GetServiceImpl(user.AppName).(user.Service)
+}
+
+func (h *Handler) Name() string {
+	return user.AppName
+}
+
+func init() {
+	// 将此Gin服务注入IOC中
+	apps.DIGinService(handler)
 }
