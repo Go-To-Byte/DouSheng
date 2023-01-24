@@ -31,6 +31,13 @@ type User struct {
 	IsFollow      bool   `json:"is_follow"`
 }
 
+func NewToken(userId int64, token string) *Token {
+	return &Token{
+		UserId: userId,
+		Token:  token,
+	}
+}
+
 // Token 用于登录和注册的模型
 type Token struct {
 	UserId int64  `json:"user_id"`
@@ -43,6 +50,11 @@ func NewLoginAndRegisterRequest() *LoginAndRegisterRequest {
 
 // LoginAndRegisterRequest 登录和注册的请求模型
 type LoginAndRegisterRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+// Validate 校验结构体参数
+func (r *LoginAndRegisterRequest) Validate() error {
+	return validate.Struct(r)
 }
