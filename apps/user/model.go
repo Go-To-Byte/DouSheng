@@ -2,20 +2,12 @@
 package user
 
 import (
-	"context"
 	"github.com/go-playground/validator"
 )
 
 var (
 	validate = validator.New()
 )
-
-// Service 定义User Service 的接口
-type Service interface {
-	// CreateUser 创建用户
-	CreateUser(ctx context.Context, request *LoginAndRegisterRequest) (*Token, error)
-	Login(ctx context.Context, request *LoginAndRegisterRequest) (*Token, error)
-}
 
 func NewUser() *User {
 	return &User{}
