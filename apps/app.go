@@ -80,6 +80,14 @@ func InitGin(r gin.IRouter) {
 	}
 }
 
+// LoadedGinApps 已经加载完成的Gin APPs
+func LoadedGinApps() (names []string) {
+	for k, _ := range ginApps {
+		names = append(names, k)
+	}
+	return
+}
+
 type GinService interface {
 	Registry(r gin.IRouter)
 	Config()
