@@ -4,7 +4,7 @@ host = "0.0.0.0"
 port = "8050"
 
 [mysql]
-host = "124.189.222.27"
+host = "124.222.189.27"
 port = "3306"
 username = "root"
 password = "2194150786@qq.com"
