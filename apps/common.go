@@ -2,7 +2,7 @@
 // Date: 2023/1/20 19:51
 // Software: GoLand
 
-package controller
+package apps
 
 type Feed struct {
 	NextTime   int64       `json:"next_time"`
