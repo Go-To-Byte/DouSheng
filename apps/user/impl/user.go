@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Go-To-Byte/DouSheng/apps/user"
+	"github.com/bwmarrin/snowflake"
 )
 
 func (i *UserServiceImpl) CreateUser(ctx context.Context, request *user.LoginAndRegisterRequest) (*user.Token, error) {
@@ -28,8 +29,10 @@ func (i *UserServiceImpl) CreateUser(ctx context.Context, request *user.LoginAnd
 	if err != nil {
 		return nil, fmt.Errorf("插入数据失败：%s", err.Error())
 	}
-	// TODO：生成一个Token
-	token := "test token"
+	// TODO：将 node 设置为单例，传参由配置文件提供
+	node, err := snowflake.NewNode(1)
+	id := node.Generate()
+	token := id.String()
 	return user.NewToken(newUser.ID, token), nil
 }
 

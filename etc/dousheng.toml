@@ -4,11 +4,11 @@ host = "0.0.0.0"
 port = "8050"
 
 [mysql]
-host = "127.0.0.1"
+host = "124.189.222.27"
 port = "3306"
 username = "root"
-password = "root"
-database = "dou_sheng"
+password = "2194150786@qq.com"
+database = "go_to_byte"
 
 [log]
 level = "debug"
