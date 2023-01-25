@@ -31,7 +31,7 @@ func main() {
 		// WithDefaultQuery 生成默认查询结构体(作为全局变量使用), 即`Q`结构体和其字段(各表模型)
 		// WithoutContext 生成没有context调用限制的代码供查询
 		// WithQueryInterface 生成interface形式的查询代码(可导出), 如`Where()`方法返回的就是一个可导出的接口类型
-		Mode: gen.WithDefaultQuery | gen.WithQueryInterface,
+		Mode: gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
 
 		// 表字段可为 null 值时, 对应结体字段使用指针类型
 		FieldNullable: true, // generate pointer when field is nullable
@@ -83,27 +83,27 @@ func main() {
 
 	// 创建模型的结构体,生成文件在 model 目录; 先创建的结果会被后面创建的覆盖
 	// 这里创建个别模型仅仅是为了拿到`*generate.QueryStructMeta`类型对象用于后面的模型关联操作中
-	//Address := g.GenerateModel("user")
+	// Address := g.GenerateModel("user")
 	// 创建全部模型文件, 并覆盖前面创建的同名模型
 	allModel := g.GenerateAllTable(fieldOpts...)
 
 	// 创建有关联关系的模型文件
-	//User := g.GenerateModel("user",
+	// User := g.GenerateModel("user",
 	//	append(
 	//		fieldOpts,
 	//		// user 一对多 address 关联, 外键`uid`在 address 表中
 	//		gen.FieldRelate(field.HasMany, "Address", Address, &field.RelateConfig{GORMTag: "foreignKey:UID"}),
 	//	)...,
-	//)
-	//Address = g.GenerateModel("user",
+	// )
+	// Address = g.GenerateModel("user",
 	//	append(
 	//		fieldOpts,
 	//		gen.FieldRelate(field.BelongsTo, "User", User, &field.RelateConfig{GORMTag: "foreignKey:UID"}),
 	//	)...,
-	//)
+	// )
 
 	// 创建模型的方法,生成文件在 query 目录; 先创建结果不会被后创建的覆盖
-	//g.ApplyBasic(User, Address)
+	// g.ApplyBasic(User, Address)
 	g.ApplyBasic(allModel...)
 
 	g.Execute()
