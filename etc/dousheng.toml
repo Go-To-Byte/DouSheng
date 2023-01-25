@@ -1,0 +1,17 @@
+[app]
+name = "DouSheng"
+host = "0.0.0.0"
+port = "8050"
+
+[mysql]
+host = "124.222.189.27"
+port = "3306"
+username = "root"
+password = "2194150786@qq.com"
+database = "go_to_byte"
+
+[log]
+level = "debug"
+dir = "logs"
+format = "text"
+to = "stdout"
