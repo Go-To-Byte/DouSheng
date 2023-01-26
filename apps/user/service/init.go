@@ -36,7 +36,9 @@ type SqlConfig struct {
 
 // initialize service config
 func initConfig() {
-	viper.SetConfigType("yaml")                                                                      // set config type
+	viper.SetConfigType("yaml") // set config type
+
+	// TODO: 改为相对路径
 	f, err := os.Open("C:\\Users\\21941\\OneDrive\\Code\\DouSheng\\apps\\user\\service\\config.yml") // read config file
 	if err != nil {
 		zap.S().Panicf("Failed to open config: %v", err)
