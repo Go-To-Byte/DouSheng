@@ -10,7 +10,7 @@ import (
 
 func registerRouter() {
 	r := run.GetRouter()
-	user := r.Group("/user_info")
+	user := r.Group("/user")
 	{
 		user.GET("/")
 		user.POST("/login")
