@@ -2,7 +2,7 @@
 // Date: 2023/1/26 0:13
 // Software: GoLand
 
-package data
+package model
 
 type Feed struct {
 	NextTime   int64       `json:"next_time"`
@@ -16,7 +16,7 @@ type VideoList struct {
 	CommentCount  int64  `json:"comment_count"`
 	CoverURL      string `json:"cover_url"`
 	FavoriteCount int64  `json:"favorite_count"`
-	ID            int64  `json:"id"`
+	ID            int64  `json:"ID"`
 	IsFavorite    bool   `json:"is_favorite"`
 	PlayURL       string `json:"play_url"`
 	Title         string `json:"title"`
@@ -25,7 +25,7 @@ type VideoList struct {
 type Author struct {
 	FollowCount   int64  `json:"follow_count"`
 	FollowerCount int64  `json:"follower_count"`
-	ID            int64  `json:"id"`
+	ID            int64  `json:"ID"`
 	IsFollow      bool   `json:"is_follow"`
 	Name          string `json:"name"`
 }
@@ -53,7 +53,7 @@ type UserInfo struct {
 type User struct {
 	FollowCount   int64  `json:"follow_count"`
 	FollowerCount int64  `json:"follower_count"`
-	ID            int64  `json:"id"`
+	ID            int64  `json:"ID"`
 	IsFollow      bool   `json:"is_follow"`
 	Name          string `json:"name"`
 }
@@ -89,7 +89,7 @@ type CommentAction struct {
 type Comment struct {
 	Content    string `json:"content"`
 	CreateDate string `json:"create_date"`
-	ID         int64  `json:"id"`
+	ID         int64  `json:"ID"`
 	User       User   `json:"user"`
 }
 
@@ -113,7 +113,7 @@ type RelationFollowList struct {
 type UserList struct {
 	FollowCount   int64  `json:"follow_count"`
 	FollowerCount int64  `json:"follower_count"`
-	ID            int64  `json:"id"`
+	ID            int64  `json:"ID"`
 	IsFollow      bool   `json:"is_follow"`
 	Name          string `json:"name"`
 }
@@ -144,5 +144,5 @@ type MessageChat struct {
 type MessageList struct {
 	Content    string `json:"content"`
 	CreateTime string `json:"create_time"`
-	ID         int64  `json:"id"`
+	ID         int64  `json:"ID"`
 }

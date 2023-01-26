@@ -80,7 +80,7 @@ func initSqlServer() *gorm.DB {
 		return sqlDB
 	}
 
-	cnd := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=%s",
+	cnd := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=%s&parseTime=True&loc=Local",
 		sqlconfig.User, sqlconfig.Password, sqlconfig.Host,
 		sqlconfig.Port, sqlconfig.Database, sqlconfig.Charset)
 	driver := mysql.Open(cnd)

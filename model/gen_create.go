@@ -2,7 +2,7 @@
 // Date: 2023/1/25 0:26
 // Software: GoLand
 
-package data
+package model
 
 import (
 	"fmt"
