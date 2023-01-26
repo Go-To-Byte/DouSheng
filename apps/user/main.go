@@ -16,8 +16,6 @@ import (
 )
 
 func main() {
-	// service.InitAll()
-
 	router := service.GetRouter()
 	router.GET("/", func(c *gin.Context) {
 		time.Sleep(time.Second)
@@ -28,7 +26,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:    ":8080",
-		Handler: router,
+		Handler: service.GetRouter(),
 	}
 
 	go func() {

@@ -12,4 +12,11 @@ func RegisterRouter() {
 		user.POST("/login")
 		user.POST("/register", register)
 	}
+
+	go func() {
+		err := r.Run("127.0.0.1:8080")
+		if err != nil {
+			return
+		}
+	}()
 }

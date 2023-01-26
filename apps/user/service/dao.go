@@ -17,3 +17,7 @@ func Add(info model.UserInfo) {
 		zap.S().Panicf("Failed create user: %v", err)
 	}
 }
+
+func Find(info model.UserInfo) {
+	
+}

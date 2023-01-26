@@ -4,11 +4,10 @@
 
 snowflakeID: 1
 
-sql:
-  driver: mysql
-  host: 0.0.0.0
-  post: 3306
-  username: root
-  password: password
-  database: data
-  charset: utf8mb3
+driver: mysql
+host: 0.0.0.0
+post: 3306
+username: root
+password: password
+database: data
+charset: utf8mb3

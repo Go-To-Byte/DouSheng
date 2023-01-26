@@ -37,6 +37,8 @@ func register(context *gin.Context) {
 		Username: context.Query("username"),
 		Passwd:   context.Query("password"),
 	}
+
+	zap.S().Debugf("add user: %+v", user)
 	Add(user)
 	context.String(200, "register success")
 }
