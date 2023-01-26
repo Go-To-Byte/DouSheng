@@ -8,44 +8,52 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/bwmarrin/snowflake"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"io"
 	"os"
 )
 
 var (
 	serviceID     int64
-	sqlconfig     sqlConfig
+	sqlconfig     SqlConfig
 	sqlDB         *gorm.DB
 	snowflakeNode *snowflake.Node
 )
 
-type sqlConfig struct {
-	driverName string `mapstructure:"driver"`
-	host       string `mapstructure:"host"`
-	port       string `mapstructure:"port"`
-	user       string `mapstructure:"username"`
-	password   string `mapstructure:"password"`
-	database   string `mapstructure:"database"`
-	charset    string `mapstructure:"charset"`
+type SqlConfig struct {
+	Driver   string `mapstructure:"driver"`
+	Host     string `mapstructure:"host"`
+	Port     string `mapstructure:"port"`
+	User     string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
+	Database string `mapstructure:"database"`
+	Charset  string `mapstructure:"charset"`
 }
 
 // initialize service config
 func initConfig() {
-	viper.SetConfigType("yaml")                  // set config type
-	configFile, err := os.ReadFile("config.yml") // read config file
-	if err != nil {                              // error
-		zap.S().Panicf("Failed to read config: %v", err)
+	viper.SetConfigType("yaml")                                                                      // set config type
+	f, err := os.Open("C:\\Users\\21941\\OneDrive\\Code\\DouSheng\\apps\\user\\service\\config.yml") // read config file
+	if err != nil {
+		zap.S().Panicf("Failed to open config: %v", err)
 	}
 
-	err = viper.ReadConfig(bytes.NewReader(configFile)) // read config
+	config, err := io.ReadAll(f)
 	if err != nil {
 		zap.S().Panicf("Failed to read config: %v", err)
 	}
 
-	serviceID = viper.GetInt64("service_id")
+	err = viper.ReadConfig(bytes.NewBuffer(config)) // read config
+	if err != nil {
+		zap.S().Panicf("Failed to read config: %v", err)
+	}
+
+	serviceID = viper.GetInt64("snowflakeID")
+	zap.S().Debugf("service_id: %d", serviceID)
 
 	err = viper.Unmarshal(&sqlconfig)
 	if err != nil {
@@ -55,8 +63,13 @@ func initConfig() {
 
 // set zap logger as singleton
 func initLogger() {
-	logger, _ := zap.NewProduction() // set logger as production
+	logger, _ := zap.NewDevelopment() // set logger as production
 	zap.ReplaceGlobals(logger)
+}
+
+func initRouter() *gin.Engine {
+	router := gin.Default()
+	return router
 }
 
 // get gorm DB
@@ -64,9 +77,14 @@ func initSqlServer() *gorm.DB {
 	if sqlDB != nil { // global database
 		return sqlDB
 	}
-	driver := mysql.Open(fmt.Sprintf("mysql://%s:%s@%s:%s/%s?charset=%s",
-		sqlconfig.user, sqlconfig.password, sqlconfig.host,
-		sqlconfig.port, sqlconfig.database, sqlconfig.charset))
+
+	cnd := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=%s",
+		sqlconfig.User, sqlconfig.Password, sqlconfig.Host,
+		sqlconfig.Port, sqlconfig.Database, sqlconfig.Charset)
+	driver := mysql.Open(cnd)
+
+	zap.S().Debugf("connecting to %s", cnd)
+
 	sqlDB, err := gorm.Open(driver)
 	if err != nil {
 		zap.S().Panicf("Failed to connect database: %v", err)
@@ -84,4 +102,12 @@ func initSnowflakeNode() *snowflake.Node {
 		zap.S().Panicf("New snowflake node error: %v", err)
 	}
 	return snowflakeNode
+}
+
+func init() {
+	initLogger()
+	initConfig()
+	initRouter()
+	initSqlServer()
+	initSnowflakeNode()
 }

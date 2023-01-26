@@ -2,7 +2,7 @@
 // Date: 2023/1/26 0:41
 // Software: GoLand
 
-package run
+package main
 
 import "github.com/gin-gonic/gin"
 

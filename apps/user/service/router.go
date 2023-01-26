@@ -4,13 +4,9 @@
 
 package service
 
-import (
-	"github.com/Go-To-Byte/DouSheng/run"
-)
-
-func registerRouter() {
-	r := run.GetRouter()
-	user := r.Group("/user")
+func RegisterRouter() {
+	r := GetRouter()
+	user := r.Group("/douyin/user")
 	{
 		user.GET("/")
 		user.POST("/login")
