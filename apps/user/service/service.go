@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"net/http"
 )
 
 func getID() int64 {
@@ -38,7 +39,16 @@ func register(context *gin.Context) {
 		Passwd:   context.Query("password"),
 	}
 
+	passwd := make([]byte, 128)
+	copy(passwd, user.Passwd)
+
+	result := FindByName(user)
+	if result == nil || len(result) > 0 {
+		context.String(200, "register failed")
+		return
+	}
+
 	zap.S().Debugf("add user: %+v", user)
 	Add(user)
-	context.String(200, "register success")
+	context.JSON(http.StatusOK, gin.H{"id": user.ID})
 }
