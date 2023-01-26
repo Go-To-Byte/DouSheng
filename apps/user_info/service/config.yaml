@@ -6,9 +6,9 @@ snowflakeID: 1
 
 sql:
   driver: mysql
-  host: 124.222.189.27
+  host: 0.0.0.0
   post: 3306
   username: root
-  password: 2194150786@qq.com
-  database: go_to_byte
+  password: password
+  database: data
   charset: utf8mb3
