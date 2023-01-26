@@ -13,7 +13,6 @@
 *.dylib
 
 # pass config file
-*.yaml
 *.yml
 
 # Test binary, built with `go test -c`

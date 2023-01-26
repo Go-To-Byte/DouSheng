@@ -8,23 +8,28 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dal/model"
 	"github.com/bwmarrin/snowflake"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
-func createID() int64 {
-	node, err := snowflake.NewNode(1)
-	if err != nil {
-		zap.S().Panicf("createID failed: %v", err)
-	}
+func getID() int64 {
+	node := initSnowflakeNode()
 	id := node.Generate()
 	return id.Int64()
 }
 
+func getSqlDB() *gorm.DB {
+	return initSqlServer()
+}
+
+func getSnowflake() *snowflake.Node {
+	return initSnowflakeNode()
+}
+
 func register(context *gin.Context) {
 	user := model.UserInfo{
-		ID:       createID(),
+		ID:       getID(),
 		Username: context.Query("username"),
 		Passwd:   context.Query("password"),
 	}
-
+	Add(user)
 }
