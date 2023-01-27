@@ -6,35 +6,15 @@ package service
 
 import (
 	"github.com/Go-To-Byte/DouSheng/dal/model"
-	"github.com/bwmarrin/snowflake"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 	"net/http"
 )
-
-func getID() int64 {
-	node := getSnowflake()
-	id := node.Generate()
-	return id.Int64()
-}
-
-func getSqlDB() *gorm.DB {
-	return initSqlServer()
-}
-
-func getSnowflake() *snowflake.Node {
-	return initSnowflakeNode()
-}
-
-func GetRouter() *gin.Engine {
-	return initRouter()
-}
 
 func register(context *gin.Context) {
 	zap.S().Debugf("register")
 	user := model.UserInfo{
-		ID:       getID(),
+		ID:       Node.Generate().Int64(),
 		Username: context.Query("username"),
 		Passwd:   context.Query("password"),
 	}

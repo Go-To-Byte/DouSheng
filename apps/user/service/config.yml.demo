@@ -2,12 +2,12 @@
 # Date: 2023/1/26 3:13
 # Software: GoLand
 
-snowflakeID: 1
+ID: 1
 
-driver: mysql
-host: 0.0.0.0
-post: 3306
-username: root
-password: password
-database: data
-charset: utf8mb3
+sql:
+  host: 0.0.0.0
+  post: 3306
+  username: root
+  password: password
+  database: data
+  charset: utf8mb3

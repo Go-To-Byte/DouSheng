@@ -6,7 +6,7 @@ package main
 
 import (
 	"context"
-	router2 "github.com/Go-To-Byte/DouSheng/router"
+	"github.com/Go-To-Byte/DouSheng/global"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	router := router2.GetRouter()
+	router := global.Router
 	router.GET("/", func(c *gin.Context) {
 		time.Sleep(time.Second)
 		c.String(http.StatusOK, "Welcome Gin Server")

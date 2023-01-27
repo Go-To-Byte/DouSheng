@@ -12,7 +12,7 @@ import (
 )
 
 func Add(info model.UserInfo) {
-	q := query.Use(getSqlDB())
+	q := query.Use(DB)
 	err := q.UserInfo.Create(&info)
 	if err != nil {
 		zap.S().Panicf("Failed create user: %v", err)
@@ -20,7 +20,7 @@ func Add(info model.UserInfo) {
 }
 
 func FindById(info model.UserInfo) []*model.UserInfo {
-	q := query.Use(getSqlDB())
+	q := query.Use(DB)
 	userInfo := q.UserInfo
 	result, err := userInfo.WithContext(context.Background()).Where(userInfo.ID.Eq(info.ID)).Find()
 	if err != nil {
@@ -31,7 +31,7 @@ func FindById(info model.UserInfo) []*model.UserInfo {
 }
 
 func FindByName(info model.UserInfo) []*model.UserInfo {
-	q := query.Use(getSqlDB())
+	q := query.Use(DB)
 	userInfo := q.UserInfo
 	result, err := userInfo.WithContext(context.Background()).
 		Where(userInfo.Username.Eq(info.Username)).Find()

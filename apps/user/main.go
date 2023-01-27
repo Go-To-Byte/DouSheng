@@ -16,17 +16,15 @@ import (
 )
 
 func main() {
-	router := service.GetRouter()
+	router := service.Router
 	router.GET("/", func(c *gin.Context) {
 		time.Sleep(time.Second)
 		c.String(http.StatusOK, "Welcome Gin Server")
 	})
 
-	service.RegisterRouter()
-
 	srv := &http.Server{
 		Addr:    ":8080",
-		Handler: service.GetRouter(),
+		Handler: service.Router,
 	}
 
 	go func() {

@@ -4,19 +4,12 @@
 
 package service
 
-func RegisterRouter() {
-	r := GetRouter()
-	user := r.Group("/douyin/user")
-	{
-		user.GET("/")
-		user.POST("/login")
-		user.POST("/register", register)
-	}
+func addRouter() {
 
-	go func() {
-		err := r.Run("127.0.0.1:8080")
-		if err != nil {
-			return
-		}
-	}()
+	// go func() {
+	// 	err := r.Run("127.0.0.1:8080")
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// }()
 }

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = ".;proto";
+
+message douyin_user_login_request {
+  string username = 1; // 登录用户名
+  string password = 2; // 登录密码
+}
+
+message douyin_user_login_response {
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+  int64 user_id = 3; // 用户id
+  string token = 4; // 用户鉴权token
+}
+
+message douyin_user_register_request {
+  string username = 1; // 注册用户名，最长32个字符
+  string password = 2; // 密码，最长32个字符
+}
+
+message douyin_user_register_response {
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+  int64 user_id = 3; // 用户id
+  string token = 4; // 用户鉴权token
+}
