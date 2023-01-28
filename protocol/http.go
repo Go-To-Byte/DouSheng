@@ -4,8 +4,8 @@ package protocol
 import (
 	"context"
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/apps"
 	"github.com/Go-To-Byte/DouSheng/conf"
+	"github.com/Go-To-Byte/DouSheng/ioc"
 	"github.com/gin-gonic/gin"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -17,39 +17,42 @@ import (
 
 func NewHttpService() *HttpService {
 
+	service := &HttpService{
+		l: zap.L().Named("Http Service"),
+		c: conf.C(),
+	}
+
 	// New了一个Gin 的Router 实例， 并未加载路由
 	r := gin.Default()
+	service.r = r
 
 	// HTTP服务对象
-	server := &http.Server{
+	service.server = &http.Server{
 		ReadHeaderTimeout: 60 * time.Second,
 		ReadTimeout:       60 * time.Second,
 		WriteTimeout:      60 * time.Second,
 		IdleTimeout:       60 * time.Second,
-		MaxHeaderBytes:    1 << 20, // 1M
-		Addr:              conf.C().App.HttpAddr(),
+		MaxHeaderBytes:    1 << 20,                  // 1M
+		Addr:              service.c.App.HttpAddr(), // 获取IP和端口
 		Handler:           r,
 	}
 
-	return &HttpService{
-		server: server,
-		l:      zap.L().Named("Http Service"),
-		r:      r,
-	}
+	return service
 }
 
 type HttpService struct {
 	server *http.Server
-	l      logger.Logger
+	l      logger.Logger // 用于打印日志
 	r      gin.IRouter
+	c      *conf.Config // 用于获取项目名称
 }
 
 // Start 开启服务
 func (s *HttpService) Start() error {
 	// 1、将所有的Gin服务对象注册到IOC中
-	apps.InitGin(s.r)
-	// 打印已加载的Gin 服务
-	s.l.Infof("已加载的Gin Apps：%v", apps.LoadedGinApps())
+
+	// 拼接好前缀再注册："/douying"
+	ioc.RegistryGin("/"+s.c.App.Name, s.r)
 
 	if err := s.server.ListenAndServe(); err != nil {
 

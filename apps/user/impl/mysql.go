@@ -2,9 +2,9 @@
 package impl
 
 import (
-	"github.com/Go-To-Byte/DouSheng/apps"
 	"github.com/Go-To-Byte/DouSheng/apps/user"
 	"github.com/Go-To-Byte/DouSheng/conf"
+	"github.com/Go-To-Byte/DouSheng/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"gorm.io/gorm"
@@ -28,9 +28,11 @@ type UserServiceImpl struct {
 	db *gorm.DB
 }
 
-func (u *UserServiceImpl) Config() {
+func (u *UserServiceImpl) Init() error {
 	u.l = zap.L().Named("User")
 	u.db = conf.C().MySQL.GetDB()
+
+	return nil
 }
 
 func (u *UserServiceImpl) Name() string {
@@ -38,6 +40,6 @@ func (u *UserServiceImpl) Name() string {
 }
 
 func init() {
-	// 将此UserService注入IOC中
-	apps.DIServiceImpl(userServiceImpl)
+	// 将此UserService注入内部服务的IOC容器中
+	ioc.InternalDI(userServiceImpl)
 }

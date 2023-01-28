@@ -1,5 +1,5 @@
 [app]
-name = "DouSheng"
+name = "douyin"
 host = "0.0.0.0"
 port = "8050"
 

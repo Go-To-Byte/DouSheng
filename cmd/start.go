@@ -3,9 +3,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/apps"
-	_ "github.com/Go-To-Byte/DouSheng/apps/all"
 	"github.com/Go-To-Byte/DouSheng/conf"
+	"github.com/Go-To-Byte/DouSheng/ioc"
 	"github.com/Go-To-Byte/DouSheng/protocol"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -13,6 +12,9 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	// 驱动加载所有需要放入IOC的实例
+	_ "github.com/Go-To-Byte/DouSheng/apps/all"
 )
 
 var (
@@ -74,7 +76,9 @@ var StartCmd = &cobra.Command{
 	Short:   "启动 Dousheng API服务",
 	Example: "go run main start",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		// ========
 		// 1、加载配置文件&全局Logger对象
+		// ========
 
 		if err := conf.LoadConfigFromToml(configFile); err != nil {
 			return err
@@ -83,12 +87,19 @@ var StartCmd = &cobra.Command{
 			return err
 		}
 
-		// 2、类似于Mysql注入驱动的方式加载UserServiceImpl的 init方法，将依赖注入IOC
-		// _ "github.com/Go-To-Byte/DouSheng/apps/user/impl"【User模块的ServiceImpl服务注入IOC】
-		// 然后再初始化IOC容器里的服务
-		apps.InitService()
+		// ========
+		// 2、初始化IOC容器中的所有服务
+		// ========
 
-		// 使用管理者来处理服务的关闭和开启
+		// 类似于Mysql注入驱动的方式加载UserServiceImpl的 init方法，将依赖注入IOC
+		// _ "github.com/Go-To-Byte/DouSheng/apps/user/impl"【User模块的ServiceImpl服务注入IOC】
+		if err := ioc.InitAllDependencies(); err != nil {
+			return err
+		}
+
+		// ========
+		// 3、使用管理者来处理服务的关闭和开启
+		// ========
 		manager := NewManager()
 
 		// 用于接收信号的信道
@@ -97,10 +108,7 @@ var StartCmd = &cobra.Command{
 		// 接收这几种信号
 		signal.Notify(ch, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGHUP, syscall.SIGINT)
 
-		// 后台挂起等待关闭【若接收到这几种信号，则优雅关闭服务】
-		go manager.WaitStop(ch)
-
-		return manager.Start() // 开启服务
+		return manager.start() // 开启服务
 	},
 }
 
@@ -117,8 +125,17 @@ type manager struct {
 	l    logger.Logger
 }
 
-func (m *manager) Start() error {
-	return m.http.Start()
+func (m *manager) start() error {
+
+	// 打印加载好的服务
+	m.l.Infof("已加载的内部服务: %s", ioc.ExistingInternalDependencies())
+	m.l.Infof("已加载的Gin HTTP服务: %s", ioc.ExistingGinDependencies())
+
+	// 注：这属于正常关闭："http: Server closed"
+	if err := m.http.Start(); err != nil && err.Error() != "http: Server closed" {
+		return err
+	}
+	return nil
 }
 
 // WaitStop 处理来自外部的中断信号，比如Terminal

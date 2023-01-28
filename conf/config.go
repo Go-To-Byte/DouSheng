@@ -27,26 +27,26 @@ func NewDefaultConfig() *Config {
 
 // Config 将配置文件抽成一个对象
 type Config struct {
-	App   *App   `toml:"app"`
+	App   *app   `toml:"app"`
 	Log   *Log   `toml:"log"`
 	MySQL *MySQL `toml:"mysql"`
 }
 
-func NewDefaultApp() *App {
-	return &App{
+func NewDefaultApp() *app {
+	return &app{
 		Name: "dousheng",
 		Host: "127.0.0.1",
 		Port: "8050",
 	}
 }
 
-type App struct {
+type app struct {
 	Name string `toml:"name" env:"APP_NAME"`
 	Host string `toml:"host" env:"APP_HOST"`
 	Port string `toml:"port" env:"APP_PORT"`
 }
 
-func (a *App) HttpAddr() string {
+func (a *app) HttpAddr() string {
 	return fmt.Sprintf("%s:%s", a.Host, a.Port)
 }
 
