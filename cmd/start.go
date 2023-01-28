@@ -98,9 +98,9 @@ var StartCmd = &cobra.Command{
 		}
 
 		// ========
-		// 3、使用管理者来处理服务的关闭和开启
+		// 3、使用服务管理者来处理服务的关闭和开启
 		// ========
-		manager := NewManager()
+		serviceManager := NewManager()
 
 		// 用于接收信号的信道
 		ch := make(chan os.Signal, 1)
@@ -108,7 +108,10 @@ var StartCmd = &cobra.Command{
 		// 接收这几种信号
 		signal.Notify(ch, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGHUP, syscall.SIGINT)
 
-		return manager.start() // 开启服务
+		// 需要在后台等待关闭
+		go serviceManager.WaitStop(ch)
+
+		return serviceManager.start() // 开启服务
 	},
 }
 
