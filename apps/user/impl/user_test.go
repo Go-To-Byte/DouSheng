@@ -5,23 +5,23 @@ import (
 	"context"
 	"fmt"
 	"github.com/Go-To-Byte/DouSheng/apps/user"
-	"github.com/Go-To-Byte/DouSheng/apps/user/impl"
 	"github.com/Go-To-Byte/DouSheng/conf"
+	"github.com/Go-To-Byte/DouSheng/ioc"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 var (
-	service user.Service
+	service user.ServiceServer
 )
 
 func TestCreateUser(t *testing.T) {
 	should := assert.New(t)
 	newUser := user.NewLoginAndRegisterRequest()
-	newUser.Username = "ciusyan"
+	newUser.Username = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	newUser.Password = "xxxx"
-	token, err := service.CreateUser(context.Background(), newUser)
+	token, err := service.Register(context.Background(), newUser)
 
 	if should.NoError(err) {
 		fmt.Println(token)
@@ -33,12 +33,14 @@ func TestCreateUser(t *testing.T) {
 
 func init() {
 
+	// 加载配置文件
 	if err := conf.LoadConfigFromToml("../../../etc/dousheng.toml"); err != nil {
 		panic(err)
 	}
 
 	// 初始化全局Logger
 	zap.DevelopmentSetup()
-	// 接口实现
-	service = impl.NewUserServiceImpl()
+
+	// 从IOC中获取接口实现
+	service = ioc.GetInternalDependency(user.AppName).(user.ServiceServer)
 }

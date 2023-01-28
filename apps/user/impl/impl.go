@@ -11,35 +11,36 @@ import (
 )
 
 // 用于注入IOC中
-var userServiceImpl = &UserServiceImpl{}
+var impl = &userServiceImpl{}
 
-func NewUserServiceImpl() *UserServiceImpl {
-	return &UserServiceImpl{
+func NewUserServiceImpl() *userServiceImpl {
+	return &userServiceImpl{
 		// User模块服务的子Logger
 		l:  zap.L().Named("User"),
 		db: conf.C().MySQL.GetDB(),
 	}
 }
 
-// UserServiceImpl 基于Mysql实现的Service
-type UserServiceImpl struct {
-	// 日志实例
+// userServiceImpl 基于Mysql实现的Service
+type userServiceImpl struct {
 	l  logger.Logger
 	db *gorm.DB
+
+	user.UnimplementedServiceServer
 }
 
-func (u *UserServiceImpl) Init() error {
+func (u *userServiceImpl) Init() error {
 	u.l = zap.L().Named("User")
 	u.db = conf.C().MySQL.GetDB()
 
 	return nil
 }
 
-func (u *UserServiceImpl) Name() string {
+func (u *userServiceImpl) Name() string {
 	return user.AppName
 }
 
 func init() {
 	// 将此UserService注入内部服务的IOC容器中
-	ioc.InternalDI(userServiceImpl)
+	ioc.InternalDI(impl)
 }

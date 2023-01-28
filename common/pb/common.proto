@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package go_to_byte.dousheng.common;
+option go_package="github.com/Go-To-Byte/DouSheng/common";
+
+// HTTP响应的基础信息【在这里面的接口不可以用。。。】
+message Response {
+  // 状态码，0-成功， 其他值-失败
+  // @gotags: json:"status_code"
+  int32 status_code = 1;
+  // 返回状态描述信息
+  // @gotags: json:"status_msg"
+  optional string status_msg = 2;
+}

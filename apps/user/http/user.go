@@ -4,25 +4,61 @@ package http
 import (
 	"github.com/Go-To-Byte/DouSheng/apps/user"
 	"github.com/gin-gonic/gin"
-	"github.com/infraboard/mcube/http/response"
+	"net/http"
 )
 
-func (h *Handler) RegisterUser(c *gin.Context) {
+func (h *Handler) Register(c *gin.Context) {
 
 	req := user.NewLoginAndRegisterRequest()
 
 	// 1、接收参数
 	if err := c.Bind(req); err != nil {
-		response.Failed(c.Writer, err)
-		return
+		// TODO：字符串转字符串指针的小工具
+		msg := err.Error()
+		c.JSON(http.StatusBadRequest, user.TokenResponse{
+			StatusCode: 1,
+			StatusMsg:  &msg,
+		})
 	}
 
-	// 2、进行接口调用git
-	token, err := h.service.CreateUser(c.Request.Context(), req)
+	// 2、进行接口调用
+	resp, err := h.service.Register(c.Request.Context(), req)
 	if err != nil {
-		response.Failed(c.Writer, err)
-		return
+		msg := err.Error()
+		c.JSON(http.StatusBadRequest, user.TokenResponse{
+			StatusCode: 1,
+			StatusMsg:  &msg,
+		})
+	}
+	resp.StatusCode = 0
+
+	c.JSON(http.StatusBadRequest, resp)
+}
+
+func (h *Handler) Login(c *gin.Context) {
+
+	req := user.NewLoginAndRegisterRequest()
+
+	// 1、接收参数
+	if err := c.Bind(req); err != nil {
+		// TODO：字符串转字符串指针的小工具
+		msg := err.Error()
+		c.JSON(http.StatusBadRequest, user.TokenResponse{
+			StatusCode: 1,
+			StatusMsg:  &msg,
+		})
 	}
 
-	response.Success(c.Writer, token)
+	// 2、进行接口调用
+	resp, err := h.service.Login(c.Request.Context(), req)
+	if err != nil {
+		msg := err.Error()
+		c.JSON(http.StatusBadRequest, user.TokenResponse{
+			StatusCode: 1,
+			StatusMsg:  &msg,
+		})
+	}
+	resp.StatusCode = 0
+
+	c.JSON(http.StatusBadRequest, resp)
 }

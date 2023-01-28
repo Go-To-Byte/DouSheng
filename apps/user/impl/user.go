@@ -4,35 +4,76 @@ package impl
 import (
 	"context"
 	"fmt"
+	"github.com/rs/xid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/Go-To-Byte/DouSheng/apps/user"
 )
 
-func (i *UserServiceImpl) CreateUser(ctx context.Context, request *user.LoginAndRegisterRequest) (*user.Token, error) {
+// Register TODO：完成注册逻辑
+func (u *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
 
-	// 1、校验参数
-	if err := request.Validate(); err != nil {
-		return nil, fmt.Errorf("参数校验失败：%s", err.Error())
+	// ====
+	// 1、请求参数校验
+	// ====
+	if err := req.Validate(); err != nil {
+		return nil, err
 	}
 
-	newUser := user.NewUser()
-	newUser.Name = request.Username
-	newUser.Password = request.Password
+	// 生成UUID
+	token := xid.New().String()
 
-	// 2、插入数据
-	db := i.db.WithContext(ctx)
-	if err := db.AutoMigrate(&user.User{}); err != nil {
-		return nil, fmt.Errorf("自动迁移表失败：%s", err.Error())
-	}
-	result := db.Create(&newUser)
-	err := result.Error
-	if err != nil {
-		return nil, fmt.Errorf("插入数据失败：%s", err.Error())
-	}
-	// TODO：生成一个Token
-	token := "test token"
-	return user.NewToken(newUser.ID, token), nil
+	// ====
+	// 2、根据 Username 查询此用户是否已经注册
+	// ====
+
+	// ====
+	// 3、未注册-创建用户，注册-返回提示
+	// ====
+
+	response := user.NewTokenResponse()
+	response.UserId = 1111
+	response.Token = token
+
+	return response, nil
 }
 
-func (i *UserServiceImpl) Login(ctx context.Context, request *user.LoginAndRegisterRequest) (*user.Token, error) {
-	return nil, nil
+// Login TODO：完成登录逻辑
+func (u *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
+	// ====
+	// 1、请求参数校验
+	// ====
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
+	// ====
+	// 2、根据用户名查询用户信息
+	// ====
+	if "ciusyan" != req.Username {
+		return nil, fmt.Errorf("没有此用户")
+	}
+
+	// ====
+	// 3、比对用户密码
+	// 需要加密后对比
+	// ====
+
+	if "111" != req.Password {
+		return nil, fmt.Errorf("密码错误")
+	}
+
+	// ====
+	// 4、将Token放入缓存
+	// ====
+	// 生成UUID
+	token := xid.New().String()
+	response := user.NewTokenResponse()
+	response.UserId = 1111
+	response.Token = token
+
+	return response, nil
+}
+func (u *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (*user.UserInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserInfo not implemented")
 }
