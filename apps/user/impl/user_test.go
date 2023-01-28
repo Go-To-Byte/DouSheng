@@ -19,8 +19,8 @@ var (
 func TestCreateUser(t *testing.T) {
 	should := assert.New(t)
 	newUser := user.NewLoginAndRegisterRequest()
-	newUser.Username = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-	newUser.Password = "xxxx"
+	newUser.Username = "ciusyan"
+	newUser.Password = "111"
 	token, err := service.Register(context.Background(), newUser)
 
 	if should.NoError(err) {
@@ -29,6 +29,7 @@ func TestCreateUser(t *testing.T) {
 		fmt.Println(token.Token)
 	}
 
+	_ = conf.C().MySQL.GetDB()
 }
 
 func init() {
@@ -39,8 +40,15 @@ func init() {
 	}
 
 	// 初始化全局Logger
-	zap.DevelopmentSetup()
+	if err := zap.DevelopmentSetup(); err != nil {
+		panic(err)
+	}
+
+	// 初始化IOC容器
+	if err := ioc.InitAllDependencies(); err != nil {
+		panic(err)
+	}
 
 	// 从IOC中获取接口实现
-	service = ioc.GetInternalDependency(user.AppName).(user.ServiceServer)
+	service = ioc.GetGrpcDependency(user.AppName).(user.ServiceServer)
 }

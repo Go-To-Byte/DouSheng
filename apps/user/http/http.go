@@ -33,7 +33,7 @@ func (h *Handler) Registry(r gin.IRouter) {
 // Init 初始化Handler对象
 func (h *Handler) Init() error {
 	// 从IOC中获取UserServiceImpl实例
-	h.service = ioc.GetInternalDependency(user.AppName).(user.ServiceServer)
+	h.service = ioc.GetGrpcDependency(user.AppName).(user.ServiceServer)
 	return nil
 }
 

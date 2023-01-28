@@ -13,6 +13,14 @@ func InitAllDependencies() error {
 			return err
 		}
 	}
+
+	// 初始化GRPC服务依赖
+	for _, v := range grpcContainer {
+		if err := v.Init(); err != nil {
+			return err
+		}
+	}
+
 	// 初始化Gin HTTP服务依赖
 	for _, v := range ginContainer {
 		if err := v.Init(); err != nil {

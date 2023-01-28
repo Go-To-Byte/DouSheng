@@ -28,30 +28,26 @@ func NewDefaultConfig() *Config {
 // Config 将配置文件抽成一个对象
 type Config struct {
 	App   *app   `toml:"app"`
-	Log   *Log   `toml:"log"`
-	MySQL *MySQL `toml:"mysql"`
+	Log   *log   `toml:"log"`
+	MySQL *mySQL `toml:"mysql"`
 }
 
 func NewDefaultApp() *app {
 	return &app{
 		Name: "dousheng",
-		Host: "127.0.0.1",
-		Port: "8050",
+		HTTP: newDefaultHTTP(),
+		GRPC: newDefaultGRPC(),
 	}
 }
 
 type app struct {
 	Name string `toml:"name" env:"APP_NAME"`
-	Host string `toml:"host" env:"APP_HOST"`
-	Port string `toml:"port" env:"APP_PORT"`
+	HTTP *http  `toml:"http"`
+	GRPC *grpc  `toml:"grpc"`
 }
 
-func (a *app) HttpAddr() string {
-	return fmt.Sprintf("%s:%s", a.Host, a.Port)
-}
-
-func NewDefaultMySQL() *MySQL {
-	return &MySQL{
+func NewDefaultMySQL() *mySQL {
+	return &mySQL{
 		Host:        "127.0.0.1",
 		Port:        "3306",
 		UserName:    "",
@@ -62,7 +58,7 @@ func NewDefaultMySQL() *MySQL {
 	}
 }
 
-func (m *MySQL) GetDB() *gorm.DB {
+func (m *mySQL) GetDB() *gorm.DB {
 	m.lock.Lock() // 锁住临界区，保证线程安全
 	defer m.lock.Unlock()
 
@@ -78,7 +74,7 @@ func (m *MySQL) GetDB() *gorm.DB {
 }
 
 // gorm获取数据库连接
-func (m *MySQL) getDBConn() (*gorm.DB, error) {
+func (m *mySQL) getDBConn() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&multiStatements=true",
 		m.UserName, m.Password, m.Host, m.Port, m.Database)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -104,8 +100,8 @@ func (m *MySQL) getDBConn() (*gorm.DB, error) {
 
 var db *gorm.DB
 
-// MySQL todo
-type MySQL struct {
+// mySQL mysql配置
+type mySQL struct {
 	Host     string `toml:"host" env:"MYSQL_HOST"`
 	Port     string `toml:"port" env:"MYSQL_PORT"`
 	UserName string `toml:"username" env:"MYSQL_USERNAME"`
@@ -125,18 +121,54 @@ type MySQL struct {
 	lock sync.Mutex
 }
 
-func NewDefaultLog() *Log {
-	return &Log{
+func NewDefaultLog() *log {
+	return &log{
 		Level:  "info",
 		Format: TextFormat,
 		To:     ToStdout,
 	}
 }
 
-// Log todo
-type Log struct {
+// log 日志配置
+type log struct {
 	Level   string    `toml:"level" env:"LOG_LEVEL"`
 	PathDir string    `toml:"path_dir" env:"LOG_PATH_DIR"`
 	Format  LogFormat `toml:"format" env:"LOG_FORMAT"`
 	To      LogTo     `toml:"to" env:"LOG_TO"`
+}
+
+func newDefaultHTTP() *http {
+	return &http{
+		Host: "127.0.0.1",
+		Port: "8050",
+	}
+}
+
+// HTTP 服务配置
+type http struct {
+	Host string `toml:"host" env:"HTTP_HOST"`
+	Port string `toml:"port" env:"HTTP_PORT"`
+}
+
+// Addr 获取 HTTP 服务配置的 IP + 端口
+func (h *http) Addr() string {
+	return fmt.Sprintf("%s:%s", h.Host, h.Port)
+}
+
+func newDefaultGRPC() *grpc {
+	return &grpc{
+		Host: "127.0.0.1",
+		Port: "8505",
+	}
+}
+
+// GRPC 服务配置
+type grpc struct {
+	Host string `toml:"host" env:"GRPC_HOST"`
+	Port string `toml:"port" env:"GRPC_PORT"`
+}
+
+// Addr 获取 GRPC 服务配置的 IP + 端口
+func (g *grpc) Addr() string {
+	return fmt.Sprintf("%s:%s", g.Host, g.Port)
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
+	"google.golang.org/grpc"
 	"gorm.io/gorm"
 )
 
@@ -40,7 +41,11 @@ func (u *userServiceImpl) Name() string {
 	return user.AppName
 }
 
+func (u *userServiceImpl) Registry(s *grpc.Server) {
+	user.RegisterServiceServer(s, impl)
+}
+
 func init() {
-	// 将此UserService注入内部服务的IOC容器中
-	ioc.InternalDI(impl)
+	// 将此UserService注入GRPC服务的IOC容器中
+	ioc.GrpcDI(impl)
 }

@@ -13,7 +13,9 @@ import (
 	"time"
 )
 
+// =====
 // 使用HTTP对外暴露服务
+// =====
 
 func NewHttpService() *HttpService {
 
@@ -32,8 +34,8 @@ func NewHttpService() *HttpService {
 		ReadTimeout:       60 * time.Second,
 		WriteTimeout:      60 * time.Second,
 		IdleTimeout:       60 * time.Second,
-		MaxHeaderBytes:    1 << 20,                  // 1M
-		Addr:              service.c.App.HttpAddr(), // 获取IP和端口
+		MaxHeaderBytes:    1 << 20,                   // 1M
+		Addr:              service.c.App.HTTP.Addr(), // 获取IP和端口
 		Handler:           r,
 	}
 
@@ -54,26 +56,28 @@ func (s *HttpService) Start() error {
 	// 拼接好前缀再注册："/douying"
 	ioc.RegistryGin("/"+s.c.App.Name, s.r)
 
+	s.l.Infof("[HTTP] 服务监听地址：%s", s.c.App.HTTP.Addr())
 	if err := s.server.ListenAndServe(); err != nil {
-
 		// 如果错误是正常关闭，则不报错
 		if err == http.ErrServerClosed {
 			s.l.Infof("服务 stop 成功")
 			return nil
 		}
-		return fmt.Errorf("开启服务异常：%s", err.Error())
+		return fmt.Errorf("开启 [HTTP] 服务异常：%s", err.Error())
 	}
 
 	return nil
 }
 
 // Stop 停止服务
-func (s *HttpService) Stop() {
+func (s *HttpService) Stop() error {
 	s.l.Infof("服务开始 stop")
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	if err := s.server.Shutdown(ctx); err != nil {
 		s.l.Warnf("关闭服务异常：%s", err)
+		return err
 	}
+	return nil
 }

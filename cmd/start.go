@@ -118,6 +118,7 @@ var StartCmd = &cobra.Command{
 func NewManager() *manager {
 	return &manager{
 		http: protocol.NewHttpService(),
+		grpc: protocol.NewGRPCService(),
 		l:    zap.L().Named("CLI"),
 	}
 }
@@ -125,14 +126,19 @@ func NewManager() *manager {
 // 用于管理服务的开启、和关闭
 type manager struct {
 	http *protocol.HttpService
+	grpc *protocol.GRPCService
 	l    logger.Logger
 }
 
 func (m *manager) start() error {
 
 	// 打印加载好的服务
-	m.l.Infof("已加载的内部服务: %s", ioc.ExistingInternalDependencies())
-	m.l.Infof("已加载的Gin HTTP服务: %s", ioc.ExistingGinDependencies())
+	m.l.Infof("已加载的 [Internal] 服务: %s", ioc.ExistingInternalDependencies())
+	m.l.Infof("已加载的 [GRPC] 服务: %s", ioc.ExistingGrpcDependencies())
+	m.l.Infof("已加载的 [HTTP] 服务: %s", ioc.ExistingGinDependencies())
+
+	// 将GRPC放在后台跑
+	go m.grpc.Start()
 
 	// 注：这属于正常关闭："http: Server closed"
 	if err := m.http.Start(); err != nil && err.Error() != "http: Server closed" {
@@ -147,7 +153,14 @@ func (m *manager) WaitStop(ch <-chan os.Signal) {
 		switch v {
 		default:
 			m.l.Infof("接受到信号：%s", v)
-			m.http.Stop()
+
+			if err := m.http.Stop(); err != nil {
+				m.l.Errorf("优雅关闭 [HTTP] 服务出错：%s", err.Error())
+			}
+
+			if err := m.grpc.Stop(); err != nil {
+				m.l.Errorf("优雅关闭 [GRPC] 服务出错：%s", err.Error())
+			}
 		}
 	}
 }

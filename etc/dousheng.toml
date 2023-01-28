@@ -1,7 +1,13 @@
 [app]
 name = "douyin"
-host = "0.0.0.0"
-port = "8050"
+
+[app.http]
+host = "127.0.0.1"
+port = "8080"
+
+[app.grpc]
+host = "127.0.0.1"
+port = "8505"
 
 [mysql]
 host = "127.0.0.1"
