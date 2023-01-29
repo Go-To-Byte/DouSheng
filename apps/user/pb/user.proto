@@ -12,7 +12,7 @@ service Service {
   // 用户登录
   rpc Login(LoginAndRegisterRequest) returns(TokenResponse);
   // 获取用户信息
-  rpc UserInfo(UserInfoRequest) returns(UserInfoResponse);
+  rpc UserInfo(common.UserIDAndTokenRequest) returns(UserInfoResponse);
 }
 
 
@@ -24,16 +24,6 @@ message LoginAndRegisterRequest {
   // 密码
   // @gotags: json:"password" validate:"required,max=32"
   string password = 2;
-}
-
-// 获取用户信息 的接口请求 model
-message UserInfoRequest {
-  // 用户ID
-  // @gotags: json:"user_id" validate:"required"
-  int64 user_id = 1;
-  // 用户鉴权Token
-  // @gotags: json:"token" validate:"required"
-  string token = 2;
 }
 
 // 用户注册 & 登录 的接口响应 model

@@ -1,5 +1,5 @@
 // @Author: Ciusyan 2023/1/24
-package http
+package api
 
 import (
 	"github.com/Go-To-Byte/DouSheng/apps/user"
@@ -21,13 +21,14 @@ type Handler struct {
 
 // Version 当前模块API的版本
 func (h *Handler) Version() string {
-	return "v1"
+	return ""
 }
 
 // Registry 用于注册Handler所需要暴露的路由
 func (h *Handler) Registry(r gin.IRouter) {
 	r.POST("/register", h.Register)
 	r.POST("/login", h.Login)
+	r.POST("/", h.GetUserInfo)
 }
 
 // Init 初始化Handler对象

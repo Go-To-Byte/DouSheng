@@ -1,5 +1,5 @@
 // @Author: Ciusyan 2023/1/24
-package http
+package api
 
 import (
 	"github.com/Go-To-Byte/DouSheng/apps/user"
@@ -61,4 +61,8 @@ func (h *Handler) Login(c *gin.Context) {
 	resp.StatusCode = 0
 
 	c.JSON(http.StatusBadRequest, resp)
+}
+
+func (h *Handler) GetUserInfo(c *gin.Context) {
+
 }

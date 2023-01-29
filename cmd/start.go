@@ -140,8 +140,8 @@ func (m *manager) start() error {
 	// 将GRPC放在后台跑
 	go m.grpc.Start()
 
-	// 注：这属于正常关闭："http: Server closed"
-	if err := m.http.Start(); err != nil && err.Error() != "http: Server closed" {
+	// 注：这属于正常关闭："api: Server closed"
+	if err := m.http.Start(); err != nil && err.Error() != "api: Server closed" {
 		return err
 	}
 	return nil

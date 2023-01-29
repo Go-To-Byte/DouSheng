@@ -42,7 +42,7 @@ func NewDefaultApp() *app {
 
 type app struct {
 	Name string `toml:"name" env:"APP_NAME"`
-	HTTP *http  `toml:"http"`
+	HTTP *http  `toml:"api"`
 	GRPC *grpc  `toml:"grpc"`
 }
 

@@ -4,6 +4,7 @@ package impl
 import (
 	"context"
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/common"
 	"github.com/rs/xid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -74,6 +75,6 @@ func (u *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 
 	return response, nil
 }
-func (u *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (*user.UserInfoResponse, error) {
+func (u *userServiceImpl) UserInfo(ctx context.Context, req *common.UserIDAndTokenRequest) (*user.UserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserInfo not implemented")
 }

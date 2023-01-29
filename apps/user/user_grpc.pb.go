@@ -8,6 +8,7 @@ package user
 
 import (
 	context "context"
+	common "github.com/Go-To-Byte/DouSheng/common"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -27,7 +28,7 @@ type ServiceClient interface {
 	// 用户登录
 	Login(ctx context.Context, in *LoginAndRegisterRequest, opts ...grpc.CallOption) (*TokenResponse, error)
 	// 获取用户信息
-	UserInfo(ctx context.Context, in *UserInfoRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
+	UserInfo(ctx context.Context, in *common.UserIDAndTokenRequest, opts ...grpc.CallOption) (*UserInfoResponse, error)
 }
 
 type serviceClient struct {
@@ -56,7 +57,7 @@ func (c *serviceClient) Login(ctx context.Context, in *LoginAndRegisterRequest, 
 	return out, nil
 }
 
-func (c *serviceClient) UserInfo(ctx context.Context, in *UserInfoRequest, opts ...grpc.CallOption) (*UserInfoResponse, error) {
+func (c *serviceClient) UserInfo(ctx context.Context, in *common.UserIDAndTokenRequest, opts ...grpc.CallOption) (*UserInfoResponse, error) {
 	out := new(UserInfoResponse)
 	err := c.cc.Invoke(ctx, "/go_to_byte.dousheng.user.Service/UserInfo", in, out, opts...)
 	if err != nil {
@@ -74,7 +75,7 @@ type ServiceServer interface {
 	// 用户登录
 	Login(context.Context, *LoginAndRegisterRequest) (*TokenResponse, error)
 	// 获取用户信息
-	UserInfo(context.Context, *UserInfoRequest) (*UserInfoResponse, error)
+	UserInfo(context.Context, *common.UserIDAndTokenRequest) (*UserInfoResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -88,7 +89,7 @@ func (UnimplementedServiceServer) Register(context.Context, *LoginAndRegisterReq
 func (UnimplementedServiceServer) Login(context.Context, *LoginAndRegisterRequest) (*TokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedServiceServer) UserInfo(context.Context, *UserInfoRequest) (*UserInfoResponse, error) {
+func (UnimplementedServiceServer) UserInfo(context.Context, *common.UserIDAndTokenRequest) (*UserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserInfo not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
@@ -141,7 +142,7 @@ func _Service_Login_Handler(srv interface{}, ctx context.Context, dec func(inter
 }
 
 func _Service_UserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserInfoRequest)
+	in := new(common.UserIDAndTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -153,7 +154,7 @@ func _Service_UserInfo_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: "/go_to_byte.dousheng.user.Service/UserInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).UserInfo(ctx, req.(*UserInfoRequest))
+		return srv.(ServiceServer).UserInfo(ctx, req.(*common.UserIDAndTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

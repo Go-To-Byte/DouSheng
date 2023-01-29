@@ -80,6 +80,190 @@ func (x *Response) GetStatusMsg() string {
 	return ""
 }
 
+// 分页请求参数
+type PageRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	PageSize   uint64 `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageNumber uint64 `protobuf:"varint,2,opt,name=page_number,json=pageNumber,proto3" json:"page_number,omitempty"`
+	Offset     int64  `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"`
+}
+
+func (x *PageRequest) Reset() {
+	*x = PageRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_common_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PageRequest) ProtoMessage() {}
+
+func (x *PageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_common_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PageRequest.ProtoReflect.Descriptor instead.
+func (*PageRequest) Descriptor() ([]byte, []int) {
+	return file_common_pb_common_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PageRequest) GetPageSize() uint64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *PageRequest) GetPageNumber() uint64 {
+	if x != nil {
+		return x.PageNumber
+	}
+	return 0
+}
+
+func (x *PageRequest) GetOffset() int64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+// UserID & Token 的 model
+type UserIDAndTokenRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 用户ID
+	// @gotags: json:"user_id" validate:"required"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" validate:"required"`
+	// 用户鉴权Token
+	// @gotags: json:"token" validate:"required"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" validate:"required"`
+}
+
+func (x *UserIDAndTokenRequest) Reset() {
+	*x = UserIDAndTokenRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_common_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UserIDAndTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserIDAndTokenRequest) ProtoMessage() {}
+
+func (x *UserIDAndTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_common_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserIDAndTokenRequest.ProtoReflect.Descriptor instead.
+func (*UserIDAndTokenRequest) Descriptor() ([]byte, []int) {
+	return file_common_pb_common_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *UserIDAndTokenRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *UserIDAndTokenRequest) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
+// StatusCode & StatusMsg 的model
+type CodeAndMsgResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 状态码，0-成功， 其他值-失败
+	// @gotags: json:"status_code"
+	StatusCode int32 `protobuf:"varint,1,opt,name=status_code,json=statusCode,proto3" json:"status_code"`
+	// 返回状态描述信息
+	// @gotags: json:"status_msg"
+	StatusMsg *string `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg,proto3,oneof" json:"status_msg"`
+}
+
+func (x *CodeAndMsgResponse) Reset() {
+	*x = CodeAndMsgResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_pb_common_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CodeAndMsgResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CodeAndMsgResponse) ProtoMessage() {}
+
+func (x *CodeAndMsgResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_common_pb_common_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CodeAndMsgResponse.ProtoReflect.Descriptor instead.
+func (*CodeAndMsgResponse) Descriptor() ([]byte, []int) {
+	return file_common_pb_common_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CodeAndMsgResponse) GetStatusCode() int32 {
+	if x != nil {
+		return x.StatusCode
+	}
+	return 0
+}
+
+func (x *CodeAndMsgResponse) GetStatusMsg() string {
+	if x != nil && x.StatusMsg != nil {
+		return *x.StatusMsg
+	}
+	return ""
+}
+
 var File_common_pb_common_proto protoreflect.FileDescriptor
 
 var file_common_pb_common_proto_rawDesc = []byte{
@@ -92,10 +276,27 @@ var file_common_pb_common_proto_rawDesc = []byte{
 	0x65, 0x12, 0x22, 0x0a, 0x0a, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x5f, 0x6d, 0x73, 0x67, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x09, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4d,
 	0x73, 0x67, 0x88, 0x01, 0x01, 0x42, 0x0d, 0x0a, 0x0b, 0x5f, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73,
-	0x5f, 0x6d, 0x73, 0x67, 0x42, 0x27, 0x5a, 0x25, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
-	0x6f, 0x6d, 0x2f, 0x47, 0x6f, 0x2d, 0x54, 0x6f, 0x2d, 0x42, 0x79, 0x74, 0x65, 0x2f, 0x44, 0x6f,
-	0x75, 0x53, 0x68, 0x65, 0x6e, 0x67, 0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x5f, 0x6d, 0x73, 0x67, 0x22, 0x63, 0x0a, 0x0b, 0x50, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x1b, 0x0a, 0x09, 0x70, 0x61, 0x67, 0x65, 0x5f, 0x73, 0x69, 0x7a, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x08, 0x70, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a, 0x65,
+	0x12, 0x1f, 0x0a, 0x0b, 0x70, 0x61, 0x67, 0x65, 0x5f, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0a, 0x70, 0x61, 0x67, 0x65, 0x4e, 0x75, 0x6d, 0x62, 0x65,
+	0x72, 0x12, 0x16, 0x0a, 0x06, 0x6f, 0x66, 0x66, 0x73, 0x65, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x03, 0x52, 0x06, 0x6f, 0x66, 0x66, 0x73, 0x65, 0x74, 0x22, 0x46, 0x0a, 0x15, 0x55, 0x73, 0x65,
+	0x72, 0x49, 0x44, 0x41, 0x6e, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x74,
+	0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65,
+	0x6e, 0x22, 0x68, 0x0a, 0x12, 0x43, 0x6f, 0x64, 0x65, 0x41, 0x6e, 0x64, 0x4d, 0x73, 0x67, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x0b, 0x73, 0x74, 0x61, 0x74, 0x75,
+	0x73, 0x5f, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0a, 0x73, 0x74,
+	0x61, 0x74, 0x75, 0x73, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x22, 0x0a, 0x0a, 0x73, 0x74, 0x61, 0x74,
+	0x75, 0x73, 0x5f, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x09,
+	0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4d, 0x73, 0x67, 0x88, 0x01, 0x01, 0x42, 0x0d, 0x0a, 0x0b,
+	0x5f, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x5f, 0x6d, 0x73, 0x67, 0x42, 0x27, 0x5a, 0x25, 0x67,
+	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x47, 0x6f, 0x2d, 0x54, 0x6f, 0x2d,
+	0x42, 0x79, 0x74, 0x65, 0x2f, 0x44, 0x6f, 0x75, 0x53, 0x68, 0x65, 0x6e, 0x67, 0x2f, 0x63, 0x6f,
+	0x6d, 0x6d, 0x6f, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -110,9 +311,12 @@ func file_common_pb_common_proto_rawDescGZIP() []byte {
 	return file_common_pb_common_proto_rawDescData
 }
 
-var file_common_pb_common_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_common_pb_common_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_common_pb_common_proto_goTypes = []interface{}{
-	(*Response)(nil), // 0: go_to_byte.dousheng.common.Response
+	(*Response)(nil),              // 0: go_to_byte.dousheng.common.Response
+	(*PageRequest)(nil),           // 1: go_to_byte.dousheng.common.PageRequest
+	(*UserIDAndTokenRequest)(nil), // 2: go_to_byte.dousheng.common.UserIDAndTokenRequest
+	(*CodeAndMsgResponse)(nil),    // 3: go_to_byte.dousheng.common.CodeAndMsgResponse
 }
 var file_common_pb_common_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -140,15 +344,52 @@ func file_common_pb_common_proto_init() {
 				return nil
 			}
 		}
+		file_common_pb_common_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PageRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_common_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UserIDAndTokenRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_pb_common_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CodeAndMsgResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_common_pb_common_proto_msgTypes[0].OneofWrappers = []interface{}{}
+	file_common_pb_common_proto_msgTypes[3].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_common_pb_common_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
