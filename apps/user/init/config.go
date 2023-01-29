@@ -13,25 +13,25 @@ import (
 
 // initialize service config
 func initConfig() {
-	V := viper.New()
-	V.SetConfigType("yaml") // set config type
+	models.V = viper.New()
+	models.V.SetConfigType("yaml") // set config type
 
-	V.SetConfigFile("apps/user/service/config.yml")
-	if err := V.ReadInConfig(); err != nil {
+	models.V.SetConfigFile("apps/user/service/config.yml")
+	if err := models.V.ReadInConfig(); err != nil {
 		zap.S().Panicf("Error reading config file: %v", err)
 	}
 
-	if err := V.Unmarshal(&models.Config); err != nil {
+	if err := models.V.Unmarshal(&models.Config); err != nil {
 		zap.S().Panicf("Failed to unmarshal sqlconfig: %v", err)
 	}
 
-	V.WatchConfig()
-	V.OnConfigChange(func(e fsnotify.Event) {
-		if err := V.ReadInConfig(); err != nil {
+	models.V.WatchConfig()
+	models.V.OnConfigChange(func(e fsnotify.Event) {
+		if err := models.V.ReadInConfig(); err != nil {
 			zap.S().Panicf("Error reading config file: %v", err)
 		}
 
-		if err := V.Unmarshal(&models.Config); err != nil {
+		if err := models.V.Unmarshal(&models.Config); err != nil {
 			zap.S().Panicf("Failed to unmarshal sqlconfig: %v", err)
 		}
 
