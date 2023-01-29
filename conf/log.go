@@ -1,6 +1,26 @@
 // @Author: Ciusyan 2023/1/23
 package conf
 
+//=====
+// 日志配置对象
+//=====
+
+// log 日志配置
+type log struct {
+	Level   string    `toml:"level" env:"LOG_LEVEL"`
+	PathDir string    `toml:"path_dir" env:"LOG_PATH_DIR"`
+	Format  LogFormat `toml:"format" env:"LOG_FORMAT"`
+	To      LogTo     `toml:"to" env:"LOG_TO"`
+}
+
+func NewDefaultLog() *log {
+	return &log{
+		Level:  "info",
+		Format: TextFormat,
+		To:     ToStdout,
+	}
+}
+
 // LogFormat 日志格式
 type LogFormat string
 

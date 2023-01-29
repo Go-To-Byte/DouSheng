@@ -7,7 +7,9 @@ import (
 	"github.com/caarlos0/env"
 )
 
-/** 用于加载全局配置 **/
+//=====
+// 用于加载全局配置
+//=====
 
 // LoadConfigFromToml 从Toml配置文件加载
 func LoadConfigFromToml(filePath string) error {
