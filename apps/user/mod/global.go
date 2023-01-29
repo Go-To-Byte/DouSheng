@@ -2,7 +2,7 @@
 // Date: 2023/1/28 1:41
 // Software: GoLand
 
-package model
+package mod
 
 import (
 	"github.com/bwmarrin/snowflake"

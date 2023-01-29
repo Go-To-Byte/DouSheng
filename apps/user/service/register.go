@@ -6,7 +6,7 @@ package service
 
 import (
 	"github.com/Go-To-Byte/DouSheng/apps/user/dao"
-	model2 "github.com/Go-To-Byte/DouSheng/apps/user/model"
+	model2 "github.com/Go-To-Byte/DouSheng/apps/user/mod"
 	"github.com/Go-To-Byte/DouSheng/dal/model"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

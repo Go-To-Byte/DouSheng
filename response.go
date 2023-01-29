@@ -2,7 +2,7 @@
 // Date: 2023/1/26 0:13
 // Software: GoLand
 
-package model
+package DouSheng
 
 type Feed struct {
 	NextTime   int64       `json:"next_time"`
