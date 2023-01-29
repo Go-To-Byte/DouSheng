@@ -11,6 +11,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/apps/user/models"
 	"github.com/Go-To-Byte/DouSheng/apps/user/proto"
 	"go.uber.org/zap"
+	"strconv"
 )
 
 // // Register Http API
@@ -47,11 +48,7 @@ import (
 // 	})
 // }
 
-type Register struct {
-	proto.UnimplementedUserServer
-}
-
-func (r *Register) Register(ctx context.Context, req *proto.RegisterRequest) (*proto.RegisterResponse, error) {
+func (r *User) Register(ctx context.Context, req *proto.RegisterRequest) (*proto.RegisterResponse, error) {
 	u := model.UserInfo{
 		ID:       models.Node.Generate().Int64(),
 		Username: req.Username,
@@ -59,12 +56,12 @@ func (r *Register) Register(ctx context.Context, req *proto.RegisterRequest) (*p
 	}
 
 	// 查询用户是否存在
-	result := dao.FindByName(u)
-	if result == nil || len(result) > 0 {
+	results := dao.FindByName(u)
+	if results == nil || len(results) > 0 {
 		return &proto.RegisterResponse{
 			StatusCode: 6,
 			StatusMsg:  "registered",
-			UserId:     result[0].ID,
+			UserId:     results[0].ID,
 			Token:      "",
 		}, nil
 	}
@@ -78,6 +75,6 @@ func (r *Register) Register(ctx context.Context, req *proto.RegisterRequest) (*p
 		StatusCode: 0,
 		StatusMsg:  "ok",
 		UserId:     u.ID,
-		Token:      string(u.ID),
+		Token:      strconv.FormatInt(u.ID, 10),
 	}, nil
 }

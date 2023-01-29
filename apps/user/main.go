@@ -28,7 +28,7 @@ func main() {
 	s := grpc.NewServer()             // 注册 grpc server
 	healthcheck := health.NewServer() // 注册健康检查
 	healthgrpc.RegisterHealthServer(s, healthcheck)
-	proto.RegisterUserServer(s, &service.Register{})
+	proto.RegisterUserServer(s, &service.User{})
 
 	// 异步检查依赖关系并根据需要切换服务状态
 	go func() {

@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 	"time"
 
+	_ "github.com/Go-To-Byte/DouSheng/apps/user/init"
 	pb "github.com/Go-To-Byte/DouSheng/apps/user/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -38,12 +39,19 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	r, err := c.Register(ctx, &pb.RegisterRequest{
+	r1, err := c.Register(ctx, &pb.RegisterRequest{
 		Username: "atest",
 		Password: "apptest",
 	})
+	zap.S().Infof("Registered: %+v", r1)
+
+	r2, err := c.Login(ctx, &pb.LoginRequest{
+		Username: "atest",
+		Password: "apptest",
+	})
+	zap.S().Infof("Registered: %+v", r2)
+
 	if err != nil {
 		zap.S().Infof("could not greet: %v", err)
 	}
-	zap.S().Infof("reginster: %+v", r)
 }
