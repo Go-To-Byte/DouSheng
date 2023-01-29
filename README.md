@@ -7,9 +7,15 @@
 需要将`etc/dousheng.toml.template`配置模板文件复制粘贴为：`etc/dousheng.toml`，并且修改为自己的配置，如：
 ```toml
 [app]
-name = "DouSheng"
-host = "0.0.0.0"
-port = "8050"
+name = "douyin"
+
+[app.http]
+host = "127.0.0.1"
+port = "8080"
+
+[app.grpc]
+host = "127.0.0.1"
+port = "8505"
 
 [mysql]
 host = "127.0.0.1"
@@ -34,50 +40,78 @@ to = "stdout"
 
 ## 项目结构
 
-* 大致目录结构
+* 目录结构概览[解读]
 ```text
-DouSheng
-├── apps            # 项目模块
-│   ├── all         # 统一注册服务到IOC容器中
-│   └── user        # 用户模块
-│       ├── http    # Controller
-│       └── impl    # ServiceImpl
-├── cmd             # 通过CLI启动项目
-├── conf            # 项目配置
-├── dist            # 构建的项目路径
-├── docs.example    # 相关文档
-├── etc             # 环境变量
-├── protocol        # 暴露的协议
-└── version         # 项目版本相关
+DouSheng            # 极简版抖音 APP
+├── apps            # 所有服务模块[其中的每一个模块，都可单独拆分出来做成微服务]
+│   ├── all         # 统一管理所有模块实例的注册[驱动加载的方式]
+│   ├── comment     # 评论模块
+│   │   ├── api
+│   │   ├── impl
+│   │   └── pb
+│   ├── user        # 用户模块
+│   │   ├── api     
+│   │   ├── impl
+│   │   └── pb
+│   └── video       # 视频模块
+│       ├── api
+│       ├── impl
+│       └── pb
+├── cmd             # CLI
+├── common.pb       # 放置公共的protobuf文件[可抽离]
+├── conf            # 项目配置对象
+├── docs            # 项目相关文档
+├── etc             # 项目具体配置
+├── ioc             # IoC容器[可抽离]
+├── protocol        # 提供协议
+├── utils           # 工具包
+└── version         # 版本信息
 ```
 
-* 部分文件结构
+* 部分主要文件概览[解读]
+
 ```text
-├── apps
-│   ├── all         
-│   │   └── auto_register.go    # IOC容器统一注册位置【驱动加载】
-│   ├── app.go                  # IOC容器
-│   └── user                    
-│       ├── app.go              # 用户模块的名称【用于注入服务至IOC】
-│       ├── http
-│       │   ├── user.go         # Controller控制层的方法
-│       │   └── http.go         # HTTP服务相关
-│       ├── impl
-│       │   ├── mapper.go       # Dao持久层
-│       │   ├── mysql.go        
-│       │   └── user.go         # ServiceImpl，用户模块业务接口的实现
-│       ├── interface.go        # Service 业务层，用户模块的接口
-│       └── model.go            # user 模块相关的 model
-├── cmd
-│   └── start.go                # CLI启动入口
-├── conf
-│   ├── config.go               # 配置文件对象【APP、MYSQL、Log】
-│   └── load.go                 # 用于外部加载配置文件
+├── apps                            # 所有的业务模块
+│   ├── all                         # 驱动注册所有的IOC容器实例
+│   │   └── auto_register.go
+│   ├── user                        # 以用户模块举例
+│   │   ├── api                     # 提供的 API 接口
+│   │   │   ├── http.go             # 使用 HTTP 的方式暴露 控制层逻辑
+│   │   │   └── user.go             # user服务模块暴露的方法
+│   │   ├── app.go                  # user模块的结构体方法
+│   │   ├── impl                    # user.ServerService 的实现
+│   │   │   ├── dao.go              # 可以看作是 持久层逻辑
+│   │   │   ├── impl.go             # 可以看作是 业务层逻辑
+│   │   │   ├── user.go             # user.ServerService 接口方法的实现
+│   │   │   └── user_test.go        # 此模块测试用例【注：必写，一般用于测试本模块CURD的功能】
+│   │   ├── pb                      # 此模块的protobuf文件，里面有（接口方法、请求model、响应model、本模块model）
+│   │   │   └── user.proto      
+│   │   ├── README.md               # 本模块说明
+│   │   ├── user.pb.go              # 利用 protoc 生成（结构体）
+│   │   └── user_grpc.pb.go         # 利用 protoc 生成（接口）
+├── cmd                             # 用于启动项目
+│   ├── root.go                     
+│   └── start.go                    # 启动逻辑在这
+├── common                          # 定义的公共的protobuf文件，可抽离
+│   ├── common.pb.go
+│   └── pb
+│       └── common.proto
+├── conf                            # 项目配置对象
+│   ├── app.go                      # 此项目的配置
+│   ├── config.go                   # 统一配置
+│   ├── config_test.go              
+│   ├── load.go                     # 加载所有配置
+│   ├── log.go                      # 日志相关配置
+│   └── mysql.go                    # mysql相关配置
 ├── etc
-│   ├── dousheng.toml           # 配置文件【不提交Github】
-│   └── dousheng.toml.template  # 配置文件模板【这里采用轻量级的toml】
-├── Makefile                    # 使用工程化管理项目【方便开发】
-├── protocol                    
-│   ├── grpc.go                 # 对外提供GRPC服务，给内部使用【还未实现】
-│   └── http.go                 # 对外提供HTTP服务，给外部使用
+│   ├── dousheng.toml               # 项目配置文件位置【可换成其他的，用其他库解析】[禁止上传github]
+│   └── dousheng.toml.template      # 配置文件模板[可上传github]
+├── ioc                             # IoC容器
+│   ├── all.go                      # 统一所有容器
+│   ├── gin.go                      # Gin HTTP 服务容器
+│   ├── grpc.go                     # GRPC 服务容器
+│   └── internal.go                 # 内部服务容器
+├── Makefile                        # 利用Makefile管理项目[相当于一个脚手架]
+├── utils                           # 放置一些通用的工具
+│   └── md5.go  
 ```

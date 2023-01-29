@@ -1,7 +1,13 @@
 [app]
-name = "DouSheng"
-host = "0.0.0.0"
-port = "8050"
+name = "项目名称"
+
+[app.http]
+host = "HTTP服务的IP"
+port = "HTTP服务的端口"
+
+[app.grpc]
+host = "GRPC服务的IP"
+port = "GRPC服务的端口"
 
 [mysql]
 host = "你数据库的IP"
@@ -11,7 +17,7 @@ password = "你的mysql密码"
 database = "你使用的数据库"
 
 [log]
-level = "debug"
-dir = "logs"
-format = "text"
-to = "stdout"
+level = "日志等级"
+dir = "输出路径"
+format = "输出形式[JSON、TEXT]"
+to = "输出目的地[标准输出、文件输出]"
