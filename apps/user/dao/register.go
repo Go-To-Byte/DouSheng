@@ -8,12 +8,12 @@ import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/apps/user/dal/model"
 	"github.com/Go-To-Byte/DouSheng/apps/user/dal/query"
-	model2 "github.com/Go-To-Byte/DouSheng/apps/user/models"
+	"github.com/Go-To-Byte/DouSheng/apps/user/models"
 	"go.uber.org/zap"
 )
 
 func Add(info model.UserInfo) {
-	q := query.Use(model2.DB)
+	q := query.Use(models.DB)
 	err := q.UserInfo.Create(&info)
 	if err != nil {
 		zap.S().Panicf("Failed create user: %v", err)
@@ -21,7 +21,7 @@ func Add(info model.UserInfo) {
 }
 
 func FindById(info model.UserInfo) []*model.UserInfo {
-	q := query.Use(model2.DB)
+	q := query.Use(models.DB)
 	userInfo := q.UserInfo
 	result, err := userInfo.WithContext(context.Background()).Where(userInfo.ID.Eq(info.ID)).Find()
 	if err != nil {
@@ -32,7 +32,7 @@ func FindById(info model.UserInfo) []*model.UserInfo {
 }
 
 func FindByName(info model.UserInfo) []*model.UserInfo {
-	q := query.Use(model2.DB)
+	q := query.Use(models.DB)
 	userInfo := q.UserInfo
 	result, err := userInfo.WithContext(context.Background()).
 		Where(userInfo.Username.Eq(info.Username)).Find()

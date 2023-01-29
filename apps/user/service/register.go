@@ -5,9 +5,9 @@
 package service
 
 import (
+	"github.com/Go-To-Byte/DouSheng/apps/user/dal/model"
 	"github.com/Go-To-Byte/DouSheng/apps/user/dao"
-	model2 "github.com/Go-To-Byte/DouSheng/apps/user/models"
-	"github.com/Go-To-Byte/DouSheng/dal/model"
+	"github.com/Go-To-Byte/DouSheng/apps/user/models"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
@@ -16,7 +16,7 @@ import (
 func Register(context *gin.Context) {
 	zap.S().Debugf("Register")
 	user := model.UserInfo{
-		ID:       model2.Node.Generate().Int64(),
+		ID:       models.Node.Generate().Int64(),
 		Username: context.Query("username"),
 		Passwd:   context.Query("password"),
 	}
