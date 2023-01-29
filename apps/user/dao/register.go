@@ -8,7 +8,7 @@ import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/apps/user/dal/model"
 	"github.com/Go-To-Byte/DouSheng/apps/user/dal/query"
-	model2 "github.com/Go-To-Byte/DouSheng/apps/user/mod"
+	model2 "github.com/Go-To-Byte/DouSheng/apps/user/models"
 	"go.uber.org/zap"
 )
 

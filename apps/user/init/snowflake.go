@@ -5,19 +5,19 @@
 package init
 
 import (
-	"github.com/Go-To-Byte/DouSheng/apps/user/mod"
+	"github.com/Go-To-Byte/DouSheng/apps/user/models"
 	"github.com/bwmarrin/snowflake"
 	"go.uber.org/zap"
 )
 
 func initNode() *snowflake.Node {
-	if mod.Node != nil { // global snowflake node
-		return mod.Node
+	if models.Node != nil { // global snowflake node
+		return models.Node
 	}
 	var err error
-	mod.Node, err = snowflake.NewNode(mod.Config.ID)
+	models.Node, err = snowflake.NewNode(models.Config.ID)
 	if err != nil {
 		zap.S().Panicf("New snowflake node error: %v", err)
 	}
-	return mod.Node
+	return models.Node
 }

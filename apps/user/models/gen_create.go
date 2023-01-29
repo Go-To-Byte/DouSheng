@@ -2,7 +2,7 @@
 // Date: 2023/1/25 0:26
 // Software: GoLand
 
-package mod
+package models
 
 import (
 	"fmt"
@@ -81,7 +81,7 @@ func main() {
 	// 模型自定义选项组
 	fieldOpts := []gen.ModelOpt{jsonField, autoCreateTimeField, autoUpdateTimeField, softDeleteField}
 
-	// 创建模型的结构体,生成文件在 mod 目录; 先创建的结果会被后面创建的覆盖
+	// 创建模型的结构体,生成文件在 models 目录; 先创建的结果会被后面创建的覆盖
 	// 这里创建个别模型仅仅是为了拿到`*generate.QueryStructMeta`类型对象用于后面的模型关联操作中
 	// Address := g.GenerateModel("user")
 	// 创建全部模型文件, 并覆盖前面创建的同名模型

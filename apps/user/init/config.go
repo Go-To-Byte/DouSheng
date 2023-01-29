@@ -5,7 +5,7 @@
 package init
 
 import (
-	"github.com/Go-To-Byte/DouSheng/apps/user/mod"
+	"github.com/Go-To-Byte/DouSheng/apps/user/models"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -21,7 +21,7 @@ func initConfig() {
 		zap.S().Panicf("Error reading config file: %v", err)
 	}
 
-	if err := V.Unmarshal(&mod.Config); err != nil {
+	if err := V.Unmarshal(&models.Config); err != nil {
 		zap.S().Panicf("Failed to unmarshal sqlconfig: %v", err)
 	}
 
@@ -31,7 +31,7 @@ func initConfig() {
 			zap.S().Panicf("Error reading config file: %v", err)
 		}
 
-		if err := V.Unmarshal(&mod.Config); err != nil {
+		if err := V.Unmarshal(&models.Config); err != nil {
 			zap.S().Panicf("Failed to unmarshal sqlconfig: %v", err)
 		}
 

@@ -5,14 +5,14 @@
 package init
 
 import (
-	"github.com/Go-To-Byte/DouSheng/apps/user/mod"
+	"github.com/Go-To-Byte/DouSheng/apps/user/models"
 	"github.com/Go-To-Byte/DouSheng/apps/user/service"
 	"github.com/gin-gonic/gin"
 )
 
 func initRouter() {
-	mod.Router = gin.Default()
-	user := mod.Router.Group("/douyin/user")
+	models.Router = gin.Default()
+	user := models.Router.Group("/douyin/user")
 	{
 		user.GET("/")
 		user.POST("/login")
