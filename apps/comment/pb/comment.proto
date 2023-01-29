@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package go_to_byte.dousheng.comment;
+option go_package="github.com/Go-To-Byte/DouSheng/apps/comment";
+
+import "apps/user/pb/user.proto";
+
+service Service {
+  // 评论操作
+  rpc CommentAction(CommentActionRequest) returns (CommentActionResponse);
+  rpc CommentList(CommentListRequest) returns (CommentListResponse);
+}
+
+message CommentActionRequest {
+  // 用户鉴权token
+  // @gotags: json:"token" validate:"required"
+  string token = 1;
+  // 视频id
+  // @gotags: json:"video_id" validate:"required"
+  int64 video_id = 2;
+  // 1-发布评论,2删除评论
+  // @gotags: json:"action_type" validate:"required"
+  int32 action_type = 3;
+  // 用户填写的评论内容,在action_type=1的时候使用
+  // @gotags: json:"comment_text"
+  optional string comment_text = 4;
+  // 要删除的评论id,在action_type=2的时候使用
+  // @gotags: json:"comment_id"
+  optional int64 comment_id = 5;
+}
+
+message CommentListRequest {
+  // 用户鉴权token
+  // @gotags: json:"token" validate:"required"
+  string token = 1;
+  // 视频id
+  // @gotags: json:"video_id" validate:"required"
+  int64 video_id = 2;
+}
+
+message CommentActionResponse {
+  // 状态码, 0-成功, 其他值-失败
+  // @gotags: json:"status_code"
+  int32 status_code = 1;
+  // 返回状态描述
+  // @gotags: json:"status_msg"
+  optional string status_msg = 2;
+  // 评论成功返回评论内容,不需要重新拉取整个列表
+  // @gotags: json:"comment"
+  optional Comment comment = 3;
+}
+
+message Comment {
+  // 视频评论id
+  // @gotags: json:"id"
+  int64 id = 1;
+  // 评论用户信息
+  // @gotags: json:"user"
+  user.User user = 2;
+  // 评论内容
+  // @gotags: json:"content"
+  string content = 3;
+  // 评论发布日期,格式mm-dd
+  // @gotags: json:"create_date"
+  string create_date = 4;
+}
+
+message CommentListResponse {
+  // 状态码,0-成功,其他值-失败
+  int32 status_code = 1;
+  // 返回状态描述
+  optional string status_msg = 2;
+  // 评论列表
+  repeated Comment comment_list = 3;
+}
