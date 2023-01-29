@@ -6,8 +6,8 @@ package service
 
 import (
 	"context"
-	"github.com/Go-To-Byte/DouSheng/apps/user/dal/model"
 	"github.com/Go-To-Byte/DouSheng/apps/user/dao"
+	"github.com/Go-To-Byte/DouSheng/apps/user/dao/dal/model"
 	"github.com/Go-To-Byte/DouSheng/apps/user/models"
 	"github.com/Go-To-Byte/DouSheng/apps/user/proto"
 	"go.uber.org/zap"

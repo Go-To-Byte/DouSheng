@@ -7,7 +7,6 @@ package init
 import (
 	"github.com/Go-To-Byte/DouSheng/apps/user/middle"
 	"github.com/Go-To-Byte/DouSheng/apps/user/models"
-	"github.com/Go-To-Byte/DouSheng/apps/user/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -27,10 +26,10 @@ func initRouter() {
 	models.Router.Use(middle.Cors())
 
 	// 添加 api(http) 路由
-	user := models.Router.Group("/douyin/user")
-	{
-		user.GET("/")
-		user.POST("/login")
-		user.POST("/register", service.Register)
-	}
+	// user := models.Router.Group("/douyin/user")
+	// {
+	// 	user.GET("/")
+	// 	user.POST("/login")
+	// 	user.POST("/register", service.Register)
+	// }
 }

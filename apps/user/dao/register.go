@@ -6,8 +6,8 @@ package dao
 
 import (
 	"context"
-	"github.com/Go-To-Byte/DouSheng/apps/user/dal/model"
-	"github.com/Go-To-Byte/DouSheng/apps/user/dal/query"
+	"github.com/Go-To-Byte/DouSheng/apps/user/dao/dal/model"
+	"github.com/Go-To-Byte/DouSheng/apps/user/dao/dal/query"
 	"github.com/Go-To-Byte/DouSheng/apps/user/models"
 	"go.uber.org/zap"
 )

@@ -14,12 +14,13 @@ import (
 	"net"
 	"time"
 
+	_ "github.com/Go-To-Byte/DouSheng/apps/user/init"
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 8080))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 50051))
 	if err != nil {
 		zap.S().Infof("failed to listen: %v", err)
 	}
