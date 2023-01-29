@@ -2,17 +2,18 @@
 // Date: 2023/1/26 3:29
 // Software: GoLand
 
-package service
+package dao
 
 import (
 	"context"
+	model2 "github.com/Go-To-Byte/DouSheng/apps/user/model"
 	"github.com/Go-To-Byte/DouSheng/dal/model"
 	"github.com/Go-To-Byte/DouSheng/dal/query"
 	"go.uber.org/zap"
 )
 
 func Add(info model.UserInfo) {
-	q := query.Use(DB)
+	q := query.Use(model2.DB)
 	err := q.UserInfo.Create(&info)
 	if err != nil {
 		zap.S().Panicf("Failed create user: %v", err)
@@ -20,7 +21,7 @@ func Add(info model.UserInfo) {
 }
 
 func FindById(info model.UserInfo) []*model.UserInfo {
-	q := query.Use(DB)
+	q := query.Use(model2.DB)
 	userInfo := q.UserInfo
 	result, err := userInfo.WithContext(context.Background()).Where(userInfo.ID.Eq(info.ID)).Find()
 	if err != nil {
@@ -31,7 +32,7 @@ func FindById(info model.UserInfo) []*model.UserInfo {
 }
 
 func FindByName(info model.UserInfo) []*model.UserInfo {
-	q := query.Use(DB)
+	q := query.Use(model2.DB)
 	userInfo := q.UserInfo
 	result, err := userInfo.WithContext(context.Background()).
 		Where(userInfo.Username.Eq(info.Username)).Find()

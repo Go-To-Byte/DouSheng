@@ -1,8 +1,8 @@
 // Author: BeYoung
-// Date: 2023/1/27 5:41
+// Date: 2023/1/29 14:16
 // Software: GoLand
 
-package service
+package init
 
 import "go.uber.org/zap"
 

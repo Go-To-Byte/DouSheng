@@ -1,19 +1,20 @@
 // Author: BeYoung
-// Date: 2023/1/27 5:23
+// Date: 2023/1/28 1:41
 // Software: GoLand
 
-package global
+package model
 
 import (
-	"github.com/Go-To-Byte/DouSheng/model"
 	"github.com/bwmarrin/snowflake"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
 var (
+	V      *viper.Viper
 	DB     *gorm.DB
 	Node   *snowflake.Node
 	Router *gin.Engine
-	Config *model.Config
+	Config = ConfigYAML{}
 )

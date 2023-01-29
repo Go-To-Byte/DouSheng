@@ -2,7 +2,7 @@
 // Date: 2023/1/28 2:04
 // Software: GoLand
 
-package service
+package model
 
 type ConfigYAML struct {
 	ID       int64    `mapstructure:"ID"`

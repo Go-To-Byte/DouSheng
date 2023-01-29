@@ -6,7 +6,7 @@ package main
 
 import (
 	"context"
-	"github.com/Go-To-Byte/DouSheng/apps/user/service"
+	"github.com/Go-To-Byte/DouSheng/apps/user/model"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	router := service.Router
+	router := model.Router
 	router.GET("/", func(c *gin.Context) {
 		time.Sleep(time.Second)
 		c.String(http.StatusOK, "Welcome Gin Server")
@@ -24,7 +24,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:    ":8080",
-		Handler: service.Router,
+		Handler: model.Router,
 	}
 
 	go func() {

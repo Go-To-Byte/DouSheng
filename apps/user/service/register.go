@@ -1,13 +1,13 @@
 // Author: BeYoung
-// Date: 2023/1/27 5:52
+// Date: 2023/1/26 2:47
 // Software: GoLand
 
 package service
 
 import (
+	"github.com/Go-To-Byte/DouSheng/apps/user/dao"
+	model2 "github.com/Go-To-Byte/DouSheng/apps/user/model"
 	"github.com/Go-To-Byte/DouSheng/dal/model"
-	"github.com/Go-To-Byte/DouSheng/dao"
-	"github.com/Go-To-Byte/DouSheng/global"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
@@ -16,7 +16,7 @@ import (
 func Register(context *gin.Context) {
 	zap.S().Debugf("Register")
 	user := model.UserInfo{
-		ID:       global.Node.Generate().Int64(),
+		ID:       model2.Node.Generate().Int64(),
 		Username: context.Query("username"),
 		Passwd:   context.Query("password"),
 	}
