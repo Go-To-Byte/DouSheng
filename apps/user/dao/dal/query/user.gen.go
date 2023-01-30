@@ -28,10 +28,8 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 	tableName := _user.userDo.TableName()
 	_user.ALL = field.NewAsterisk(tableName)
 	_user.ID = field.NewInt64(tableName, "id")
-	_user.Phone = field.NewString(tableName, "phone")
-	_user.Name = field.NewString(tableName, "name")
-	_user.FollowCount = field.NewInt64(tableName, "follow_count")
-	_user.FollowerCount = field.NewInt64(tableName, "follower_count")
+	_user.Username = field.NewString(tableName, "username")
+	_user.Passwd = field.NewString(tableName, "passwd")
 
 	_user.fillFieldMap()
 
@@ -41,12 +39,10 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 type user struct {
 	userDo
 
-	ALL           field.Asterisk
-	ID            field.Int64
-	Phone         field.String
-	Name          field.String
-	FollowCount   field.Int64
-	FollowerCount field.Int64
+	ALL      field.Asterisk
+	ID       field.Int64
+	Username field.String
+	Passwd   field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -64,10 +60,8 @@ func (u user) As(alias string) *user {
 func (u *user) updateTableName(table string) *user {
 	u.ALL = field.NewAsterisk(table)
 	u.ID = field.NewInt64(table, "id")
-	u.Phone = field.NewString(table, "phone")
-	u.Name = field.NewString(table, "name")
-	u.FollowCount = field.NewInt64(table, "follow_count")
-	u.FollowerCount = field.NewInt64(table, "follower_count")
+	u.Username = field.NewString(table, "username")
+	u.Passwd = field.NewString(table, "passwd")
 
 	u.fillFieldMap()
 
@@ -84,12 +78,10 @@ func (u *user) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 5)
+	u.fieldMap = make(map[string]field.Expr, 3)
 	u.fieldMap["id"] = u.ID
-	u.fieldMap["phone"] = u.Phone
-	u.fieldMap["name"] = u.Name
-	u.fieldMap["follow_count"] = u.FollowCount
-	u.fieldMap["follower_count"] = u.FollowerCount
+	u.fieldMap["username"] = u.Username
+	u.fieldMap["passwd"] = u.Passwd
 }
 
 func (u user) clone(db *gorm.DB) user {

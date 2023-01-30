@@ -13,7 +13,7 @@ import (
 )
 
 func (r *User) Login(ctx context.Context, req *proto.LoginRequest) (*proto.LoginResponse, error) {
-	u := model.UserInfo{
+	u := model.User{
 		ID:       0,
 		Username: req.Username,
 		Passwd:   req.Password,

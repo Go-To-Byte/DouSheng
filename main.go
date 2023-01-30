@@ -6,7 +6,7 @@ package DouSheng
 
 import (
 	"context"
-	"github.com/Go-To-Byte/DouSheng/apps/user/models"
+	"github.com/Go-To-Byte/DouSheng/apps/user_info/models"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"

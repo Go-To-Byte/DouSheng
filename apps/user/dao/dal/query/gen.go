@@ -21,9 +21,9 @@ var (
 	Favorite *favorite
 	Follow   *follow
 	Follower *follower
+	Info     *info
 	Message  *message
 	User     *user
-	UserInfo *userInfo
 	Video    *video
 )
 
@@ -33,9 +33,9 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	Favorite = &Q.Favorite
 	Follow = &Q.Follow
 	Follower = &Q.Follower
+	Info = &Q.Info
 	Message = &Q.Message
 	User = &Q.User
-	UserInfo = &Q.UserInfo
 	Video = &Q.Video
 }
 
@@ -46,9 +46,9 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		Favorite: newFavorite(db, opts...),
 		Follow:   newFollow(db, opts...),
 		Follower: newFollower(db, opts...),
+		Info:     newInfo(db, opts...),
 		Message:  newMessage(db, opts...),
 		User:     newUser(db, opts...),
-		UserInfo: newUserInfo(db, opts...),
 		Video:    newVideo(db, opts...),
 	}
 }
@@ -60,9 +60,9 @@ type Query struct {
 	Favorite favorite
 	Follow   follow
 	Follower follower
+	Info     info
 	Message  message
 	User     user
-	UserInfo userInfo
 	Video    video
 }
 
@@ -75,9 +75,9 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		Favorite: q.Favorite.clone(db),
 		Follow:   q.Follow.clone(db),
 		Follower: q.Follower.clone(db),
+		Info:     q.Info.clone(db),
 		Message:  q.Message.clone(db),
 		User:     q.User.clone(db),
-		UserInfo: q.UserInfo.clone(db),
 		Video:    q.Video.clone(db),
 	}
 }
@@ -97,9 +97,9 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		Favorite: q.Favorite.replaceDB(db),
 		Follow:   q.Follow.replaceDB(db),
 		Follower: q.Follower.replaceDB(db),
+		Info:     q.Info.replaceDB(db),
 		Message:  q.Message.replaceDB(db),
 		User:     q.User.replaceDB(db),
-		UserInfo: q.UserInfo.replaceDB(db),
 		Video:    q.Video.replaceDB(db),
 	}
 }
@@ -109,9 +109,9 @@ type queryCtx struct {
 	Favorite IFavoriteDo
 	Follow   IFollowDo
 	Follower IFollowerDo
+	Info     IInfoDo
 	Message  IMessageDo
 	User     IUserDo
-	UserInfo IUserInfoDo
 	Video    IVideoDo
 }
 
@@ -121,9 +121,9 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		Favorite: q.Favorite.WithContext(ctx),
 		Follow:   q.Follow.WithContext(ctx),
 		Follower: q.Follower.WithContext(ctx),
+		Info:     q.Info.WithContext(ctx),
 		Message:  q.Message.WithContext(ctx),
 		User:     q.User.WithContext(ctx),
-		UserInfo: q.UserInfo.WithContext(ctx),
 		Video:    q.Video.WithContext(ctx),
 	}
 }

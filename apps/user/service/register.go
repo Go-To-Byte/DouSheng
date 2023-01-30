@@ -49,7 +49,7 @@ import (
 // }
 
 func (r *User) Register(ctx context.Context, req *proto.RegisterRequest) (*proto.RegisterResponse, error) {
-	u := model.UserInfo{
+	u := model.User{
 		ID:       models.Node.Generate().Int64(),
 		Username: req.Username,
 		Passwd:   req.Password,
