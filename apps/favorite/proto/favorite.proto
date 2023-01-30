@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option go_package = ".;proto";
+
+// 生成代码：
+// protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative favorite.proto
+service favorite{
+
+}
+
