@@ -5,8 +5,8 @@
 package init
 
 import (
-	"github.com/Go-To-Byte/DouSheng/apps/user/middle"
-	"github.com/Go-To-Byte/DouSheng/apps/user/models"
+	"github.com/Go-To-Byte/DouSheng/apps/info/middle"
+	"github.com/Go-To-Byte/DouSheng/apps/info/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

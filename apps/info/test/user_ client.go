@@ -10,8 +10,8 @@ import (
 	"go.uber.org/zap"
 	"time"
 
-	_ "github.com/Go-To-Byte/DouSheng/apps/user/init"
-	pb "github.com/Go-To-Byte/DouSheng/apps/user/proto"
+	_ "github.com/Go-To-Byte/DouSheng/apps/info/init"
+	pb "github.com/Go-To-Byte/DouSheng/apps/info/init"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

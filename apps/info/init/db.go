@@ -6,7 +6,7 @@ package init
 
 import (
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/apps/user/models"
+	"github.com/Go-To-Byte/DouSheng/apps/info/models"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
