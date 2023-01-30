@@ -40,8 +40,8 @@ func main() {
 	defer cancel()
 
 	r1, err := c.Register(ctx, &pb.RegisterRequest{
-		Username: "atest",
-		Password: "apptest",
+		Username: "atest1",
+		Password: "apptest2",
 	})
 	zap.S().Infof("Registered: %+v", r1)
 
