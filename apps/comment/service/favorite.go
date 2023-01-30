@@ -8,38 +8,28 @@ import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/apps/comment/dao"
 	"github.com/Go-To-Byte/DouSheng/apps/comment/dao/dal/model"
+	"github.com/Go-To-Byte/DouSheng/apps/comment/models"
 	"github.com/Go-To-Byte/DouSheng/apps/comment/proto"
+	"go.uber.org/zap"
 )
 
-func (f *Favorite) Favorite(ctx context.Context, req *proto.FavoriteRequest) (*proto.FavoriteResponse, error) {
-	favorite := model.Favorite{
-		UserID:  req.UserId,
+func (c *Comment) Favorite(ctx context.Context, req *proto.CommentRequest) (*proto.CommentResponse, error) {
+	comment := model.Comment{
+		ID:      models.Node.Generate().Int64(),
 		VideoID: req.VideoId,
-		Flag:    1,
+		UserID:  req.UserId,
+		Comment: req.Content,
 	}
-
-	if err := dao.Add(favorite); err != nil {
-		return &proto.FavoriteResponse{
-			StatusCode: 1,
-			StatusMsg:  "favorite add failed",
-		}, err
+	if err := dao.Add(comment); err != nil {
+		return &proto.CommentResponse{
+			StatusCode: 0,
+			StatusMsg:  "",
+			Comment:    req.Content,
+		}, nil
+		zap.S().Errorf("failed to add comment: %+v", comment)
 	}
-
-	return &proto.FavoriteResponse{
-		StatusCode: 0,
-		StatusMsg:  "ok",
-	}, nil
 }
 
-func (f *Favorite) FavoriteList(ctx context.Context, req *proto.FavoriteListRequest) (*proto.FavoriteListResponse, error) {
-	r := dao.FavoriteFindByUserID(req.UserId)
-	list := make([]int64, len(r))
-	for i := range r {
-		list = append(list, r[i].VideoID)
-	}
-	return &proto.FavoriteListResponse{
-		StatusCode: 0,
-		StatusMsg:  "ok",
-		VideoList:  list,
-	}, nil
+func (c *Comment) FavoriteList(ctx context.Context, req *proto.CommentListRequest) (*proto.CommentListResponse, error) {
+
 }

@@ -8,6 +8,6 @@ import (
 	"github.com/Go-To-Byte/DouSheng/apps/comment/proto"
 )
 
-type Favorite struct {
-	proto.UnimplementedFavoriteServer
+type Comment struct {
+	proto.UnimplementedCommentServer
 }

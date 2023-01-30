@@ -30,7 +30,7 @@ func newComment(db *gorm.DB, opts ...gen.DOOption) comment {
 	_comment.ID = field.NewInt64(tableName, "id")
 	_comment.VideoID = field.NewInt64(tableName, "video_id")
 	_comment.UserID = field.NewInt64(tableName, "user_id")
-	_comment.Comment = field.NewString(tableName, "comment")
+	_comment.Content = field.NewString(tableName, "content")
 
 	_comment.fillFieldMap()
 
@@ -44,7 +44,7 @@ type comment struct {
 	ID      field.Int64
 	VideoID field.Int64
 	UserID  field.Int64
-	Comment field.String
+	Content field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -64,7 +64,7 @@ func (c *comment) updateTableName(table string) *comment {
 	c.ID = field.NewInt64(table, "id")
 	c.VideoID = field.NewInt64(table, "video_id")
 	c.UserID = field.NewInt64(table, "user_id")
-	c.Comment = field.NewString(table, "comment")
+	c.Content = field.NewString(table, "content")
 
 	c.fillFieldMap()
 
@@ -85,7 +85,7 @@ func (c *comment) fillFieldMap() {
 	c.fieldMap["id"] = c.ID
 	c.fieldMap["video_id"] = c.VideoID
 	c.fieldMap["user_id"] = c.UserID
-	c.fieldMap["comment"] = c.Comment
+	c.fieldMap["content"] = c.Content
 }
 
 func (c comment) clone(db *gorm.DB) comment {
