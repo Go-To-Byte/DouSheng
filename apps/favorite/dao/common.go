@@ -6,18 +6,17 @@ package dao
 
 import (
 	"context"
-	"github.com/Go-To-Byte/DouSheng/apps/message/dao/dal/model"
-	"github.com/Go-To-Byte/DouSheng/apps/message/dao/dal/query"
-	"github.com/Go-To-Byte/DouSheng/apps/message/models"
-
+	"github.com/Go-To-Byte/DouSheng/apps/favorite/dao/dal/model"
+	"github.com/Go-To-Byte/DouSheng/apps/favorite/dao/dal/query"
+	"github.com/Go-To-Byte/DouSheng/apps/favorite/models"
 	"go.uber.org/zap"
 )
 
-func Add(message model.Message) error {
+func Add(favorite model.Favorite) error {
 	q := query.Use(models.DB)
 	tx := q.Begin()
-	if err := tx.Message.Create(&message); err != nil {
-		zap.S().Panicf("Failed add message: %v", err)
+	if err := tx.Favorite.Create(&favorite); err != nil {
+		zap.S().Panicf("Failed add favorite: %v", err)
 		return err
 	}
 	if err := tx.Commit(); err != nil {
@@ -27,11 +26,11 @@ func Add(message model.Message) error {
 	return nil
 }
 
-func MessageFindByUserID(userID int64) []*model.Message {
+func FavoriteFindByUserID(userID int64) []*model.Favorite {
 	q := query.Use(models.DB)
-	m := q.Message
+	f := q.Favorite
 
-	r, err := m.WithContext(context.Background()).Where(m.UserID.Eq(userID)).Find()
+	r, err := f.WithContext(context.Background()).Where(f.UserID.Eq(userID)).Find()
 	if err != nil {
 		zap.S().Panicf("Failed find follows: %v", userID)
 	}

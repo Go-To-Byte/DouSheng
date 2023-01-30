@@ -5,7 +5,7 @@
 package init
 
 import (
-	"github.com/Go-To-Byte/DouSheng/apps/message/models"
+	"github.com/Go-To-Byte/DouSheng/apps/favorite/models"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"

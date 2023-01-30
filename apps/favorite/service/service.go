@@ -8,6 +8,6 @@ import (
 	"github.com/Go-To-Byte/DouSheng/apps/favorite/proto"
 )
 
-type Message struct {
-	proto.UnimplementedChatServer
+type Favorite struct {
+	proto.UnimplementedFavoriteServer
 }

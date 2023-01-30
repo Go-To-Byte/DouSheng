@@ -14,7 +14,7 @@ import (
 	"net"
 	"time"
 
-	_ "github.com/Go-To-Byte/DouSheng/apps/message/init"
+	_ "github.com/Go-To-Byte/DouSheng/apps/favorite/init"
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
@@ -28,7 +28,7 @@ func main() {
 	s := grpc.NewServer()             // 注册 grpc server
 	healthcheck := health.NewServer() // 注册健康检查
 	healthgrpc.RegisterHealthServer(s, healthcheck)
-	proto.RegisterChatServer(s, &service.Message{})
+	proto.RegisterFavoriteServer(s, &service.Favorite{})
 
 	// 异步检查依赖关系并根据需要切换服务状态
 	go func() {
