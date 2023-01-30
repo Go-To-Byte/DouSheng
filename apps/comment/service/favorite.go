@@ -14,7 +14,8 @@ import (
 	"time"
 )
 
-func (c *Comment) Favorite(ctx context.Context, req *proto.CommentRequest) (*proto.CommentResponse, error) {
+func (c *Comment) Comment(ctx context.Context, req *proto.CommentRequest) (*proto.CommentResponse, error) {
+	// 从 request 获取评论信息
 	comment := model.Comment{
 		ID:      models.Node.Generate().Int64(),
 		VideoID: req.VideoId,
@@ -22,6 +23,7 @@ func (c *Comment) Favorite(ctx context.Context, req *proto.CommentRequest) (*pro
 		Content: req.Content,
 	}
 
+	// 添加评论
 	if err := dao.Add(comment); err != nil {
 		zap.S().Errorf("failed to add comment: %+v", comment)
 
@@ -32,11 +34,12 @@ func (c *Comment) Favorite(ctx context.Context, req *proto.CommentRequest) (*pro
 				Id:         0,
 				User:       0,
 				Content:    "",
-				CreateDate: 0,
+				CreateDate: "",
 			},
 		}, err
 	}
 
+	zap.S().Debugf("success to add comment: %+v", comment)
 	return &proto.CommentResponse{
 		StatusCode: 0,
 		StatusMsg:  "success",
@@ -49,6 +52,24 @@ func (c *Comment) Favorite(ctx context.Context, req *proto.CommentRequest) (*pro
 	}, nil
 }
 
-func (c *Comment) FavoriteList(ctx context.Context, req *proto.CommentListRequest) (*proto.CommentListResponse, error) {
-	
+func (c *Comment) CommentList(ctx context.Context, req *proto.CommentListRequest) (*proto.CommentListResponse, error) {
+	r := dao.CommentFindByVideoID(req.VideoId)
+	list := make([]*proto.Comment, len(r))
+
+	for i := range r {
+		comment := &proto.Comment{
+			Id:         r[i].ID,
+			User:       r[i].UserID,
+			Content:    r[i].Content,
+			CreateDate: time.Unix(r[i].ID>>22, 0).Format("2006-01-02 15:04:05"),
+		}
+		list = append(list, comment)
+	}
+
+	zap.S().Debugf("success to get comment list ==> len(comment_list): %v", len(list))
+	return &proto.CommentListResponse{
+		StatusCode:  0,
+		StatusMsg:   "success",
+		CommentList: list,
+	}, nil
 }

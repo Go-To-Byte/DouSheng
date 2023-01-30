@@ -31,7 +31,6 @@ message Comment {
 }
 
 message CommentListRequest {
-  int64 user_id = 1; // 用户鉴权token
   int64 video_id = 2; // 视频id
 }
 

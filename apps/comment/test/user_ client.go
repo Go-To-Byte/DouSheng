@@ -8,7 +8,7 @@ import (
 	"context"
 	"flag"
 	_ "github.com/Go-To-Byte/DouSheng/apps/comment/init"
-	proto2 "github.com/Go-To-Byte/DouSheng/apps/comment/proto"
+	"github.com/Go-To-Byte/DouSheng/apps/comment/proto"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -31,18 +31,20 @@ func main() {
 		zap.S().Infof("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := proto2.NewFavoriteClient(conn)
+	c := proto.NewCommentClient(conn)
 
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	f, err := c.Favorite(ctx, &proto2.FavoriteRequest{
+	f, err := c.Comment(ctx, &proto.CommentRequest{
 		UserId:     0,
 		VideoId:    0,
 		ActionType: 0,
+		Content:    "",
+		CommentId:  0,
 	})
-	zap.S().Infof("favorite: %v", f.StatusMsg)
+	zap.S().Infof("comment status: %v", f.StatusMsg)
 
 	if err != nil {
 		zap.S().Infof("could not greet: %v", err)
