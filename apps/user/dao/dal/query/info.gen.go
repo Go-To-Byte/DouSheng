@@ -28,7 +28,6 @@ func newInfo(db *gorm.DB, opts ...gen.DOOption) info {
 	tableName := _info.infoDo.TableName()
 	_info.ALL = field.NewAsterisk(tableName)
 	_info.ID = field.NewInt64(tableName, "id")
-	_info.Phone = field.NewString(tableName, "phone")
 	_info.Name = field.NewString(tableName, "name")
 	_info.FollowCount = field.NewInt64(tableName, "follow_count")
 	_info.FollowerCount = field.NewInt64(tableName, "follower_count")
@@ -43,7 +42,6 @@ type info struct {
 
 	ALL           field.Asterisk
 	ID            field.Int64
-	Phone         field.String
 	Name          field.String
 	FollowCount   field.Int64
 	FollowerCount field.Int64
@@ -64,7 +62,6 @@ func (i info) As(alias string) *info {
 func (i *info) updateTableName(table string) *info {
 	i.ALL = field.NewAsterisk(table)
 	i.ID = field.NewInt64(table, "id")
-	i.Phone = field.NewString(table, "phone")
 	i.Name = field.NewString(table, "name")
 	i.FollowCount = field.NewInt64(table, "follow_count")
 	i.FollowerCount = field.NewInt64(table, "follower_count")
@@ -84,9 +81,8 @@ func (i *info) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (i *info) fillFieldMap() {
-	i.fieldMap = make(map[string]field.Expr, 5)
+	i.fieldMap = make(map[string]field.Expr, 4)
 	i.fieldMap["id"] = i.ID
-	i.fieldMap["phone"] = i.Phone
 	i.fieldMap["name"] = i.Name
 	i.fieldMap["follow_count"] = i.FollowCount
 	i.fieldMap["follower_count"] = i.FollowerCount

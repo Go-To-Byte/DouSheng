@@ -20,7 +20,7 @@ func (u *User) Login(ctx context.Context, req *proto.LoginRequest) (*proto.Login
 	}
 
 	// 查询用户是否存在
-	results := dao.FindByName(user)
+	results := dao.UserFindByName(user)
 	if results == nil || len(results) > 1 {
 		return &proto.LoginResponse{
 			StatusCode: 6,

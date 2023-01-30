@@ -3,22 +3,24 @@ use go_to_byte;
 set FOREIGN_KEY_CHECKS = 0;
 
 drop table if exists user;
-
 drop table if exists user_follow;
-
 drop table if exists user_follower;
-
 drop table if exists user_info;
-
 drop table if exists user_message;
-
 drop table if exists video_comment;
-
 drop table if exists video_favorite;
-
 drop table if exists video_info;
+drop table if exists comment;
+drop table if exists favorite;
+drop table if exists follow;
+drop table if exists follower;
+drop table if exists info;
+drop table if exists message;
+drop table if exists user;
+drop table if exists video;
 
 set FOREIGN_KEY_CHECKS = 1;
+
 
 /*==============================================================*/
 /* Table: comment                                               */
@@ -31,7 +33,6 @@ create table comment
     comment  varchar(128) not null,
     primary key (id)
 );
-
 
 
 /*==============================================================*/
@@ -71,6 +72,19 @@ create table follower
 
 
 /*==============================================================*/
+/* Table: info                                                  */
+/*==============================================================*/
+create table info
+(
+    id             bigint   not null,
+    name           char(16) not null,
+    follow_count   int      not null,
+    follower_count int      not null,
+    primary key (id)
+);
+
+
+/*==============================================================*/
 /* Table: message                                               */
 /*==============================================================*/
 create table message
@@ -83,30 +97,18 @@ create table message
 );
 
 
+
 /*==============================================================*/
 /* Table: user                                                  */
 /*==============================================================*/
 create table user
 (
-    id             bigint   not null,
-    phone          char(11) not null,
-    name           char(16) not null,
-    follow_count   int      not null,
-    follower_count int      not null,
+    id       bigint    not null,
+    username char(16)  not null,
+    passwd   char(128) not null,
     primary key (id)
 );
 
-
-/*==============================================================*/
-/* Table: user_info                                             */
-/*==============================================================*/
-create table user_info
-(
-    id       bigint      not null,
-    username varchar(16) not null,
-    passwd   char(128)   not null,
-    primary key (id)
-);
 
 
 /*==============================================================*/
@@ -123,3 +125,5 @@ create table video
     play_url       varchar(256) not null,
     primary key (id)
 );
+
+

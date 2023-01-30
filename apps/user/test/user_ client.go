@@ -51,6 +51,13 @@ func main() {
 	})
 	zap.S().Infof("Registered: %+v", r2)
 
+	r3, err := c.Info(ctx, &pb.InfoRequest{
+		UserId: 1619766175401512960,
+		Token:  "1619766175401512960",
+	})
+
+	zap.S().Infof("Registered: %+v", r3)
+
 	if err != nil {
 		zap.S().Infof("could not greet: %v", err)
 	}

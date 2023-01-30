@@ -27,7 +27,7 @@ import (
 // 	passwd := make([]byte, 128)
 // 	copy(passwd, user.Passwd)
 //
-// 	result := dao.FindByName(user)
+// 	result := dao.UserFindByName(user)
 // 	if result == nil || len(result) > 0 {
 // 		context.JSON(http.StatusForbidden, gin.H{
 // 			"user_id":     0,
@@ -56,7 +56,7 @@ func (u *User) Register(ctx context.Context, req *proto.RegisterRequest) (*proto
 	}
 
 	// 查询用户是否存在
-	results := dao.FindByName(user)
+	results := dao.UserFindByName(user)
 	if results == nil || len(results) > 0 {
 		return &proto.RegisterResponse{
 			StatusCode: 6,

@@ -9,7 +9,6 @@ const TableNameInfo = "info"
 // Info mapped from table <info>
 type Info struct {
 	ID            int64  `gorm:"column:id;type:bigint;primaryKey" json:"id"`
-	Phone         string `gorm:"column:phone;type:char(11);not null" json:"phone"`
 	Name          string `gorm:"column:name;type:char(16);not null" json:"name"`
 	FollowCount   int64  `gorm:"column:follow_count;type:int;not null" json:"follow_count"`
 	FollowerCount int64  `gorm:"column:follower_count;type:int;not null" json:"follower_count"`
