@@ -16,7 +16,7 @@ func initConfig() {
 	models.V = viper.New()
 	models.V.SetConfigType("yaml") // set config type
 
-	models.V.SetConfigFile("config/config.yml")
+	models.V.SetConfigFile("apps/user/config/config.yml")
 	if err := models.V.ReadInConfig(); err != nil {
 		zap.S().Panicf("Error reading config file: %v", err)
 	}

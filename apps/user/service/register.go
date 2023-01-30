@@ -48,15 +48,15 @@ import (
 // 	})
 // }
 
-func (r *User) Register(ctx context.Context, req *proto.RegisterRequest) (*proto.RegisterResponse, error) {
-	u := model.User{
+func (u *User) Register(ctx context.Context, req *proto.RegisterRequest) (*proto.RegisterResponse, error) {
+	user := model.User{
 		ID:       models.Node.Generate().Int64(),
 		Username: req.Username,
 		Passwd:   req.Password,
 	}
 
 	// 查询用户是否存在
-	results := dao.FindByName(u)
+	results := dao.FindByName(user)
 	if results == nil || len(results) > 0 {
 		return &proto.RegisterResponse{
 			StatusCode: 6,
@@ -68,13 +68,13 @@ func (r *User) Register(ctx context.Context, req *proto.RegisterRequest) (*proto
 
 	// 添加用户, TODO: 密码加密
 	zap.S().Debugf("add user: %+v", u)
-	dao.Add(u)
+	dao.Add(user)
 
 	// TODO: 生成token
 	return &proto.RegisterResponse{
 		StatusCode: 0,
 		StatusMsg:  "ok",
-		UserId:     u.ID,
-		Token:      strconv.FormatInt(u.ID, 10),
+		UserId:     user.ID,
+		Token:      strconv.FormatInt(user.ID, 10),
 	}, nil
 }

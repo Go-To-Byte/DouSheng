@@ -1,0 +1,1 @@
+module github.com/Go-To-Byte/DouSheng/apps/info

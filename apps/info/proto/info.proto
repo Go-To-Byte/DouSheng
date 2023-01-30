@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option go_package = ".;proto";
+
+// 生成代码：
+// protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative user.proto
+service Info{
+  rpc info (InfoRequest)  returns (InfoResponse);
+}
+
+
+message InfoRequest {
+  int64 user_id = 1; // 用户id
+  string token = 2; // 用户鉴权token
+}
+
+message InfoResponse {
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+  User user = 3; // 用户信息
+}
+
+message User {
+  int64 id = 1; // 用户id
+  string name = 2; // 用户名称
+  int64 follow_count = 3; // 关注总数
+  int64 follower_count = 4; // 粉丝总数
+  bool is_follow = 5; // true-已关注，false-未关注
+}

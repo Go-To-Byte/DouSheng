@@ -12,15 +12,15 @@ import (
 	"strconv"
 )
 
-func (r *User) Login(ctx context.Context, req *proto.LoginRequest) (*proto.LoginResponse, error) {
-	u := model.User{
+func (u *User) Login(ctx context.Context, req *proto.LoginRequest) (*proto.LoginResponse, error) {
+	user := model.User{
 		ID:       0,
 		Username: req.Username,
 		Passwd:   req.Password,
 	}
 
 	// 查询用户是否存在
-	results := dao.FindByName(u)
+	results := dao.FindByName(user)
 	if results == nil || len(results) > 1 {
 		return &proto.LoginResponse{
 			StatusCode: 6,
@@ -32,7 +32,7 @@ func (r *User) Login(ctx context.Context, req *proto.LoginRequest) (*proto.Login
 
 	// 密码匹配，TODO: 使用加密算法匹配
 	result := results[0]
-	if u.Passwd != result.Passwd {
+	if user.Passwd != result.Passwd {
 		return &proto.LoginResponse{
 			StatusCode: 6,
 			StatusMsg:  "passwd mismatch",
