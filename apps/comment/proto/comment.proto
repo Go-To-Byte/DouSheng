@@ -27,7 +27,7 @@ message Comment {
   int64 id = 1; // 视频评论id
   int64 user = 2; // 评论用户信息
   string content = 3; // 评论内容
-  int64 create_date = 4; // 评论发布日期，格式 mm-dd
+  string create_date = 4; // 评论发布日期，格式 mm-dd
 }
 
 message CommentListRequest {

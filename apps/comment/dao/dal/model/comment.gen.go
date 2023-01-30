@@ -11,7 +11,7 @@ type Comment struct {
 	ID      int64  `gorm:"column:id;type:bigint;primaryKey" json:"id"`
 	VideoID int64  `gorm:"column:video_id;type:bigint;not null" json:"video_id"`
 	UserID  int64  `gorm:"column:user_id;type:bigint;not null" json:"user_id"`
-	Comment string `gorm:"column:comment;type:varchar(128);not null" json:"comment"`
+	Content string `gorm:"column:content;type:varchar(128);not null" json:"content"`
 }
 
 // TableName Comment's table name
