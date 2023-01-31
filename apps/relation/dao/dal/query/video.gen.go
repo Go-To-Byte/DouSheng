@@ -30,8 +30,6 @@ func newVideo(db *gorm.DB, opts ...gen.DOOption) video {
 	_video.ID = field.NewInt64(tableName, "id")
 	_video.AuthID = field.NewInt64(tableName, "auth_id")
 	_video.Titel = field.NewString(tableName, "titel")
-	_video.CommentCount = field.NewInt64(tableName, "comment_count")
-	_video.FavoriteCount = field.NewInt64(tableName, "favorite_count")
 	_video.CoverURL = field.NewString(tableName, "cover_url")
 	_video.PlayURL = field.NewString(tableName, "play_url")
 
@@ -43,14 +41,12 @@ func newVideo(db *gorm.DB, opts ...gen.DOOption) video {
 type video struct {
 	videoDo
 
-	ALL           field.Asterisk
-	ID            field.Int64
-	AuthID        field.Int64
-	Titel         field.String
-	CommentCount  field.Int64
-	FavoriteCount field.Int64
-	CoverURL      field.String
-	PlayURL       field.String
+	ALL      field.Asterisk
+	ID       field.Int64
+	AuthID   field.Int64
+	Titel    field.String
+	CoverURL field.String
+	PlayURL  field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -70,8 +66,6 @@ func (v *video) updateTableName(table string) *video {
 	v.ID = field.NewInt64(table, "id")
 	v.AuthID = field.NewInt64(table, "auth_id")
 	v.Titel = field.NewString(table, "titel")
-	v.CommentCount = field.NewInt64(table, "comment_count")
-	v.FavoriteCount = field.NewInt64(table, "favorite_count")
 	v.CoverURL = field.NewString(table, "cover_url")
 	v.PlayURL = field.NewString(table, "play_url")
 
@@ -90,12 +84,10 @@ func (v *video) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (v *video) fillFieldMap() {
-	v.fieldMap = make(map[string]field.Expr, 7)
+	v.fieldMap = make(map[string]field.Expr, 5)
 	v.fieldMap["id"] = v.ID
 	v.fieldMap["auth_id"] = v.AuthID
 	v.fieldMap["titel"] = v.Titel
-	v.fieldMap["comment_count"] = v.CommentCount
-	v.fieldMap["favorite_count"] = v.FavoriteCount
 	v.fieldMap["cover_url"] = v.CoverURL
 	v.fieldMap["play_url"] = v.PlayURL
 }

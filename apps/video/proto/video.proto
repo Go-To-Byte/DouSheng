@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option go_package = ".;proto";
+
+// 生成代码：
+// protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative video.proto
+service video{
+  rpc publish(PublishRequest) returns (PublishResponse);
+  rpc publish_list(PublishListRequest) returns (PublishListResponse);
+}
+
+message PublishRequest {
+  int64 user_id = 1; // 用户鉴权token
+  string video_url = 2; // 视频数据
+  string cover_url = 3; // 封面数据
+  string title = 4; // 视频标题
+}
+
+message PublishResponse {
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+}
+
+message PublishListRequest {
+  int64 user_id = 1; // 用户id
+}
+
+message PublishListResponse {
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+  repeated Video video_list = 3; // 用户发布的视频列表
+}
+
+message Video {
+  int64 video_id = 1; // 视频唯一标识
+  int64 user_id = 2; // 视频作者信息
+  string play_url = 3; // 视频播放地址
+  string cover_url = 4; // 视频封面地址
+  int64 favorite_count = 5; // 视频的点赞总数
+  int64 comment_count = 6; // 视频的评论总数
+  bool is_favorite = 7; // true-已点赞，false-未点赞
+  string title = 8; // 视频标题
+}
