@@ -5,8 +5,9 @@
 package models
 
 type ConfigYAML struct {
-	ID       int64    `mapstructure:"ID"`
-	DBConfig DBConfig `mapstructure:"sql"`
+	ID         int64      `mapstructure:"ID"`
+	GrpcConfig GrpcConfig `mapstructure:"grpc"`
+	DBConfig   DBConfig   `mapstructure:"sql"`
 }
 
 type DBConfig struct {
@@ -16,4 +17,9 @@ type DBConfig struct {
 	Password string `mapstructure:"password"`
 	Database string `mapstructure:"database"`
 	Charset  string `mapstructure:"charset"`
+}
+
+type GrpcConfig struct {
+	Host string `mapstructure:"host"`
+	Port string `mapstructure:"port"`
 }

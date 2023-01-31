@@ -6,5 +6,7 @@ package inits
 
 func init() {
 	initZap()
+	initConfig()
 	initRouter()
+	initGrpc()
 }

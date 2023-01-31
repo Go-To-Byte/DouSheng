@@ -4,14 +4,14 @@
 
 package models
 
-type Feed struct {
-	NextTime   int64       `json:"next_time"`
-	StatusCode int64       `json:"status_code"`
-	StatusMsg  string      `json:"status_msg"`
-	VideoList  []VideoList `json:"video_list"`
+type FeedResponse struct {
+	NextTime   int64   `json:"next_time"`
+	StatusCode int64   `json:"status_code"`
+	StatusMsg  string  `json:"status_msg"`
+	VideoList  []Video `json:"video_list"`
 }
 
-type VideoList struct {
+type Video struct {
 	Author        Author `json:"author"`
 	CommentCount  int64  `json:"comment_count"`
 	CoverURL      string `json:"cover_url"`
@@ -30,21 +30,21 @@ type Author struct {
 	Name          string `json:"name"`
 }
 
-type UserRegister struct {
+type RegisterResponse struct {
 	StatusCode int64  `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
 	Token      string `json:"token"`
 	UserID     int64  `json:"user_id"`
 }
 
-type UserLogin struct {
+type LoginResponse struct {
 	StatusCode int64  `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
 	Token      string `json:"token"`
 	UserID     int64  `json:"user_id"`
 }
 
-type UserInfo struct {
+type InfoResponse struct {
 	StatusCode int64  `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
 	User       User   `json:"user"`
@@ -58,29 +58,29 @@ type User struct {
 	Name          string `json:"name"`
 }
 
-type PublishAction struct {
+type PublishResponse struct {
 	StatusCode int64  `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
 }
 
-type PublishList struct {
-	StatusCode int64       `json:"status_code"`
-	StatusMsg  string      `json:"status_msg"`
-	VideoList  []VideoList `json:"video_list"`
+type PublishListResponse struct {
+	StatusCode int64   `json:"status_code"`
+	StatusMsg  string  `json:"status_msg"`
+	VideoList  []Video `json:"video_list"`
 }
 
-type FavoriteAction struct {
+type FavoriteResponse struct {
 	StatusCode int64  `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
 }
 
-type FavoriteList struct {
-	StatusCode string      `json:"status_code"`
-	StatusMsg  string      `json:"status_msg"`
-	VideoList  []VideoList `json:"video_list"`
+type FavoriteListResponse struct {
+	StatusCode string  `json:"status_code"`
+	StatusMsg  string  `json:"status_msg"`
+	VideoList  []Video `json:"video_list"`
 }
 
-type CommentAction struct {
+type CommentResponse struct {
 	Comment    Comment `json:"comment"`
 	StatusCode int64   `json:"status_code"`
 	StatusMsg  string  `json:"status_msg"`
@@ -93,49 +93,41 @@ type Comment struct {
 	User       User   `json:"user"`
 }
 
-type CommentList struct {
+type CommentListResponse struct {
 	Comments   []Comment `json:"comment_list"`
 	StatusCode int64     `json:"status_code"`
 	StatusMsg  string    `json:"status_msg"`
 }
 
-type RelationAction struct {
+type FollowResponse struct {
 	StatusCode int64  `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
 }
 
-type RelationFollowList struct {
-	StatusCode string     `json:"status_code"`
-	StatusMsg  string     `json:"status_msg"`
-	UserList   []UserList `json:"user_list"`
+type FollowListResponse struct {
+	StatusCode string `json:"status_code"`
+	StatusMsg  string `json:"status_msg"`
+	UserList   []User `json:"user_list"`
 }
 
-type UserList struct {
-	FollowCount   int64  `json:"follow_count"`
-	FollowerCount int64  `json:"follower_count"`
-	ID            int64  `json:"ID"`
-	IsFollow      bool   `json:"is_follow"`
-	Name          string `json:"name"`
+type FollowerListResponse struct {
+	StatusCode string `json:"status_code"`
+	StatusMsg  string `json:"status_msg"`
+	UserList   []User `json:"user_list"`
 }
 
-type RelationFollowerList struct {
-	StatusCode string     `json:"status_code"`
-	StatusMsg  string     `json:"status_msg"`
-	UserList   []UserList `json:"user_list"`
+type FriendListResponse struct {
+	StatusCode string `json:"status_code"`
+	StatusMsg  string `json:"status_msg"`
+	UserList   []User `json:"user_list"`
 }
 
-type RelationFriendList struct {
-	StatusCode string     `json:"status_code"`
-	StatusMsg  string     `json:"status_msg"`
-	UserList   []UserList `json:"user_list"`
-}
-
-type MessageAction struct {
+type MessageResponse struct {
 	StatusCode int64  `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
 }
 
-type MessageChat struct {
+type MessageListResponse struct {
 	MessageList []MessageList `json:"message_list"`
 	StatusCode  string        `json:"status_code"`
 	StatusMsg   string        `json:"status_msg"`
