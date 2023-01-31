@@ -12,26 +12,25 @@ import (
 )
 
 func (u *User) Info(ctx context.Context, req *proto.InfoRequest) (*proto.InfoResponse, error) {
-	info := model.Info{
-		ID:            req.GetUserId(),
-		Name:          "",
-		FollowCount:   0,
-		FollowerCount: 0,
+	user := model.User{
+		ID:       req.UserId,
+		Username: "",
+		Passwd:   "",
 	}
 
 	// 查询用户
-	results := dao.InfoFindByID(info)
-	userInfo := proto.Info{
-		Id:            results[0].ID,
-		Name:          results[0].Name,
-		FollowCount:   results[0].FollowCount,
-		FollowerCount: results[0].FollowerCount,
+	r := dao.UserFindById(user)
+	userInfo := proto.User{
+		Id:            r[0].ID,
+		Name:          r[0].Username,
+		FollowCount:   0,
+		FollowerCount: 0,
 		IsFollow:      false,
 	}
 
 	return &proto.InfoResponse{
 		StatusCode: 0,
 		StatusMsg:  "ok",
-		Info:       &userInfo,
+		User:       &userInfo,
 	}, nil
 }

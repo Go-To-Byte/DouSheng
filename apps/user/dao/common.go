@@ -12,22 +12,21 @@ import (
 	"go.uber.org/zap"
 )
 
-func Add(user model.User) {
+func Add(user model.User) error {
 	q := query.Use(models.DB)
-	err := q.User.Create(&user)
-	if err != nil {
-		zap.S().Panicf("Failed create user: %v", err)
+	tx := q.Begin()
+
+	if err := tx.User.Create(&user); err != nil {
+		zap.S().Panicf("Failed create user(%+v) ==> err: %v", user, err)
+		return err
 	}
-	info := model.Info{
-		ID:            user.ID,
-		Name:          user.Username,
-		FollowCount:   0,
-		FollowerCount: 0,
+
+	if err := tx.Commit(); err != nil {
+		zap.S().Panicf("Failed commit user(%+v) ==> err: %v", user, err)
+		return err
 	}
-	err = q.Info.Create(&info)
-	if err != nil {
-		zap.S().Panicf("Failed create user: %v", err)
-	}
+
+	return nil
 }
 
 func UserFindById(user model.User) []*model.User {
@@ -49,18 +48,6 @@ func UserFindByName(user model.User) []*model.User {
 		Where(u.Username.Eq(user.Username)).Find()
 	if err != nil {
 		zap.S().Panicf("Failed find user_info: %+v", user)
-		return nil
-	}
-	return r
-}
-
-func InfoFindByID(info model.Info) []*model.Info {
-	q := query.Use(models.DB)
-	i := q.Info
-	r, err := i.WithContext(context.Background()).
-		Where(i.ID.Eq(info.ID)).Find()
-	if err != nil {
-		zap.S().Panicf("Failed find user_info: %+v", info)
 		return nil
 	}
 	return r
