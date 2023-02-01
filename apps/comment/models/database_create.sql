@@ -21,109 +21,63 @@ drop table if exists video;
 
 set FOREIGN_KEY_CHECKS = 1;
 
-
-/*==============================================================*/
-/* Table: comment                                               */
-/*==============================================================*/
 create table comment
 (
-    id       bigint       not null,
+    id       bigint       not null
+        primary key,
     video_id bigint       not null,
     user_id  bigint       not null,
-    comment  varchar(128) not null,
-    primary key (id)
+    content  varchar(128) not null
 );
 
-
-/*==============================================================*/
-/* Table: favorite                                              */
-/*==============================================================*/
 create table favorite
 (
-    user_id  bigint not null,
-    video_id bigint not null,
-    flag     bool   not null,
+    user_id  bigint     not null,
+    video_id bigint     not null,
+    flag     tinyint(1) not null,
     primary key (user_id, video_id)
 );
 
-
-/*==============================================================*/
-/* Table: follow                                                */
-/*==============================================================*/
 create table follow
 (
-    follow    bigint not null,
-    to_follow bigint not null,
-    flag      bool   not null,
-    primary key (to_follow, follow)
+    user_id    bigint     not null,
+    to_user_id bigint     not null,
+    flag       tinyint(1) not null,
+    primary key (to_user_id, user_id)
 );
 
-
-/*==============================================================*/
-/* Table: follower                                              */
-/*==============================================================*/
 create table follower
 (
-    follower    bigint not null,
-    to_follower bigint not null,
-    flag        bool   not null,
-    primary key (follower, to_follower)
+    user_id    bigint     not null,
+    to_user_id bigint     not null,
+    flag       tinyint(1) not null,
+    primary key (user_id, to_user_id)
 );
 
-
-/*==============================================================*/
-/* Table: info                                                  */
-/*==============================================================*/
-create table info
-(
-    id             bigint   not null,
-    name           char(16) not null,
-    follow_count   int      not null,
-    follower_count int      not null,
-    primary key (id)
-);
-
-
-/*==============================================================*/
-/* Table: message                                               */
-/*==============================================================*/
 create table message
 (
-    id      bigint       not null,
-    send    bigint       not null,
-    receive bigint       not null,
-    content varchar(128) not null,
-    primary key (id)
+    id         bigint       not null
+        primary key,
+    user_id    bigint       not null,
+    to_user_id bigint       not null,
+    content    varchar(128) not null
 );
 
-
-
-/*==============================================================*/
-/* Table: user                                                  */
-/*==============================================================*/
 create table user
 (
-    id       bigint    not null,
-    username char(16)  not null,
-    passwd   char(128) not null,
-    primary key (id)
+    id       bigint      not null
+        primary key,
+    username varchar(16) not null,
+    passwd   char(128)   not null
 );
 
-
-
-/*==============================================================*/
-/* Table: video                                                 */
-/*==============================================================*/
 create table video
 (
-    id             bigint       not null,
-    auth_id        bigint       not null,
-    titel          varchar(128) not null,
-    comment_count  int          not null,
-    favorite_count int          not null,
-    cover_url      longtext     not null,
-    play_url       varchar(256) not null,
-    primary key (id)
+    id        bigint       not null
+        primary key,
+    auth_id   bigint       not null,
+    titel     varchar(128) not null,
+    cover_url longtext     not null,
+    play_url  varchar(256) not null
 );
-
 
