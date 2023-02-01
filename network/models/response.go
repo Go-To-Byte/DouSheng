@@ -53,7 +53,7 @@ type InfoResponse struct {
 type User struct {
 	FollowCount   int64  `json:"follow_count"`
 	FollowerCount int64  `json:"follower_count"`
-	ID            int64  `json:"ID"`
+	ID            int64  `json:"id"`
 	IsFollow      bool   `json:"is_follow"`
 	Name          string `json:"name"`
 }
