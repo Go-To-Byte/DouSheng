@@ -9,6 +9,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	proto "github.com/Go-To-Byte/DouSheng/network/protos"
 	"go.uber.org/zap"
+	"strconv"
 )
 
 // 建立 user grpc 连接, 处理用户信息
@@ -54,4 +55,14 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 	}
 
 	return response, err
+}
+
+// JWT return userID
+func JWT(token string) (userID int64, err error) {
+	// TODO: JWT Authorization
+	if userID, err = strconv.ParseInt(token, 10, 64); err == nil {
+		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
+		return
+	}
+	return
 }

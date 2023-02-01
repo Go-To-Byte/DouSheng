@@ -73,19 +73,15 @@ func Follow(ctx *gin.Context) {
 }
 
 func FollowList(ctx *gin.Context) {
-	zap.S().Debugf("Follow")
+	zap.S().Debugf("FollowList")
 	c := proto.NewRelationClient(models.GrpcConn)
 	request := proto.FollowListRequest{UserId: 0}
 
 	// TODO: JWT Authorization
 	var err error
 	token := ctx.Query("token")
-	if request.UserId, err = strconv.ParseInt(token, 10, 64); err == nil {
+	if request.UserId, err = JWT(token); err == nil {
 		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
-		ctx.JSON(http.StatusForbidden, models.FollowResponse{
-			StatusCode: 1,
-			StatusMsg:  fmt.Sprintf("Invalid token value failed: %v", token),
-		})
 		ctx.Abort()
 		return
 	}
@@ -118,9 +114,83 @@ func FollowList(ctx *gin.Context) {
 }
 
 func FollowerList(ctx *gin.Context) {
+	zap.S().Debugf("FollowerList")
+	c := proto.NewRelationClient(models.GrpcConn)
+	request := proto.FollowerListRequest{UserId: 0}
 
+	// TODO: JWT Authorization
+	var err error
+	token := ctx.Query("token")
+	if request.UserId, err = JWT(token); err == nil {
+		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
+		ctx.Abort()
+		return
+	}
+
+	// 发出请求, 获取粉丝列表 && 处理响应
+	if response, err := c.FollowerList(ctx, &request); err != nil {
+		ctx.JSON(http.StatusBadRequest, models.FollowerListResponse{
+			StatusCode: string(response.StatusCode),
+			StatusMsg:  response.StatusMsg,
+			UserList:   nil,
+		})
+	} else {
+		// 获得关注用户的id列表后，处理响应数据
+		followerListResponse := models.FollowerListResponse{
+			StatusCode: string(response.StatusCode),
+			StatusMsg:  response.StatusMsg,
+		}
+		zap.S().Debugf("relation follower list: len(user_list) = %d", len(response.UserList))
+
+		// 依据 user_id 提取 user_info
+		for i := 0; i < len(response.UserList); i++ {
+			user, err := getUserInfo(request.UserId, response.UserList[i])
+			if err != nil {
+				continue
+			}
+			followerListResponse.UserList = append(followerListResponse.UserList, user)
+		}
+		ctx.JSON(http.StatusOK, followerListResponse)
+	}
 }
 
 func FriendList(ctx *gin.Context) {
+	zap.S().Debugf("FollowerList")
+	c := proto.NewRelationClient(models.GrpcConn)
+	request := proto.FriendListRequest{UserId: 0}
 
+	// TODO: JWT Authorization
+	var err error
+	token := ctx.Query("token")
+	if request.UserId, err = JWT(token); err == nil {
+		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
+		ctx.Abort()
+		return
+	}
+
+	// 发出请求, 获取好友列表 && 处理响应
+	if response, err := c.FriendList(ctx, &request); err != nil {
+		ctx.JSON(http.StatusBadRequest, models.FriendListResponse{
+			StatusCode: string(response.StatusCode),
+			StatusMsg:  response.StatusMsg,
+			UserList:   nil,
+		})
+	} else {
+		// 获得好友的id列表后，处理响应数据
+		friendListResponse := models.FriendListResponse{
+			StatusCode: string(response.StatusCode),
+			StatusMsg:  response.StatusMsg,
+		}
+		zap.S().Debugf("relation follower list: len(user_list) = %d", len(response.UserList))
+
+		// 依据 user_id 提取 user_info
+		for i := 0; i < len(response.UserList); i++ {
+			user, err := getUserInfo(request.UserId, response.UserList[i])
+			if err != nil {
+				continue
+			}
+			friendListResponse.UserList = append(friendListResponse.UserList, user)
+		}
+		ctx.JSON(http.StatusOK, friendListResponse)
+	}
 }
