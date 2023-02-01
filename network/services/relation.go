@@ -90,7 +90,7 @@ func FollowList(ctx *gin.Context) {
 		return
 	}
 
-	// 发出请求 && 处理响应
+	// 发出请求, 获取关注列表 && 处理响应
 	if response, err := c.FollowList(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FollowListResponse{
 			StatusCode: string(response.StatusCode),
@@ -98,8 +98,8 @@ func FollowList(ctx *gin.Context) {
 			UserList:   nil,
 		})
 	} else {
-		// 处理响应数据
-		responseJson := models.FollowListResponse{
+		// 获得关注用户的id列表后，处理响应数据
+		followListResponse := models.FollowListResponse{
 			StatusCode: string(response.StatusCode),
 			StatusMsg:  response.StatusMsg,
 		}
@@ -107,20 +107,13 @@ func FollowList(ctx *gin.Context) {
 
 		// 依据 user_id 提取 user_info
 		for i := 0; i < len(response.UserList); i++ {
-			r, err := getUserInfo(response.UserList[i])
+			user, err := getUserInfo(request.UserId, response.UserList[i])
 			if err != nil {
 				continue
 			}
-			u := models.User{
-				FollowCount:   0,
-				FollowerCount: 0,
-				ID:            0,
-				IsFollow:      false,
-				Name:          "",
-			}
-			responseJson = append(responseJson.UserList)
+			followListResponse.UserList = append(followListResponse.UserList, user)
 		}
-		ctx.JSON(http.StatusOK, responseJson)
+		ctx.JSON(http.StatusOK, followListResponse)
 	}
 }
 

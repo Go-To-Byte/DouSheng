@@ -79,7 +79,7 @@ func Info(ctx *gin.Context) {
 	zap.S().Debugf("Register")
 	c := proto.NewUserClient(models.GrpcConn)
 
-	if id, err := strconv.ParseInt(ctx.Query("user_id"), 10, 64); err != nil {
+	if userID, err := strconv.ParseInt(ctx.Query("user_id"), 10, 64); err != nil {
 		zap.S().Panicf("Failed to parse user_id(%v): %v", ctx.Query("user_id"), err)
 		ctx.JSON(http.StatusBadRequest, models.InfoResponse{
 			StatusCode: 1,
@@ -89,20 +89,21 @@ func Info(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	} else {
-		request := proto.InfoRequest{UserId: id}
+		request := proto.InfoRequest{UserId: userID}
 		if response, err := c.Info(ctx, &request); err != nil {
-			zap.S().Panicf("Failed to get user info(%v): %v", id, err)
+			zap.S().Panicf("Failed to get user info(%v): %v", userID, err)
 			ctx.JSON(http.StatusBadRequest, models.InfoResponse{
 				StatusCode: 1,
-				StatusMsg:  fmt.Sprintf("Failed to get user info: %v", id),
+				StatusMsg:  fmt.Sprintf("Failed to get user info: %v", userID),
 				User:       models.User{},
 			})
 			ctx.Abort()
 			return
 		} else {
-			zap.S().Debugf("Get user info(%v): %v", id, response)
+			zap.S().Debugf("Get user info(%v): %v", userID, response)
 
 			// TODO: 调用 relation模块填充数据
+			user := getUserInfo()
 			ctx.JSON(http.StatusOK, models.InfoResponse{
 				StatusCode: 0,
 				StatusMsg:  "success",

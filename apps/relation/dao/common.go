@@ -98,6 +98,11 @@ func FindByUserIDWithToUserID(relation model.Relation) []*model.Relation {
 }
 
 func FollowJudge(relation model.Relation) bool {
+	// 如果 id 一致，直接返回 true
+	if relation.UserID == relation.ToUserID {
+		return true
+	}
+
 	q := query.Use(models.DB)
 	f := q.Relation
 
