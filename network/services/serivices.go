@@ -12,7 +12,7 @@ import (
 )
 
 // 建立 user grpc 连接, 处理用户信息
-func getUserInfo(userID int64, toUserId int64) (response *proto.InfoResponse, err error) {
+func getUserInfo(userID int64, toUserId int64) (response models.User, err error) {
 	zap.S().Debugf("get UserInfo: %d", userID)
 	user := proto.NewUserClient(models.GrpcConn)
 	relation := proto.NewRelationClient(models.GrpcConn)
@@ -28,29 +28,29 @@ func getUserInfo(userID int64, toUserId int64) (response *proto.InfoResponse, er
 	if r, e := user.Info(context.Background(), &userRequest); err != nil {
 		zap.S().Errorf("error getting user info: (%v) ==> %v", userID, e)
 	} else {
-		response.User.Name = r.User.Name
-		response.User.Id = r.User.Id
+		response.Name = r.User.Name
+		response.ID = r.User.Id
 	}
 
 	// 获取关注人数
 	if r, e := relation.FollowList(context.Background(), &followListRequest); err != nil {
 		zap.S().Errorf("error getting relation followList: (%v) ==> %v", userID, e)
 	} else {
-		response.User.FollowCount = int64(len(r.UserList))
+		response.FollowCount = int64(len(r.UserList))
 	}
 
 	// 获取粉丝人数
 	if r, e := relation.FollowerList(context.Background(), &followerListRequest); err != nil {
 		zap.S().Errorf("error getting relation followerList: (%v) ==> %v", userID, e)
 	} else {
-		response.User.FollowerCount = int64(len(r.UserList))
+		response.FollowerCount = int64(len(r.UserList))
 	}
 
 	// 获取是否关注信息
 	if r, e := relation.FollowJudge(context.Background(), &followJudgeRequest); err != nil {
 		zap.S().Errorf("error getting relation followJudge: (%v) ==> %v", userID, e)
 	} else {
-		response.User.IsFollow = r.IsFollow == 1
+		response.IsFollow = r.IsFollow == 1
 	}
 
 	return response, err

@@ -79,7 +79,22 @@ func Info(ctx *gin.Context) {
 	zap.S().Debugf("Register")
 	c := proto.NewUserClient(models.GrpcConn)
 
-	if userID, err := strconv.ParseInt(ctx.Query("user_id"), 10, 64); err != nil {
+	// TODO: JWT Authorization
+	var err error
+	var userID int64
+	token := ctx.Query("token")
+	if userID, err = strconv.ParseInt(token, 10, 64); err == nil {
+		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
+		ctx.JSON(http.StatusForbidden, models.FollowResponse{
+			StatusCode: 1,
+			StatusMsg:  fmt.Sprintf("Invalid token value failed: %v", token),
+		})
+		ctx.Abort()
+		return
+	}
+
+	// 解析查询用户的id
+	if toUserID, err := strconv.ParseInt(ctx.Query("user_id"), 10, 64); err != nil {
 		zap.S().Panicf("Failed to parse user_id(%v): %v", ctx.Query("user_id"), err)
 		ctx.JSON(http.StatusBadRequest, models.InfoResponse{
 			StatusCode: 1,
@@ -89,31 +104,25 @@ func Info(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	} else {
-		request := proto.InfoRequest{UserId: userID}
+		request := proto.InfoRequest{UserId: toUserID}
 		if response, err := c.Info(ctx, &request); err != nil {
-			zap.S().Panicf("Failed to get user info(%v): %v", userID, err)
+			zap.S().Panicf("Failed to get user info(%v): %v", toUserID, err)
 			ctx.JSON(http.StatusBadRequest, models.InfoResponse{
 				StatusCode: 1,
-				StatusMsg:  fmt.Sprintf("Failed to get user info: %v", userID),
+				StatusMsg:  fmt.Sprintf("Failed to get user info: %v", toUserID),
 				User:       models.User{},
 			})
 			ctx.Abort()
 			return
 		} else {
-			zap.S().Debugf("Get user info(%v): %v", userID, response)
+			zap.S().Debugf("Get user info(%v): %v", toUserID, response)
 
-			// TODO: 调用 relation模块填充数据
-			user := getUserInfo()
+			// 调用 relation 模块填充数据
+			user, _ := getUserInfo(userID, toUserID)
 			ctx.JSON(http.StatusOK, models.InfoResponse{
 				StatusCode: 0,
 				StatusMsg:  "success",
-				User: models.User{
-					FollowCount:   0,
-					FollowerCount: 0,
-					ID:            response.User.Id,
-					IsFollow:      false,
-					Name:          response.User.Name,
-				},
+				User:       user,
 			})
 		}
 	}
