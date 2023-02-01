@@ -53,13 +53,13 @@ func (r *Relation) FollowJudge(ctx context.Context, req *proto.FollowJudgeReques
 		return &proto.FollowJudgeResponse{
 			StatusCode: 0,
 			StatusMsg:  "success",
-			IsFriend:   1,
+			IsFollow:   1,
 		}, nil
 	}
 	return &proto.FollowJudgeResponse{
 		StatusCode: 0,
 		StatusMsg:  "success",
-		IsFriend:   0,
+		IsFollow:   0,
 	}, nil
 }
 

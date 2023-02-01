@@ -62,5 +62,5 @@ message FollowJudgeRequest {
 message FollowJudgeResponse {
   int32 status_code = 1; // 状态码，0-成功，其他值-失败
   string status_msg = 2; // 返回状态描述
-  int32 is_friend = 3; // 标志位, 1-是，其他值-否
+  int32 is_follow = 3; // 标志位, 1-是，其他值-否
 }
