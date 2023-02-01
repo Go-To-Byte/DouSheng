@@ -13,14 +13,19 @@ import (
 	"go.uber.org/zap"
 )
 
-func Add(message model.Message) error {
+func Add(message model.Message) (err error) {
 	q := query.Use(models.DB)
 	tx := q.Begin()
-	if err := tx.Message.Create(&message); err != nil {
+	defer func() {
+		if recover() != nil || err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+	if err = tx.Message.Create(&message); err != nil {
 		zap.S().Panicf("Failed add message: %v", err)
 		return err
 	}
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		zap.S().Panicf("Failed commit: %v", err)
 		return err
 	}

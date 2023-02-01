@@ -13,35 +13,21 @@ import (
 	"go.uber.org/zap"
 )
 
-func Add(userID int64, toUserID int64) error {
+func Add(relation model.Relation) (err error) {
 	q := query.Use(models.DB)
-	follow := model.Follow{
-		UserID:   userID,
-		ToUserID: toUserID,
-		Flag:     1,
-	}
-	follower := model.Follower{
-		UserID:   toUserID,
-		ToUserID: userID,
-		Flag:     1,
+	tx := q.Begin()
+	defer func() {
+		if recover() != nil || err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	if err = tx.Relation.Create(&relation); err != nil {
+		zap.S().Panicf("Failed create relation: %+v", relation)
+		return err
 	}
 
-	tx := q.Begin()
-	if err := tx.Follow.Create(&follow); err != nil {
-		zap.S().Panicf("Failed create follow: %+v", follow)
-		if err := tx.Rollback(); err != nil {
-			zap.S().Panicf("Failed rollback follow: %v", err)
-			return err
-		}
-	}
-	if err := tx.Follower.Create(&follower); err != nil {
-		zap.S().Panicf("Failed create follower: %+v", follower)
-		if err := tx.Rollback(); err != nil {
-			zap.S().Panicf("Failed rollback follower: %v", err)
-			return err
-		}
-	}
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		zap.S().Panicf("Failed commit: %v", err)
 		return err
 	}

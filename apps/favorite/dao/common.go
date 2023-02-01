@@ -12,29 +12,39 @@ import (
 	"go.uber.org/zap"
 )
 
-func Add(favorite model.Favorite) error {
+func Add(favorite model.Favorite) (err error) {
 	q := query.Use(models.DB)
 	tx := q.Begin()
-	if err := tx.Favorite.Create(&favorite); err != nil {
+	defer func() {
+		if recover() != nil || err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+	if err = tx.Favorite.Create(&favorite); err != nil {
 		zap.S().Panicf("Failed add favorite: %v", err)
 		return err
 	}
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		zap.S().Panicf("Failed commit: %v", err)
 		return err
 	}
 	return nil
 }
 
-func Delete(favorite model.Favorite) error {
+func Delete(favorite model.Favorite) (err error) {
 	q := query.Use(models.DB)
 	f := q.Favorite
 	tx := q.Begin()
-	if _, err := tx.Favorite.Where(f.UserID.Eq(favorite.UserID), f.VideoID.Eq(favorite.VideoID)).Update(f.Flag, 0); err != nil {
+	defer func() {
+		if recover() != nil || err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+	if _, err = tx.Favorite.Where(f.UserID.Eq(favorite.UserID), f.VideoID.Eq(favorite.VideoID)).Update(f.Flag, 0); err != nil {
 		zap.S().Panicf("Failed delete favorite: %v", err)
 		return err
 	}
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		zap.S().Panicf("Failed delete: %v", err)
 		return err
 	}

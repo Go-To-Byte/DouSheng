@@ -13,28 +13,40 @@ import (
 	"go.uber.org/zap"
 )
 
-func Add(video model.Video) error {
+func Add(video model.Video) (err error) {
 	q := query.Use(models.DB)
 	tx := q.Begin()
-	if err := tx.Video.Create(&video); err != nil {
+	defer func() {
+		if recover() != nil || err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	if err = tx.Video.Create(&video); err != nil {
 		zap.S().Panicf("Failed add video: %v", err)
 		return err
 	}
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		zap.S().Panicf("Failed commit add: %v", err)
 		return err
 	}
 	return nil
 }
 
-func Delete(video model.Video) error {
+func Delete(video model.Video) (err error) {
 	q := query.Use(models.DB)
 	tx := q.Begin()
-	if _, err := tx.Video.Delete(&video); err != nil {
+	defer func() {
+		if recover() != nil || err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	if _, err = tx.Video.Delete(&video); err != nil {
 		zap.S().Panicf("Failed delete video: %v", err)
 		return err
 	}
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		zap.S().Panicf("Failed commit delete: %v", err)
 		return err
 	}

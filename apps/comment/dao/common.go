@@ -12,28 +12,38 @@ import (
 	"go.uber.org/zap"
 )
 
-func Add(comment model.Comment) error {
+func Add(comment model.Comment) (err error) {
 	q := query.Use(models.DB)
 	tx := q.Begin()
-	if err := tx.Comment.Create(&comment); err != nil {
+	defer func() {
+		if recover() != nil || err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+	if err = tx.Comment.Create(&comment); err != nil {
 		zap.S().Panicf("Failed add favorite: %v", err)
 		return err
 	}
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		zap.S().Panicf("Failed commit: %v", err)
 		return err
 	}
 	return nil
 }
 
-func Delete(comment model.Comment) error {
+func Delete(comment model.Comment) (err error) {
 	q := query.Use(models.DB)
 	tx := q.Begin()
-	if _, err := tx.Comment.Delete(&comment); err != nil {
+	defer func() {
+		if recover() != nil || err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+	if _, err = tx.Comment.Delete(&comment); err != nil {
 		zap.S().Panicf("Failed add favorite: %v", err)
 		return err
 	}
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		zap.S().Panicf("Failed commit: %v", err)
 		return err
 	}
