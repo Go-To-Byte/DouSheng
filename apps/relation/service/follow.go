@@ -41,6 +41,28 @@ func (r *Relation) Follow(ctx context.Context, req *proto.FollowRequest) (*proto
 	}, nil
 }
 
+func (r *Relation) FollowJudge(ctx context.Context, req *proto.FollowJudgeRequest) (*proto.FollowJudgeResponse, error) {
+	relation := model.Relation{
+		ID:       0,
+		UserID:   req.UserId,
+		ToUserID: req.ToUserId,
+		Flag:     1,
+	}
+
+	if result := dao.FollowJudge(relation); result == true {
+		return &proto.FollowJudgeResponse{
+			StatusCode: 0,
+			StatusMsg:  "success",
+			IsFriend:   1,
+		}, nil
+	}
+	return &proto.FollowJudgeResponse{
+		StatusCode: 0,
+		StatusMsg:  "success",
+		IsFriend:   0,
+	}, nil
+}
+
 func (r *Relation) FollowList(ctx context.Context, req *proto.FollowListRequest) (*proto.FollowListResponse, error) {
 	relation := model.Relation{
 		ID:       0,
@@ -48,7 +70,7 @@ func (r *Relation) FollowList(ctx context.Context, req *proto.FollowListRequest)
 		ToUserID: 0,
 		Flag:     1,
 	}
-	result := dao.RelationFindByUserID(relation)
+	result := dao.FindByUserID(relation)
 	list := make([]int64, 0)
 	for i := range result {
 		list = append(list, result[i].ToUserID)

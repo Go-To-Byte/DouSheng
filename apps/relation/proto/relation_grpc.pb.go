@@ -23,10 +23,10 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RelationClient interface {
 	Follow(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
+	FollowJudge(ctx context.Context, in *FollowJudgeRequest, opts ...grpc.CallOption) (*FollowJudgeResponse, error)
 	FollowList(ctx context.Context, in *FollowListRequest, opts ...grpc.CallOption) (*FollowListResponse, error)
 	FollowerList(ctx context.Context, in *FollowerListRequest, opts ...grpc.CallOption) (*FollowerListResponse, error)
 	FriendList(ctx context.Context, in *FriendListRequest, opts ...grpc.CallOption) (*FriendListResponse, error)
-	FollowDelete(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
 }
 
 type relationClient struct {
@@ -40,6 +40,15 @@ func NewRelationClient(cc grpc.ClientConnInterface) RelationClient {
 func (c *relationClient) Follow(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error) {
 	out := new(FollowResponse)
 	err := c.cc.Invoke(ctx, "/relation/follow", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *relationClient) FollowJudge(ctx context.Context, in *FollowJudgeRequest, opts ...grpc.CallOption) (*FollowJudgeResponse, error) {
+	out := new(FollowJudgeResponse)
+	err := c.cc.Invoke(ctx, "/relation/follow_judge", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -73,24 +82,15 @@ func (c *relationClient) FriendList(ctx context.Context, in *FriendListRequest, 
 	return out, nil
 }
 
-func (c *relationClient) FollowDelete(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error) {
-	out := new(FollowResponse)
-	err := c.cc.Invoke(ctx, "/relation/follow_delete", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // RelationServer is the server API for Relation service.
 // All implementations must embed UnimplementedRelationServer
 // for forward compatibility
 type RelationServer interface {
 	Follow(context.Context, *FollowRequest) (*FollowResponse, error)
+	FollowJudge(context.Context, *FollowJudgeRequest) (*FollowJudgeResponse, error)
 	FollowList(context.Context, *FollowListRequest) (*FollowListResponse, error)
 	FollowerList(context.Context, *FollowerListRequest) (*FollowerListResponse, error)
 	FriendList(context.Context, *FriendListRequest) (*FriendListResponse, error)
-	FollowDelete(context.Context, *FollowRequest) (*FollowResponse, error)
 	mustEmbedUnimplementedRelationServer()
 }
 
@@ -101,6 +101,9 @@ type UnimplementedRelationServer struct {
 func (UnimplementedRelationServer) Follow(context.Context, *FollowRequest) (*FollowResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Follow not implemented")
 }
+func (UnimplementedRelationServer) FollowJudge(context.Context, *FollowJudgeRequest) (*FollowJudgeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FollowJudge not implemented")
+}
 func (UnimplementedRelationServer) FollowList(context.Context, *FollowListRequest) (*FollowListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FollowList not implemented")
 }
@@ -109,9 +112,6 @@ func (UnimplementedRelationServer) FollowerList(context.Context, *FollowerListRe
 }
 func (UnimplementedRelationServer) FriendList(context.Context, *FriendListRequest) (*FriendListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FriendList not implemented")
-}
-func (UnimplementedRelationServer) FollowDelete(context.Context, *FollowRequest) (*FollowResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FollowDelete not implemented")
 }
 func (UnimplementedRelationServer) mustEmbedUnimplementedRelationServer() {}
 
@@ -140,6 +140,24 @@ func _Relation_Follow_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RelationServer).Follow(ctx, req.(*FollowRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Relation_FollowJudge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowJudgeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RelationServer).FollowJudge(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/relation/follow_judge",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RelationServer).FollowJudge(ctx, req.(*FollowJudgeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -198,24 +216,6 @@ func _Relation_FriendList_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Relation_FollowDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FollowRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RelationServer).FollowDelete(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/relation/follow_delete",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RelationServer).FollowDelete(ctx, req.(*FollowRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Relation_ServiceDesc is the grpc.ServiceDesc for Relation service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +228,10 @@ var Relation_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Relation_Follow_Handler,
 		},
 		{
+			MethodName: "follow_judge",
+			Handler:    _Relation_FollowJudge_Handler,
+		},
+		{
 			MethodName: "follow_list",
 			Handler:    _Relation_FollowList_Handler,
 		},
@@ -238,10 +242,6 @@ var Relation_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "friend_list",
 			Handler:    _Relation_FriendList_Handler,
-		},
-		{
-			MethodName: "follow_delete",
-			Handler:    _Relation_FollowDelete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

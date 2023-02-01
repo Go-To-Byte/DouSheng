@@ -19,7 +19,7 @@ func (r *Relation) FollowerList(ctx context.Context, req *proto.FollowerListRequ
 		ToUserID: req.UserId,
 		Flag:     1,
 	}
-	result := dao.RelationFindByToUserID(relation)
+	result := dao.FindByToUserID(relation)
 	list := make([]int64, 0)
 	for i := range result {
 		list = append(list, result[i].UserID)

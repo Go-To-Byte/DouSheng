@@ -58,7 +58,7 @@ func Delete(relation model.Relation) (err error) {
 	return nil
 }
 
-func RelationFindByUserID(relation model.Relation) []*model.Relation {
+func FindByUserID(relation model.Relation) []*model.Relation {
 	q := query.Use(models.DB)
 	f := q.Relation
 
@@ -71,7 +71,7 @@ func RelationFindByUserID(relation model.Relation) []*model.Relation {
 	return r
 }
 
-func RelationFindByToUserID(relation model.Relation) []*model.Relation {
+func FindByToUserID(relation model.Relation) []*model.Relation {
 	q := query.Use(models.DB)
 	f := q.Relation
 
@@ -84,7 +84,7 @@ func RelationFindByToUserID(relation model.Relation) []*model.Relation {
 	return r
 }
 
-func RelationFindByUserIDAndToUserID(relation model.Relation) []*model.Relation {
+func FindByUserIDWithToUserID(relation model.Relation) []*model.Relation {
 	q := query.Use(models.DB)
 	f := q.Relation
 
@@ -95,4 +95,18 @@ func RelationFindByUserIDAndToUserID(relation model.Relation) []*model.Relation 
 		zap.S().Errorf("Failed find followers: %+v", relation)
 	}
 	return r
+}
+
+func FollowJudge(relation model.Relation) bool {
+	q := query.Use(models.DB)
+	f := q.Relation
+
+	r, err := f.WithContext(context.Background()).
+		Where(f.UserID.Eq(relation.UserID), f.ToUserID.Eq(relation.ToUserID), f.Flag.Eq(1)).
+		Find()
+	if err != nil {
+		zap.S().Errorf("Failed find followers: %+v", relation)
+	}
+
+	return len(r) >= 1
 }

@@ -98,14 +98,27 @@ func FollowList(ctx *gin.Context) {
 			UserList:   nil,
 		})
 	} else {
-		// 依据 user_id 提前 user_info
+		// 处理响应数据
 		responseJson := models.FollowListResponse{
 			StatusCode: string(response.StatusCode),
 			StatusMsg:  response.StatusMsg,
 		}
+		zap.S().Debugf("relation follow list: len(user_list) = %d", len(response.UserList))
 
+		// 依据 user_id 提取 user_info
 		for i := 0; i < len(response.UserList); i++ {
-
+			r, err := getUserInfo(response.UserList[i])
+			if err != nil {
+				continue
+			}
+			u := models.User{
+				FollowCount:   0,
+				FollowerCount: 0,
+				ID:            0,
+				IsFollow:      false,
+				Name:          "",
+			}
+			responseJson = append(responseJson.UserList)
 		}
 		ctx.JSON(http.StatusOK, responseJson)
 	}
