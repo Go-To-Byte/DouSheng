@@ -8,11 +8,13 @@ const TableNameVideo = "video"
 
 // Video mapped from table <video>
 type Video struct {
-	ID       int64  `gorm:"column:id;type:bigint;primaryKey" json:"id"`
-	AuthID   int64  `gorm:"column:auth_id;type:bigint;not null" json:"auth_id"`
-	Titel    string `gorm:"column:titel;type:varchar(128);not null" json:"titel"`
-	CoverURL string `gorm:"column:cover_url;type:longtext;not null" json:"cover_url"`
-	PlayURL  string `gorm:"column:play_url;type:varchar(256);not null" json:"play_url"`
+	ID            int64  `gorm:"column:id;type:bigint;primaryKey" json:"id"`
+	AuthID        int64  `gorm:"column:auth_id;type:bigint;not null" json:"auth_id"`
+	Titel         string `gorm:"column:titel;type:varchar(128);not null" json:"titel"`
+	CommentCount  int64  `gorm:"column:comment_count;type:int;not null" json:"comment_count"`
+	FavoriteCount int64  `gorm:"column:favorite_count;type:int;not null" json:"favorite_count"`
+	CoverURL      string `gorm:"column:cover_url;type:longtext;not null" json:"cover_url"`
+	PlayURL       string `gorm:"column:play_url;type:varchar(256);not null" json:"play_url"`
 }
 
 // TableName Video's table name

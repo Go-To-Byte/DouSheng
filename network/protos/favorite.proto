@@ -7,6 +7,7 @@ option go_package = ".;proto";
 service favorite{
   rpc favorite(FavoriteRequest) returns (FavoriteResponse);
   rpc favorite_list(FavoriteListRequest) returns (FavoriteListResponse);
+  rpc favorite_delete(FavoriteRequest) returns (FavoriteResponse);
 }
 
 message FavoriteRequest {

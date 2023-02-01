@@ -8,11 +8,13 @@ import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/apps/favorite/dao"
 	"github.com/Go-To-Byte/DouSheng/apps/favorite/dao/dal/model"
+	"github.com/Go-To-Byte/DouSheng/apps/favorite/models"
 	"github.com/Go-To-Byte/DouSheng/apps/favorite/proto"
 )
 
 func (f *Favorite) Favorite(ctx context.Context, req *proto.FavoriteRequest) (*proto.FavoriteResponse, error) {
 	favorite := model.Favorite{
+		ID:      models.Node.Generate().Int64(),
 		UserID:  req.UserId,
 		VideoID: req.VideoId,
 		Flag:    1,
@@ -22,6 +24,27 @@ func (f *Favorite) Favorite(ctx context.Context, req *proto.FavoriteRequest) (*p
 		return &proto.FavoriteResponse{
 			StatusCode: 1,
 			StatusMsg:  "favorite add failed",
+		}, err
+	}
+
+	return &proto.FavoriteResponse{
+		StatusCode: 0,
+		StatusMsg:  "ok",
+	}, nil
+}
+
+func (f *Favorite) FavoriteDelete(ctx context.Context, req *proto.FavoriteRequest) (*proto.FavoriteResponse, error) {
+	favorite := model.Favorite{
+		ID:      0,
+		UserID:  req.UserId,
+		VideoID: req.VideoId,
+		Flag:    1,
+	}
+
+	if err := dao.Delete(favorite); err != nil {
+		return &proto.FavoriteResponse{
+			StatusCode: 1,
+			StatusMsg:  "favorite delete failed",
 		}, err
 	}
 

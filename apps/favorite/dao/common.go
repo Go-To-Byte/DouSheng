@@ -26,11 +26,26 @@ func Add(favorite model.Favorite) error {
 	return nil
 }
 
+func Delete(favorite model.Favorite) error {
+	q := query.Use(models.DB)
+	f := q.Favorite
+	tx := q.Begin()
+	if _, err := tx.Favorite.Where(f.UserID.Eq(favorite.UserID), f.VideoID.Eq(favorite.VideoID)).Update(f.Flag, 0); err != nil {
+		zap.S().Panicf("Failed delete favorite: %v", err)
+		return err
+	}
+	if err := tx.Commit(); err != nil {
+		zap.S().Panicf("Failed delete: %v", err)
+		return err
+	}
+	return nil
+}
+
 func FavoriteFindByUserID(userID int64) []*model.Favorite {
 	q := query.Use(models.DB)
 	f := q.Favorite
 
-	r, err := f.WithContext(context.Background()).Where(f.UserID.Eq(userID)).Find()
+	r, err := f.WithContext(context.Background()).Where(f.UserID.Eq(userID), f.Flag.Eq(1)).Find()
 	if err != nil {
 		zap.S().Panicf("Failed find follows: %v", userID)
 	}
