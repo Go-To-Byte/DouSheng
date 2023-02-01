@@ -12,8 +12,8 @@ import (
 func User() {
 	u := models.Router.Group("/douyin/user")
 	{
-		u.GET("/")
-		u.POST("/login")
+		u.GET("/", services.Info)
+		u.POST("/login", services.Login)
 		u.POST("/register", services.Register)
 	}
 }
