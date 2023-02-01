@@ -20,31 +20,20 @@ func (r *Relation) Follow(ctx context.Context, req *proto.FollowRequest) (*proto
 		ToUserID: req.ToUserId,
 		Flag:     1,
 	}
-	if err := dao.Add(relation); err != nil {
-		return &proto.FollowResponse{
-			StatusCode: 1,
-			StatusMsg:  "failed add follow",
-		}, err
-	}
-	return &proto.FollowResponse{
-		StatusCode: 0,
-		StatusMsg:  "success",
-	}, nil
-}
-
-func (r *Relation) FollowDelete(ctx context.Context, req *proto.FollowRequest) (*proto.FollowResponse, error) {
-	relation := model.Relation{
-		ID:       0,
-		UserID:   req.UserId,
-		ToUserID: req.ToUserId,
-		Flag:     0,
-	}
-
-	if err := dao.Delete(relation); err != nil {
-		return &proto.FollowResponse{
-			StatusCode: 1,
-			StatusMsg:  "failed delete follow",
-		}, err
+	if req.ActionType == 1 {
+		if err := dao.Add(relation); err != nil {
+			return &proto.FollowResponse{
+				StatusCode: 1,
+				StatusMsg:  "failed add follow",
+			}, err
+		}
+	} else if req.ActionType == 2 {
+		if err := dao.Delete(relation); err != nil {
+			return &proto.FollowResponse{
+				StatusCode: 1,
+				StatusMsg:  "failed delete follow",
+			}, err
+		}
 	}
 	return &proto.FollowResponse{
 		StatusCode: 0,
@@ -60,7 +49,7 @@ func (r *Relation) FollowList(ctx context.Context, req *proto.FollowListRequest)
 		Flag:     1,
 	}
 	result := dao.RelationFindByUserID(relation)
-	list := make([]int64, len(result))
+	list := make([]int64, 0)
 	for i := range result {
 		list = append(list, result[i].ToUserID)
 	}

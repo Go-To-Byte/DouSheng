@@ -9,7 +9,6 @@ service relation{
   rpc follow_list(FollowListRequest) returns (FollowListResponse);
   rpc follower_list(FollowerListRequest) returns (FollowerListResponse);
   rpc friend_list(FriendListRequest) returns (FriendListResponse);
-  rpc follow_delete(FollowRequest) returns (FollowResponse);
 }
 
 message FollowRequest {

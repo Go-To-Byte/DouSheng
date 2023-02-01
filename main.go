@@ -2,7 +2,9 @@
 // Date: 2023/1/25 23:50
 // Software: GoLand
 
-package DouSheng
+package main
+
+import "fmt"
 
 func main() {
 	// router := models.Router
@@ -35,4 +37,12 @@ func main() {
 	// 	log.Fatal("Server Shutdown:", err)
 	// }
 	// log.Println("Server exiting")
+	i64 := make([]int64, 2)
+	i64 = append(i64, 1)
+	i64 = append(i64, 1)
+	i64 = append(i64, 1)
+	i64 = append(i64, 1)
+	i64 = append(i64, 1)
+	i64 = append(i64, 1)
+	fmt.Println(len(i64), cap(i64))
 }

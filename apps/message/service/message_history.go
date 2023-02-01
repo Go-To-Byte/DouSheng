@@ -17,7 +17,7 @@ func (m *Message) MessageHistory(ctx context.Context, req *proto.MessageListRequ
 	r1 := dao.MessageFindByUserID(req.UserId)
 	r2 := dao.MessageFindByUserID(req.ToUserId)
 
-	messages := make([]*proto.Message, len(r1)+len(r2))
+	messages := make([]*proto.Message, 0)
 
 	// 合并所有聊天记录
 	for i := 0; i < len(r1); i++ {

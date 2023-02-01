@@ -56,7 +56,7 @@ func (f *Favorite) FavoriteDelete(ctx context.Context, req *proto.FavoriteReques
 
 func (f *Favorite) FavoriteList(ctx context.Context, req *proto.FavoriteListRequest) (*proto.FavoriteListResponse, error) {
 	r := dao.FavoriteFindByUserID(req.UserId)
-	list := make([]int64, len(r))
+	list := make([]int64, 0)
 	for i := range r {
 		list = append(list, r[i].VideoID)
 	}

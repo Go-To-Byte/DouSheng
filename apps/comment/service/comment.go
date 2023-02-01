@@ -54,7 +54,7 @@ func (c *Comment) Comment(ctx context.Context, req *proto.CommentRequest) (*prot
 
 func (c *Comment) CommentList(ctx context.Context, req *proto.CommentListRequest) (*proto.CommentListResponse, error) {
 	r := dao.CommentFindByVideoID(req.VideoId)
-	list := make([]*proto.Comment, len(r))
+	list := make([]*proto.Comment, 0)
 
 	for i := range r {
 		comment := &proto.Comment{

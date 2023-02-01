@@ -21,7 +21,7 @@ func (r *Relation) FriendList(ctx context.Context, req *proto.FriendListRequest)
 	}
 	result := dao.RelationFindByUserIDAndToUserID(relation)
 
-	list := make([]int64, len(result))
+	list := make([]int64, 0)
 	for i := range result {
 		list = append(list, result[i].UserID)
 	}

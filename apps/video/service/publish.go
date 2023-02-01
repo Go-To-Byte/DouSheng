@@ -42,7 +42,7 @@ func (v *Video) Publish(ctx context.Context, req *proto.PublishRequest) (*proto.
 
 func (v *Video) PublishList(ctx context.Context, req *proto.PublishListRequest) (*proto.PublishListResponse, error) {
 	r := dao.VideoFindByUserID(req.UserId)
-	list := make([]*proto.Video, len(r))
+	list := make([]*proto.Video, 0)
 
 	for i := range r {
 		video := &proto.Video{
