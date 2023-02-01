@@ -26,6 +26,7 @@ type RelationClient interface {
 	FollowList(ctx context.Context, in *FollowListRequest, opts ...grpc.CallOption) (*FollowListResponse, error)
 	FollowerList(ctx context.Context, in *FollowerListRequest, opts ...grpc.CallOption) (*FollowerListResponse, error)
 	FriendList(ctx context.Context, in *FriendListRequest, opts ...grpc.CallOption) (*FriendListResponse, error)
+	FollowDelete(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
 }
 
 type relationClient struct {
@@ -47,7 +48,7 @@ func (c *relationClient) Follow(ctx context.Context, in *FollowRequest, opts ...
 
 func (c *relationClient) FollowList(ctx context.Context, in *FollowListRequest, opts ...grpc.CallOption) (*FollowListResponse, error) {
 	out := new(FollowListResponse)
-	err := c.cc.Invoke(ctx, "/relation/followList", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/relation/follow_list", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +57,7 @@ func (c *relationClient) FollowList(ctx context.Context, in *FollowListRequest, 
 
 func (c *relationClient) FollowerList(ctx context.Context, in *FollowerListRequest, opts ...grpc.CallOption) (*FollowerListResponse, error) {
 	out := new(FollowerListResponse)
-	err := c.cc.Invoke(ctx, "/relation/followerList", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/relation/follower_list", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +66,16 @@ func (c *relationClient) FollowerList(ctx context.Context, in *FollowerListReque
 
 func (c *relationClient) FriendList(ctx context.Context, in *FriendListRequest, opts ...grpc.CallOption) (*FriendListResponse, error) {
 	out := new(FriendListResponse)
-	err := c.cc.Invoke(ctx, "/relation/friendList", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/relation/friend_list", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *relationClient) FollowDelete(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error) {
+	out := new(FollowResponse)
+	err := c.cc.Invoke(ctx, "/relation/follow_delete", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +90,7 @@ type RelationServer interface {
 	FollowList(context.Context, *FollowListRequest) (*FollowListResponse, error)
 	FollowerList(context.Context, *FollowerListRequest) (*FollowerListResponse, error)
 	FriendList(context.Context, *FriendListRequest) (*FriendListResponse, error)
+	FollowDelete(context.Context, *FollowRequest) (*FollowResponse, error)
 	mustEmbedUnimplementedRelationServer()
 }
 
@@ -98,6 +109,9 @@ func (UnimplementedRelationServer) FollowerList(context.Context, *FollowerListRe
 }
 func (UnimplementedRelationServer) FriendList(context.Context, *FriendListRequest) (*FriendListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FriendList not implemented")
+}
+func (UnimplementedRelationServer) FollowDelete(context.Context, *FollowRequest) (*FollowResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FollowDelete not implemented")
 }
 func (UnimplementedRelationServer) mustEmbedUnimplementedRelationServer() {}
 
@@ -140,7 +154,7 @@ func _Relation_FollowList_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/relation/followList",
+		FullMethod: "/relation/follow_list",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RelationServer).FollowList(ctx, req.(*FollowListRequest))
@@ -158,7 +172,7 @@ func _Relation_FollowerList_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/relation/followerList",
+		FullMethod: "/relation/follower_list",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RelationServer).FollowerList(ctx, req.(*FollowerListRequest))
@@ -176,10 +190,28 @@ func _Relation_FriendList_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/relation/friendList",
+		FullMethod: "/relation/friend_list",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RelationServer).FriendList(ctx, req.(*FriendListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Relation_FollowDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RelationServer).FollowDelete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/relation/follow_delete",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RelationServer).FollowDelete(ctx, req.(*FollowRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -196,16 +228,20 @@ var Relation_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Relation_Follow_Handler,
 		},
 		{
-			MethodName: "followList",
+			MethodName: "follow_list",
 			Handler:    _Relation_FollowList_Handler,
 		},
 		{
-			MethodName: "followerList",
+			MethodName: "follower_list",
 			Handler:    _Relation_FollowerList_Handler,
 		},
 		{
-			MethodName: "friendList",
+			MethodName: "friend_list",
 			Handler:    _Relation_FriendList_Handler,
+		},
+		{
+			MethodName: "follow_delete",
+			Handler:    _Relation_FollowDelete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

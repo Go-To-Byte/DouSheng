@@ -7,29 +7,28 @@ package service
 import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/apps/relation/dao"
+	"github.com/Go-To-Byte/DouSheng/apps/relation/dao/dal/model"
 	"github.com/Go-To-Byte/DouSheng/apps/relation/proto"
 	"go.uber.org/zap"
 )
 
 func (r *Relation) FollowerList(ctx context.Context, req *proto.FollowerListRequest) (*proto.FollowerListResponse, error) {
-	result := dao.FollowersFindByID(req.UserId)
+	relation := model.Relation{
+		ID:       0,
+		UserID:   0,
+		ToUserID: req.UserId,
+		Flag:     1,
+	}
+	result := dao.RelationFindByToUserID(relation)
 	list := make([]int64, len(result))
 	for i := range result {
-		list = append(list, result[i].ToUserID)
+		list = append(list, result[i].UserID)
 	}
 	zap.S().Debugf("id:%v ==> len(follower):%v", req.UserId, len(list))
 
-	if len(list) == 0 {
-		return &proto.FollowerListResponse{
-			StatusCode: 1,
-			StatusMsg:  "failed to follow list",
-			UserList:   nil,
-		}, nil
-	}
-
 	return &proto.FollowerListResponse{
 		StatusCode: 0,
-		StatusMsg:  "ok",
+		StatusMsg:  "success",
 		UserList:   list,
 	}, nil
 }

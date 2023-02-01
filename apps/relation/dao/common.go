@@ -34,42 +34,65 @@ func Add(relation model.Relation) (err error) {
 	return nil
 }
 
-func FollowsFindByID(userID int64) []*model.Follow {
+func Delete(relation model.Relation) (err error) {
 	q := query.Use(models.DB)
-	f := q.Follow
+	r := q.Relation
+	tx := q.Begin()
+	defer func() {
+		if recover() != nil || err != nil {
+			_ = tx.Rollback()
+		}
+	}()
 
-	r, err := f.WithContext(context.Background()).Where(f.UserID.Eq(userID)).Find()
+	if _, err = tx.WithContext(context.Background()).Relation.
+		Where(r.UserID.Eq(relation.UserID), r.ToUserID.Eq(relation.ToUserID)).
+		Update(r.Flag, 0); err != nil {
+		zap.S().Panicf("Failed delete relation: %+v", relation)
+		return err
+	}
+
+	if err = tx.Commit(); err != nil {
+		zap.S().Panicf("Failed commit: %v", err)
+		return err
+	}
+	return nil
+}
+
+func RelationFindByUserID(relation model.Relation) []*model.Relation {
+	q := query.Use(models.DB)
+	f := q.Relation
+
+	r, err := f.WithContext(context.Background()).
+		Where(f.UserID.Eq(relation.UserID), f.Flag.Eq(1)).
+		Find()
 	if err != nil {
-		zap.S().Panicf("Failed find follows: %v", userID)
+		zap.S().Errorf("Failed find follows: %v", relation.UserID)
 	}
 	return r
 }
 
-func FollowersFindByID(userID int64) []*model.Follower {
+func RelationFindByToUserID(relation model.Relation) []*model.Relation {
 	q := query.Use(models.DB)
-	f := q.Follower
+	f := q.Relation
 
-	r, err := f.WithContext(context.Background()).Where(f.UserID.Eq(userID)).Find()
+	r, err := f.WithContext(context.Background()).
+		Where(f.UserID.Eq(relation.ToUserID), f.Flag.Eq(1)).
+		Find()
 	if err != nil {
-		zap.S().Panicf("Failed find follows: %v", userID)
+		zap.S().Errorf("Failed find followers: %+v", relation)
 	}
 	return r
 }
 
-func FriendsFindByID(userID int64) []int64 {
-	follows := FollowsFindByID(userID)
-	followers := FollowersFindByID(userID)
-	var hash = map[int64]bool{}
-	list := make([]int64, 5)
-	for i := range follows {
-		if follows[i].Flag != 0 {
-			hash[follows[i].ToUserID] = true
-		}
+func RelationFindByUserIDAndToUserID(relation model.Relation) []*model.Relation {
+	q := query.Use(models.DB)
+	f := q.Relation
+
+	r, err := f.WithContext(context.Background()).
+		Where(f.UserID.Eq(relation.UserID), f.ToUserID.Eq(relation.ToUserID), f.Flag.Eq(1)).
+		Find()
+	if err != nil {
+		zap.S().Errorf("Failed find followers: %+v", relation)
 	}
-	for i := range followers {
-		if hash[followers[i].ToUserID] && followers[i].Flag != 0 {
-			list = append(list, followers[i].ToUserID)
-		}
-	}
-	return list
+	return r
 }
