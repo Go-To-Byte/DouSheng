@@ -12,6 +12,6 @@ import (
 func initPort() {
 	port, err := service.GetFreePort()
 	if err == nil {
-		models.Port = port
+		models.Config.Localhost.Port = port
 	}
 }

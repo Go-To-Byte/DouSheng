@@ -15,8 +15,8 @@ import (
 // get gorm DB
 func initDB() {
 	cnd := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=%s&parseTime=True",
-		models.Config.DBConfig.User, models.Config.DBConfig.Password, models.Config.DBConfig.Host,
-		models.Config.DBConfig.Port, models.Config.DBConfig.Database, models.Config.DBConfig.Charset)
+		models.Config.DB.User, models.Config.DB.Password, models.Config.DB.Host,
+		models.Config.DB.Port, models.Config.DB.Database, models.Config.DB.Charset)
 	driver := mysql.Open(cnd)
 
 	zap.S().Debugf("connecting to %s", cnd)

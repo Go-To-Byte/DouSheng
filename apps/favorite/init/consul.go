@@ -13,7 +13,7 @@ import (
 // 注册服务
 func initConsul() {
 	cfg := api.DefaultConfig()
-	cfg.Address = "192.168.75.141:8500"
+	cfg.Address = fmt.Sprintf("%v:%v", models.Config.Consul.Host, models.Config.Consul.Port)
 
 	client, err := api.NewClient(cfg)
 	if err != nil {
@@ -21,7 +21,7 @@ func initConsul() {
 	}
 	// 生成对应的检查对象
 	check := &api.AgentServiceCheck{
-		GRPC:                           fmt.Sprintf("192.168.10.5:%v", models.Port),
+		GRPC:                           fmt.Sprintf("%v:%v", models.Config.Localhost.Host, models.Config.Localhost.Port),
 		Timeout:                        "5s",
 		Interval:                       "5s",
 		DeregisterCriticalServiceAfter: "10s",
@@ -29,11 +29,11 @@ func initConsul() {
 
 	// 生成注册对象
 	registration := new(api.AgentServiceRegistration)
-	registration.Name = "user"
+	registration.Name = models.Config.Consul.Name
 	registration.ID = models.Node.Generate().String()
-	registration.Port = models.Port
-	registration.Tags = []string{"user"}
-	registration.Address = "192.168.10.5"
+	registration.Port = models.Config.Localhost.Port
+	registration.Tags = []string{models.Config.Consul.Tags}
+	registration.Address = models.Config.Localhost.Host
 	registration.Check = check
 
 	err = client.Agent().ServiceRegister(registration)

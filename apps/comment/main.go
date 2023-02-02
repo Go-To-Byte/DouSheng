@@ -6,6 +6,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/apps/comment/models"
 	"github.com/Go-To-Byte/DouSheng/apps/comment/proto"
 	"github.com/Go-To-Byte/DouSheng/apps/comment/service"
 	"go.uber.org/zap"
@@ -20,7 +21,7 @@ import (
 )
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 50051))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", models.Config.Localhost.Port))
 	if err != nil {
 		zap.S().Infof("failed to listen: %v", err)
 	}

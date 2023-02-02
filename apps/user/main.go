@@ -21,7 +21,7 @@ import (
 )
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", models.Port))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", models.Config.Localhost.Port))
 	if err != nil {
 		zap.S().Infof("failed to listen: %v", err)
 	}

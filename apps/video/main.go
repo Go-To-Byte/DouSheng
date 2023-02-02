@@ -6,6 +6,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/apps/video/models"
 	"github.com/Go-To-Byte/DouSheng/apps/video/proto"
 	"github.com/Go-To-Byte/DouSheng/apps/video/service"
 
@@ -21,7 +22,7 @@ import (
 )
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 50051))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", models.Config.Localhost.Port))
 	if err != nil {
 		zap.S().Infof("failed to listen: %v", err)
 	}
