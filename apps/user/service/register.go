@@ -67,7 +67,7 @@ func (u *User) Register(ctx context.Context, req *proto.RegisterRequest) (*proto
 	}
 
 	// 添加用户, TODO: 密码加密
-	zap.S().Debugf("add user: %+v", u)
+	zap.S().Debugf("add user: %+v", user)
 	err := dao.Add(user)
 	if err != nil {
 		return nil, err

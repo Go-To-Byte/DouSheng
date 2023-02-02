@@ -6,6 +6,7 @@ package services
 
 import (
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/network/milddlewares"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	proto "github.com/Go-To-Byte/DouSheng/network/protos"
 	"github.com/gin-gonic/gin"
@@ -34,12 +35,26 @@ func Register(ctx *gin.Context) {
 			UserID:     0,
 		})
 		ctx.Abort()
+		return
 	} else {
 		zap.S().Debugf("Registered: %+v", response)
+		jwt := milddlewares.NewJWT()
+		token, err := jwt.CreateToken(response.UserId)
+		if err != nil {
+			zap.S().Panicf("Failed to register: %v", &request)
+			ctx.JSON(http.StatusBadRequest, models.RegisterResponse{
+				StatusCode: 1,
+				StatusMsg:  "failed to register",
+				Token:      "",
+				UserID:     0,
+			})
+			ctx.Abort()
+			return
+		}
 		ctx.JSON(http.StatusOK, models.RegisterResponse{
 			StatusCode: 0,
 			StatusMsg:  "success",
-			Token:      strconv.FormatInt(response.UserId, 10),
+			Token:      token,
 			UserID:     response.UserId,
 		})
 	}
@@ -66,10 +81,22 @@ func Login(ctx *gin.Context) {
 		ctx.Abort()
 	} else {
 		zap.S().Debugf("login: %+v", response)
+		jwt := milddlewares.NewJWT()
+		token, err := jwt.CreateToken(response.UserId)
+		if err != nil {
+			zap.S().Panicf("Failed to login: %v", &request)
+			ctx.JSON(http.StatusBadRequest, models.LoginResponse{
+				StatusCode: 1,
+				StatusMsg:  "failed to login",
+				Token:      "",
+				UserID:     0,
+			})
+			ctx.Abort()
+		}
 		ctx.JSON(http.StatusOK, models.LoginResponse{
 			StatusCode: 0,
 			StatusMsg:  "success",
-			Token:      strconv.FormatInt(response.UserId, 10),
+			Token:      token,
 			UserID:     response.UserId,
 		})
 	}
@@ -79,11 +106,11 @@ func Info(ctx *gin.Context) {
 	zap.S().Debugf("Register")
 	c := proto.NewUserClient(models.GrpcConn)
 
-	// TODO: JWT Authorization
+	// JWT Authorization
 	var err error
-	var userID int64
-	token := ctx.Query("token")
-	if userID, err = strconv.ParseInt(token, 10, 64); err == nil {
+	jwt := milddlewares.NewJWT()
+	token := &models.TokenClaims{}
+	if token, err = jwt.ParseToken(ctx.Query("token")); err != nil {
 		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
 		ctx.JSON(http.StatusForbidden, models.FollowResponse{
 			StatusCode: 1,
@@ -94,7 +121,8 @@ func Info(ctx *gin.Context) {
 	}
 
 	// 解析查询用户的id
-	if toUserID, err := strconv.ParseInt(ctx.Query("user_id"), 10, 64); err != nil {
+	var toUserID int64
+	if toUserID, err = strconv.ParseInt(ctx.Query("user_id"), 10, 64); err != nil {
 		zap.S().Panicf("Failed to parse user_id(%v): %v", ctx.Query("user_id"), err)
 		ctx.JSON(http.StatusBadRequest, models.InfoResponse{
 			StatusCode: 1,
@@ -103,27 +131,27 @@ func Info(ctx *gin.Context) {
 		})
 		ctx.Abort()
 		return
-	} else {
-		request := proto.InfoRequest{UserId: toUserID}
-		if response, err := c.Info(ctx, &request); err != nil {
-			zap.S().Panicf("Failed to get user info(%v): %v", toUserID, err)
-			ctx.JSON(http.StatusBadRequest, models.InfoResponse{
-				StatusCode: 1,
-				StatusMsg:  fmt.Sprintf("Failed to get user info: %v", toUserID),
-				User:       models.User{},
-			})
-			ctx.Abort()
-			return
-		} else {
-			zap.S().Debugf("Get user info(%v): %v", toUserID, response)
+	}
 
-			// 调用 relation 模块填充数据
-			user, _ := getUserInfo(userID, toUserID)
-			ctx.JSON(http.StatusOK, models.InfoResponse{
-				StatusCode: 0,
-				StatusMsg:  "success",
-				User:       user,
-			})
-		}
+	request := proto.InfoRequest{UserId: toUserID}
+	if response, err := c.Info(ctx, &request); err != nil {
+		zap.S().Errorf("Failed to get user info(%v): %v", toUserID, err)
+		ctx.JSON(http.StatusBadRequest, models.InfoResponse{
+			StatusCode: 1,
+			StatusMsg:  fmt.Sprintf("Failed to get user info: %v", toUserID),
+			User:       models.User{},
+		})
+		ctx.Abort()
+		return
+	} else {
+		zap.S().Debugf("Get user info(%v): %v", toUserID, response)
+
+		// 调用 relation 模块填充数据
+		user, _ := getUserInfo(token.ID, toUserID)
+		ctx.JSON(http.StatusOK, models.InfoResponse{
+			StatusCode: 0,
+			StatusMsg:  "success",
+			User:       user,
+		})
 	}
 }

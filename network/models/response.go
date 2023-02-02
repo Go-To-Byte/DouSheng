@@ -12,22 +12,14 @@ type FeedResponse struct {
 }
 
 type Video struct {
-	Author        Author `json:"author"`
+	Author        User   `json:"author"`
 	CommentCount  int64  `json:"comment_count"`
 	CoverURL      string `json:"cover_url"`
 	FavoriteCount int64  `json:"favorite_count"`
-	ID            int64  `json:"ID"`
+	ID            int64  `json:"id"`
 	IsFavorite    bool   `json:"is_favorite"`
 	PlayURL       string `json:"play_url"`
 	Title         string `json:"title"`
-}
-
-type Author struct {
-	FollowCount   int64  `json:"follow_count"`
-	FollowerCount int64  `json:"follower_count"`
-	ID            int64  `json:"ID"`
-	IsFollow      bool   `json:"is_follow"`
-	Name          string `json:"name"`
 }
 
 type RegisterResponse struct {
@@ -89,7 +81,7 @@ type CommentResponse struct {
 type Comment struct {
 	Content    string `json:"content"`
 	CreateDate string `json:"create_date"`
-	ID         int64  `json:"ID"`
+	ID         int64  `json:"id"`
 	User       User   `json:"user"`
 }
 
@@ -136,5 +128,5 @@ type MessageListResponse struct {
 type MessageList struct {
 	Content    string `json:"content"`
 	CreateTime string `json:"create_time"`
-	ID         int64  `json:"ID"`
+	ID         int64  `json:"id"`
 }

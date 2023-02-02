@@ -5,6 +5,7 @@
 package routers
 
 import (
+	"github.com/Go-To-Byte/DouSheng/network/milddlewares"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	"github.com/Go-To-Byte/DouSheng/network/services"
 )
@@ -16,4 +17,5 @@ func User() {
 		u.POST("/login", services.Login)
 		u.POST("/register", services.Register)
 	}
+	u.Use(milddlewares.JWTAuth())
 }
