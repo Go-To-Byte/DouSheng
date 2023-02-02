@@ -5,19 +5,25 @@
 package models
 
 type ConfigYAML struct {
-	ID         int64      `mapstructure:"ID"`
-	JwtConfig  jwtConfig  `mapstructure:"jwt"`
-	GrpcConfig grpcConfig `mapstructure:"grpc"`
-	DBConfig   dbConfig   `mapstructure:"sql"`
+	ID       int64        `mapstructure:"ID"`
+	DB       dbConfig     `mapstructure:"sql"`
+	Jwt      jwtConfig    `mapstructure:"jwt"`
+	GrpcName grpcConfig   `mapstructure:"grpc"`
+	Consul   consulConfig `mapstructure:"consul"`
 }
 
 type jwtConfig struct {
 	Key string `mapstructure:"key"`
 }
 
+type consulConfig struct {
+	Port int    `mapstructure:"port"`
+	Host string `mapstructure:"host"`
+}
+
 type dbConfig struct {
+	Port     int    `mapstructure:"port"`
 	Host     string `mapstructure:"host"`
-	Port     string `mapstructure:"port"`
 	User     string `mapstructure:"username"`
 	Password string `mapstructure:"password"`
 	Database string `mapstructure:"database"`
@@ -25,6 +31,11 @@ type dbConfig struct {
 }
 
 type grpcConfig struct {
-	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
+	Feed     string `mapstructure:"feed"`
+	User     string `mapstructure:"user"`
+	Video    string `mapstructure:"video"`
+	Comment  string `mapstructure:"comment"`
+	Massage  string `mapstructure:"massage"`
+	Relation string `mapstructure:"relation"`
+	Favorite string `mapstructure:"favorite"`
 }

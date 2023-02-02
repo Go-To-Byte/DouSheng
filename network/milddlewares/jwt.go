@@ -67,7 +67,7 @@ type JWT struct {
 
 func NewJWT() *JWT {
 	return &JWT{
-		[]byte(models.Config.JwtConfig.Key), // 可以设置过期时间
+		[]byte(models.Config.Jwt.Key), // 可以设置过期时间
 	}
 }
 

@@ -10,7 +10,7 @@ import (
 )
 
 type Message struct {
-	proto.UnimplementedChatServer
+	proto.UnimplementedMessageServer
 }
 
 func GetFreePort() (int, error) {

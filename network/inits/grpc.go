@@ -14,8 +14,8 @@ import (
 
 func initGrpc() {
 	// target := fmt.Sprintf("%v:%v", models.Config.GrpcConfig.Host, models.Config.GrpcConfig.Port)
-	target:=fmt.Sprintf("consul://%s:%d/%s?wait=14s", "192.168.75.141", 8500, global.ServerConfig.GoodsSrvInfo.Name),
-	if dial, err := grpc.Dial(target, grpc.WithTransportCredentials(insecure.NewCredentials())); err != nil {
+	targetUser := fmt.Sprintf("consul://%v:%v/%v?wait=14s", models.Config.Consul.Host, models.Config.Consul.Port, models.Config.GrpcName.User),
+	if dial, err := grpc.Dial(targetUser, grpc.WithTransportCredentials(insecure.NewCredentials())); err != nil {
 		zap.S().Panicf("grpc dial failed: %v", err)
 	} else {
 		zap.S().Infof("grpc dial connect: %v", target)

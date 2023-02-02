@@ -18,122 +18,122 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ChatClient is the client API for Chat service.
+// MessageClient is the client API for Message service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ChatClient interface {
+type MessageClient interface {
 	MessageAction(ctx context.Context, in *MessageRequest, opts ...grpc.CallOption) (*MessageResponse, error)
 	MessageHistory(ctx context.Context, in *MessageListRequest, opts ...grpc.CallOption) (*MessageListResponse, error)
 }
 
-type chatClient struct {
+type messageClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewChatClient(cc grpc.ClientConnInterface) ChatClient {
-	return &chatClient{cc}
+func NewMessageClient(cc grpc.ClientConnInterface) MessageClient {
+	return &messageClient{cc}
 }
 
-func (c *chatClient) MessageAction(ctx context.Context, in *MessageRequest, opts ...grpc.CallOption) (*MessageResponse, error) {
+func (c *messageClient) MessageAction(ctx context.Context, in *MessageRequest, opts ...grpc.CallOption) (*MessageResponse, error) {
 	out := new(MessageResponse)
-	err := c.cc.Invoke(ctx, "/chat/message_action", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/message/message_action", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *chatClient) MessageHistory(ctx context.Context, in *MessageListRequest, opts ...grpc.CallOption) (*MessageListResponse, error) {
+func (c *messageClient) MessageHistory(ctx context.Context, in *MessageListRequest, opts ...grpc.CallOption) (*MessageListResponse, error) {
 	out := new(MessageListResponse)
-	err := c.cc.Invoke(ctx, "/chat/message_history", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/message/message_history", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ChatServer is the server API for Chat service.
-// All implementations must embed UnimplementedChatServer
+// MessageServer is the server API for Message service.
+// All implementations must embed UnimplementedMessageServer
 // for forward compatibility
-type ChatServer interface {
+type MessageServer interface {
 	MessageAction(context.Context, *MessageRequest) (*MessageResponse, error)
 	MessageHistory(context.Context, *MessageListRequest) (*MessageListResponse, error)
-	mustEmbedUnimplementedChatServer()
+	mustEmbedUnimplementedMessageServer()
 }
 
-// UnimplementedChatServer must be embedded to have forward compatible implementations.
-type UnimplementedChatServer struct {
+// UnimplementedMessageServer must be embedded to have forward compatible implementations.
+type UnimplementedMessageServer struct {
 }
 
-func (UnimplementedChatServer) MessageAction(context.Context, *MessageRequest) (*MessageResponse, error) {
+func (UnimplementedMessageServer) MessageAction(context.Context, *MessageRequest) (*MessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MessageAction not implemented")
 }
-func (UnimplementedChatServer) MessageHistory(context.Context, *MessageListRequest) (*MessageListResponse, error) {
+func (UnimplementedMessageServer) MessageHistory(context.Context, *MessageListRequest) (*MessageListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MessageHistory not implemented")
 }
-func (UnimplementedChatServer) mustEmbedUnimplementedChatServer() {}
+func (UnimplementedMessageServer) mustEmbedUnimplementedMessageServer() {}
 
-// UnsafeChatServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ChatServer will
+// UnsafeMessageServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MessageServer will
 // result in compilation errors.
-type UnsafeChatServer interface {
-	mustEmbedUnimplementedChatServer()
+type UnsafeMessageServer interface {
+	mustEmbedUnimplementedMessageServer()
 }
 
-func RegisterChatServer(s grpc.ServiceRegistrar, srv ChatServer) {
-	s.RegisterService(&Chat_ServiceDesc, srv)
+func RegisterMessageServer(s grpc.ServiceRegistrar, srv MessageServer) {
+	s.RegisterService(&Message_ServiceDesc, srv)
 }
 
-func _Chat_MessageAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Message_MessageAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MessageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).MessageAction(ctx, in)
+		return srv.(MessageServer).MessageAction(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/chat/message_action",
+		FullMethod: "/message/message_action",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).MessageAction(ctx, req.(*MessageRequest))
+		return srv.(MessageServer).MessageAction(ctx, req.(*MessageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_MessageHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Message_MessageHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MessageListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).MessageHistory(ctx, in)
+		return srv.(MessageServer).MessageHistory(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/chat/message_history",
+		FullMethod: "/message/message_history",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).MessageHistory(ctx, req.(*MessageListRequest))
+		return srv.(MessageServer).MessageHistory(ctx, req.(*MessageListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Chat_ServiceDesc is the grpc.ServiceDesc for Chat service.
+// Message_ServiceDesc is the grpc.ServiceDesc for Message service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Chat_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "chat",
-	HandlerType: (*ChatServer)(nil),
+var Message_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "message",
+	HandlerType: (*MessageServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "message_action",
-			Handler:    _Chat_MessageAction_Handler,
+			Handler:    _Message_MessageAction_Handler,
 		},
 		{
 			MethodName: "message_history",
-			Handler:    _Chat_MessageHistory_Handler,
+			Handler:    _Message_MessageHistory_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
