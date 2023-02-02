@@ -18,3 +18,4 @@ var (
 	Router *gin.Engine
 	Config = ConfigYAML{}
 )
+var Port int

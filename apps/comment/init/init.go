@@ -7,7 +7,9 @@ package init
 func init() {
 	initLogger()
 	initConfig()
+	initPort()
+	initNode()
+	initConsul()
 	initRouter()
 	initDB()
-	initNode()
 }
