@@ -6,6 +6,7 @@ package services
 
 import (
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/network/milddlewares"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	proto "github.com/Go-To-Byte/DouSheng/network/protos"
 	"github.com/gin-gonic/gin"
@@ -16,21 +17,21 @@ import (
 
 func Follow(ctx *gin.Context) {
 	zap.S().Debugf("Follow")
-	c := proto.NewRelationClient(models.GrpcConn)
+	c := proto.NewRelationClient(models.Dials["relation"])
 	request := proto.FollowRequest{
 		UserId:     0,
 		ToUserId:   0,
 		ActionType: 0,
 	}
 
-	// TODO: JWT Authorization
+	// JWT Authorization
 	var err error
 	token := ctx.Query("token")
 	if request.UserId, err = strconv.ParseInt(token, 10, 64); err == nil {
-		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
+		zap.S().Panicf("Invalid token value (token: %v): %v", token, err)
 		ctx.JSON(http.StatusForbidden, models.FollowResponse{
 			StatusCode: 1,
-			StatusMsg:  fmt.Sprintf("Invalid token value failed: %v", token),
+			StatusMsg:  fmt.Sprintf("Invalid token value: %v", token),
 		})
 		ctx.Abort()
 		return
@@ -74,14 +75,19 @@ func Follow(ctx *gin.Context) {
 
 func FollowList(ctx *gin.Context) {
 	zap.S().Debugf("FollowList")
-	c := proto.NewRelationClient(models.GrpcConn)
+	c := proto.NewRelationClient(models.Dials["relation"])
 	request := proto.FollowListRequest{UserId: 0}
 
-	// TODO: JWT Authorization
+	// JWT Authorization
 	var err error
-	token := ctx.Query("token")
-	if request.UserId, err = JWT(token); err == nil {
-		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
+	jwt := milddlewares.NewJWT()
+	token := &models.TokenClaims{}
+	if token, err = jwt.ParseToken(ctx.Query("token")); err != nil {
+		zap.S().Panicf("Invalid token value(token: %v): %v", token, err)
+		ctx.JSON(http.StatusForbidden, models.FollowResponse{
+			StatusCode: 1,
+			StatusMsg:  fmt.Sprintf("Invalid token value: %v", token),
+		})
 		ctx.Abort()
 		return
 	}
@@ -115,14 +121,19 @@ func FollowList(ctx *gin.Context) {
 
 func FollowerList(ctx *gin.Context) {
 	zap.S().Debugf("FollowerList")
-	c := proto.NewRelationClient(models.GrpcConn)
+	c := proto.NewRelationClient(models.Dials["relation"])
 	request := proto.FollowerListRequest{UserId: 0}
 
-	// TODO: JWT Authorization
+	// JWT Authorization
 	var err error
-	token := ctx.Query("token")
-	if request.UserId, err = JWT(token); err == nil {
-		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
+	jwt := milddlewares.NewJWT()
+	token := &models.TokenClaims{}
+	if token, err = jwt.ParseToken(ctx.Query("token")); err != nil {
+		zap.S().Panicf("Invalid token value (token: %v): %v", token, err)
+		ctx.JSON(http.StatusForbidden, models.FollowResponse{
+			StatusCode: 1,
+			StatusMsg:  fmt.Sprintf("Invalid token value: %v", token),
+		})
 		ctx.Abort()
 		return
 	}
@@ -156,14 +167,19 @@ func FollowerList(ctx *gin.Context) {
 
 func FriendList(ctx *gin.Context) {
 	zap.S().Debugf("FollowerList")
-	c := proto.NewRelationClient(models.GrpcConn)
+	c := proto.NewRelationClient(models.Dials["relation"])
 	request := proto.FriendListRequest{UserId: 0}
 
-	// TODO: JWT Authorization
+	// JWT Authorization
 	var err error
-	token := ctx.Query("token")
-	if request.UserId, err = JWT(token); err == nil {
-		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
+	jwt := milddlewares.NewJWT()
+	token := &models.TokenClaims{}
+	if token, err = jwt.ParseToken(ctx.Query("token")); err != nil {
+		zap.S().Panicf("Invalid token value (token: %v): %v", token, err)
+		ctx.JSON(http.StatusForbidden, models.FollowResponse{
+			StatusCode: 1,
+			StatusMsg:  fmt.Sprintf("Invalid token value: %v", token),
+		})
 		ctx.Abort()
 		return
 	}

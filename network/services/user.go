@@ -18,7 +18,7 @@ import (
 // Register Http API
 func Register(ctx *gin.Context) {
 	zap.S().Debugf("Register")
-	c := proto.NewUserClient(models.GrpcConn)
+	c := proto.NewUserClient(models.Dials["user"])
 
 	// TODO: md5.Sum(password)
 	request := proto.RegisterRequest{
@@ -27,7 +27,7 @@ func Register(ctx *gin.Context) {
 	}
 
 	if response, err := c.Register(ctx, &request); err != nil {
-		zap.S().Panicf("Failed to register: %v", &request)
+		zap.S().Errorf("Failed to register: %v", &request)
 		ctx.JSON(http.StatusBadRequest, models.RegisterResponse{
 			StatusCode: 1,
 			StatusMsg:  "failed to register",
@@ -62,7 +62,7 @@ func Register(ctx *gin.Context) {
 
 func Login(ctx *gin.Context) {
 	zap.S().Debugf("Register")
-	c := proto.NewUserClient(models.GrpcConn)
+	c := proto.NewUserClient(models.Dials["user"])
 
 	// TODO: md5.Sum(password)
 	request := proto.LoginRequest{
@@ -103,18 +103,18 @@ func Login(ctx *gin.Context) {
 }
 
 func Info(ctx *gin.Context) {
-	zap.S().Debugf("Register")
-	c := proto.NewUserClient(models.GrpcConn)
+	zap.S().Debugf("Info")
+	c := proto.NewUserClient(models.Dials["user"])
 
 	// JWT Authorization
 	var err error
 	jwt := milddlewares.NewJWT()
 	token := &models.TokenClaims{}
 	if token, err = jwt.ParseToken(ctx.Query("token")); err != nil {
-		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
+		zap.S().Panicf("Invalid token value (token: %v): %v", token, err)
 		ctx.JSON(http.StatusForbidden, models.FollowResponse{
 			StatusCode: 1,
-			StatusMsg:  fmt.Sprintf("Invalid token value failed: %v", token),
+			StatusMsg:  fmt.Sprintf("Invalid token value: %v", token),
 		})
 		ctx.Abort()
 		return
@@ -147,7 +147,15 @@ func Info(ctx *gin.Context) {
 		zap.S().Debugf("Get user info(%v): %v", toUserID, response)
 
 		// 调用 relation 模块填充数据
-		user, _ := getUserInfo(token.ID, toUserID)
+		user, err := getUserInfo(token.ID, toUserID)
+		if err != nil {
+			zap.S().Errorf("Failed to get user info")
+			ctx.JSON(http.StatusBadRequest, models.InfoResponse{
+				StatusCode: 1,
+				StatusMsg:  "success",
+				User:       models.User{},
+			})
+		}
 		ctx.JSON(http.StatusOK, models.InfoResponse{
 			StatusCode: 0,
 			StatusMsg:  "success",

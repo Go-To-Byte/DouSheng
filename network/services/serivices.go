@@ -9,14 +9,13 @@ import (
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	proto "github.com/Go-To-Byte/DouSheng/network/protos"
 	"go.uber.org/zap"
-	"strconv"
 )
 
 // 建立 user grpc 连接, 处理用户信息
 func getUserInfo(userID int64, toUserId int64) (response models.User, err error) {
 	zap.S().Debugf("get UserInfo: %d", userID)
-	user := proto.NewUserClient(models.GrpcConn)
-	relation := proto.NewRelationClient(models.GrpcConn)
+	user := proto.NewUserClient(models.Dials["user"])
+	relation := proto.NewRelationClient(models.Dials["relation"])
 	userRequest := proto.InfoRequest{UserId: userID}
 	followListRequest := proto.FollowListRequest{UserId: userID}
 	followerListRequest := proto.FollowerListRequest{UserId: userID}
@@ -55,14 +54,4 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 	}
 
 	return response, err
-}
-
-// JWT return userID
-func JWT(token string) (userID int64, err error) {
-	// TODO: JWT Authorization
-	if userID, err = strconv.ParseInt(token, 10, 64); err == nil {
-		zap.S().Panicf("Invalid token value failed(token: %v): %v", token, err)
-		return
-	}
-	return
 }

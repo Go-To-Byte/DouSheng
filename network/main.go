@@ -18,12 +18,15 @@ import (
 )
 
 func main() {
-	defer func(GrpcConn *grpc.ClientConn) {
-		err := GrpcConn.Close()
-		if err != nil {
-			zap.S().Errorf("grpc.ClientConn.Close failed")
+	defer func(grpcConn map[string]*grpc.ClientConn) {
+		for k := range grpcConn {
+			err := grpcConn[k].Close()
+			if err != nil {
+				zap.S().Errorf("Grpc Client Connect Close Failed: %v", k)
+				continue
+			}
 		}
-	}(models.GrpcConn)
+	}(models.Dials)
 
 	router := models.Router
 	router.GET("/", func(c *gin.Context) {
