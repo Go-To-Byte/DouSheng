@@ -16,9 +16,9 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 	zap.S().Debugf("get UserInfo: %d", userID)
 	user := proto.NewUserClient(models.Dials["user"])
 	relation := proto.NewRelationClient(models.Dials["relation"])
-	userRequest := proto.InfoRequest{UserId: userID}
-	followListRequest := proto.FollowListRequest{UserId: userID}
-	followerListRequest := proto.FollowerListRequest{UserId: userID}
+	userRequest := proto.InfoRequest{UserId: toUserId}
+	followListRequest := proto.FollowListRequest{UserId: toUserId}
+	followerListRequest := proto.FollowerListRequest{UserId: toUserId}
 	followJudgeRequest := proto.FollowJudgeRequest{
 		UserId:   userID,
 		ToUserId: toUserId,

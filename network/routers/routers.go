@@ -8,4 +8,5 @@ func Init() {
 	User()
 	Comment()
 	Relation()
+	Favorite()
 }
