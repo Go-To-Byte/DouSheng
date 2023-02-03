@@ -6,4 +6,6 @@ package routers
 
 func Init() {
 	User()
+	Comment()
+	Relation()
 }

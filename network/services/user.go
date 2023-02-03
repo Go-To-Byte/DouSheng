@@ -75,8 +75,6 @@ func Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, models.LoginResponse{
 			StatusCode: 1,
 			StatusMsg:  "failed to login",
-			Token:      "",
-			UserID:     0,
 		})
 		ctx.Abort()
 	} else {
@@ -88,8 +86,6 @@ func Login(ctx *gin.Context) {
 			ctx.JSON(http.StatusBadRequest, models.LoginResponse{
 				StatusCode: 1,
 				StatusMsg:  "failed to login",
-				Token:      "",
-				UserID:     0,
 			})
 			ctx.Abort()
 		}
@@ -112,7 +108,7 @@ func Info(ctx *gin.Context) {
 	token := &models.TokenClaims{}
 	if token, err = jwt.ParseToken(ctx.Query("token")); err != nil {
 		zap.S().Panicf("Invalid token value (token: %v): %v", token, err)
-		ctx.JSON(http.StatusForbidden, models.FollowResponse{
+		ctx.JSON(http.StatusForbidden, models.InfoResponse{
 			StatusCode: 1,
 			StatusMsg:  fmt.Sprintf("Invalid token value: %v", token),
 		})
@@ -127,7 +123,6 @@ func Info(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, models.InfoResponse{
 			StatusCode: 1,
 			StatusMsg:  fmt.Sprintf("Failed to parse user_id: %v", ctx.Query("user_id")),
-			User:       models.User{},
 		})
 		ctx.Abort()
 		return
@@ -139,7 +134,6 @@ func Info(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, models.InfoResponse{
 			StatusCode: 1,
 			StatusMsg:  fmt.Sprintf("Failed to get user info: %v", toUserID),
-			User:       models.User{},
 		})
 		ctx.Abort()
 		return
@@ -152,8 +146,7 @@ func Info(ctx *gin.Context) {
 			zap.S().Errorf("Failed to get user info")
 			ctx.JSON(http.StatusBadRequest, models.InfoResponse{
 				StatusCode: 1,
-				StatusMsg:  "success",
-				User:       models.User{},
+				StatusMsg:  "failed to get user info",
 			})
 		}
 		ctx.JSON(http.StatusOK, models.InfoResponse{

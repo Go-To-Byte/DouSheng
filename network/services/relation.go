@@ -18,16 +18,12 @@ import (
 func Follow(ctx *gin.Context) {
 	zap.S().Debugf("Follow")
 	c := proto.NewRelationClient(models.Dials["relation"])
-	request := proto.FollowRequest{
-		UserId:     0,
-		ToUserId:   0,
-		ActionType: 0,
-	}
 
 	// JWT Authorization
 	var err error
-	token := ctx.Query("token")
-	if request.UserId, err = strconv.ParseInt(token, 10, 64); err == nil {
+	jwt := milddlewares.NewJWT()
+	token := &models.TokenClaims{}
+	if token, err = jwt.ParseToken(ctx.Query("token")); err != nil {
 		zap.S().Panicf("Invalid token value (token: %v): %v", token, err)
 		ctx.JSON(http.StatusForbidden, models.FollowResponse{
 			StatusCode: 1,
@@ -36,8 +32,10 @@ func Follow(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
+
 	// Parse to_user_id to int64
-	if request.ToUserId, err = strconv.ParseInt(ctx.Query("to_user_id"), 10, 64); err != nil {
+	var toUserID int64
+	if toUserID, err = strconv.ParseInt(ctx.Query("to_user_id"), 10, 64); err != nil {
 		zap.S().Panicf("Parse to_user_id value failed(id: %v): %v", ctx.Query("to_user_id"), err)
 		ctx.JSON(http.StatusBadRequest, models.FollowResponse{
 			StatusCode: 1,
@@ -46,9 +44,10 @@ func Follow(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	// Parse ActionType to int32
-	ActionType, err := strconv.ParseInt(ctx.Query("ActionType"), 10, 32)
-	if request.ActionType = int32(ActionType); err != nil {
+
+	// Parse ActionType
+	var actionType int64
+	if actionType, err = strconv.ParseInt(ctx.Query("ActionType"), 10, 32); err != nil {
 		zap.S().Panicf("Parse ActionType value failed(id: %v): %v", ctx.Query("to_user_id"), err)
 		ctx.JSON(http.StatusBadRequest, models.FollowResponse{
 			StatusCode: 1,
@@ -59,11 +58,17 @@ func Follow(ctx *gin.Context) {
 	}
 
 	// 发出请求 && 处理响应
+	request := proto.FollowRequest{
+		UserId:     token.ID,
+		ToUserId:   toUserID,
+		ActionType: int32(actionType),
+	}
 	if response, err := c.Follow(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FollowResponse{
 			StatusCode: 1,
 			StatusMsg:  response.StatusMsg,
 		})
+		ctx.Abort()
 	} else {
 		ctx.JSON(http.StatusOK, models.FollowResponse{
 			StatusCode: 0,
@@ -76,7 +81,6 @@ func Follow(ctx *gin.Context) {
 func FollowList(ctx *gin.Context) {
 	zap.S().Debugf("FollowList")
 	c := proto.NewRelationClient(models.Dials["relation"])
-	request := proto.FollowListRequest{UserId: 0}
 
 	// JWT Authorization
 	var err error
@@ -84,8 +88,8 @@ func FollowList(ctx *gin.Context) {
 	token := &models.TokenClaims{}
 	if token, err = jwt.ParseToken(ctx.Query("token")); err != nil {
 		zap.S().Panicf("Invalid token value(token: %v): %v", token, err)
-		ctx.JSON(http.StatusForbidden, models.FollowResponse{
-			StatusCode: 1,
+		ctx.JSON(http.StatusForbidden, models.FollowListResponse{
+			StatusCode: strconv.Itoa(1),
 			StatusMsg:  fmt.Sprintf("Invalid token value: %v", token),
 		})
 		ctx.Abort()
@@ -93,11 +97,11 @@ func FollowList(ctx *gin.Context) {
 	}
 
 	// 发出请求, 获取关注列表 && 处理响应
+	request := proto.FollowListRequest{UserId: token.ID}
 	if response, err := c.FollowList(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FollowListResponse{
 			StatusCode: string(response.StatusCode),
 			StatusMsg:  response.StatusMsg,
-			UserList:   nil,
 		})
 	} else {
 		// 获得关注用户的id列表后，处理响应数据
@@ -122,7 +126,6 @@ func FollowList(ctx *gin.Context) {
 func FollowerList(ctx *gin.Context) {
 	zap.S().Debugf("FollowerList")
 	c := proto.NewRelationClient(models.Dials["relation"])
-	request := proto.FollowerListRequest{UserId: 0}
 
 	// JWT Authorization
 	var err error
@@ -130,8 +133,8 @@ func FollowerList(ctx *gin.Context) {
 	token := &models.TokenClaims{}
 	if token, err = jwt.ParseToken(ctx.Query("token")); err != nil {
 		zap.S().Panicf("Invalid token value (token: %v): %v", token, err)
-		ctx.JSON(http.StatusForbidden, models.FollowResponse{
-			StatusCode: 1,
+		ctx.JSON(http.StatusForbidden, models.FollowerListResponse{
+			StatusCode: strconv.Itoa(1),
 			StatusMsg:  fmt.Sprintf("Invalid token value: %v", token),
 		})
 		ctx.Abort()
@@ -139,11 +142,11 @@ func FollowerList(ctx *gin.Context) {
 	}
 
 	// 发出请求, 获取粉丝列表 && 处理响应
+	request := proto.FollowerListRequest{UserId: token.ID}
 	if response, err := c.FollowerList(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FollowerListResponse{
 			StatusCode: string(response.StatusCode),
 			StatusMsg:  response.StatusMsg,
-			UserList:   nil,
 		})
 	} else {
 		// 获得关注用户的id列表后，处理响应数据
@@ -168,7 +171,6 @@ func FollowerList(ctx *gin.Context) {
 func FriendList(ctx *gin.Context) {
 	zap.S().Debugf("FollowerList")
 	c := proto.NewRelationClient(models.Dials["relation"])
-	request := proto.FriendListRequest{UserId: 0}
 
 	// JWT Authorization
 	var err error
@@ -176,8 +178,8 @@ func FriendList(ctx *gin.Context) {
 	token := &models.TokenClaims{}
 	if token, err = jwt.ParseToken(ctx.Query("token")); err != nil {
 		zap.S().Panicf("Invalid token value (token: %v): %v", token, err)
-		ctx.JSON(http.StatusForbidden, models.FollowResponse{
-			StatusCode: 1,
+		ctx.JSON(http.StatusForbidden, models.FriendListResponse{
+			StatusCode: strconv.Itoa(1),
 			StatusMsg:  fmt.Sprintf("Invalid token value: %v", token),
 		})
 		ctx.Abort()
@@ -185,11 +187,11 @@ func FriendList(ctx *gin.Context) {
 	}
 
 	// 发出请求, 获取好友列表 && 处理响应
+	request := proto.FriendListRequest{UserId: token.ID}
 	if response, err := c.FriendList(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FriendListResponse{
 			StatusCode: string(response.StatusCode),
 			StatusMsg:  response.StatusMsg,
-			UserList:   nil,
 		})
 	} else {
 		// 获得好友的id列表后，处理响应数据

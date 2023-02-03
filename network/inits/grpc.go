@@ -30,7 +30,6 @@ func initFeedClient() {
 }
 
 func initUserClient() {
-
 	// target := fmt.Sprintf("%v:%v", models.Config.GrpcConfig.Host, models.Config.GrpcConfig.Port)
 	targetUser := fmt.Sprintf("consul://%s:%d/%s?wait=14s",
 		models.Config.Consul.Host, models.Config.Consul.Port, models.Config.GrpcName.User)
