@@ -32,13 +32,15 @@ func Add(message model.Message) (err error) {
 	return nil
 }
 
-func MessageFindByUserID(userID int64) []*model.Message {
+func MessageFindByUserIDWithToUserID(message model.Message) []*model.Message {
 	q := query.Use(models.DB)
 	m := q.Message
 
-	r, err := m.WithContext(context.Background()).Where(m.UserID.Eq(userID)).Find()
+	r, err := m.WithContext(context.Background()).
+		Where(m.UserID.Eq(message.UserID), m.ToUserID.Eq(message.ToUserID)).
+		Find()
 	if err != nil {
-		zap.S().Panicf("Failed find follows: %v", userID)
+		zap.S().Panicf("Failed find message: %+v", message)
 	}
 	return r
 }

@@ -7,6 +7,7 @@ package service
 import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/apps/message/dao"
+	"github.com/Go-To-Byte/DouSheng/apps/message/dao/dal/model"
 	"github.com/Go-To-Byte/DouSheng/apps/message/proto"
 	"go.uber.org/zap"
 	"strconv"
@@ -14,8 +15,18 @@ import (
 
 func (m *Message) MessageHistory(ctx context.Context, req *proto.MessageListRequest) (*proto.MessageListResponse, error) {
 	// 聊天记录 == 我发送的消息 + 对方发送的消息
-	r1 := dao.MessageFindByUserID(req.UserId)
-	r2 := dao.MessageFindByUserID(req.ToUserId)
+	r1 := dao.MessageFindByUserIDWithToUserID(model.Message{
+		ID:       0,
+		UserID:   req.UserId,
+		ToUserID: req.ToUserId,
+		Content:  "",
+	})
+	r2 := dao.MessageFindByUserIDWithToUserID(model.Message{
+		ID:       0,
+		UserID:   req.ToUserId,
+		ToUserID: req.UserId,
+		Content:  "",
+	})
 
 	messages := make([]*proto.Message, 0)
 
@@ -23,6 +34,8 @@ func (m *Message) MessageHistory(ctx context.Context, req *proto.MessageListRequ
 	for i := 0; i < len(r1); i++ {
 		message := &proto.Message{
 			Id:         r1[i].ID,
+			UserId:     r1[i].UserID,
+			ToUserId:   r1[i].ToUserID,
 			Content:    r1[i].Content,
 			CreateTime: strconv.FormatInt(r1[i].ID>>22, 10),
 		}
@@ -31,6 +44,8 @@ func (m *Message) MessageHistory(ctx context.Context, req *proto.MessageListRequ
 	for i := 0; i < len(r2); i++ {
 		message := &proto.Message{
 			Id:         r2[i].ID,
+			UserId:     r2[i].UserID,
+			ToUserId:   r2[i].ToUserID,
 			Content:    r2[i].Content,
 			CreateTime: strconv.FormatInt(r2[i].ID>>22, 10),
 		}

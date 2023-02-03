@@ -22,8 +22,10 @@ message MessageListResponse {
 
 message Message {
   int64 id = 1; // 消息id
-  string content = 2; // 消息内容
-  string create_time = 3; // 消息创建时间
+  int64 user_id = 2; //用户id
+  int64 to_user_id = 3; // 对方用户id
+  string content = 4; // 消息内容
+  string create_time = 5; // 消息创建时间
 }
 
 message MessageRequest {

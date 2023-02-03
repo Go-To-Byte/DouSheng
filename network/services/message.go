@@ -106,6 +106,8 @@ func MessageList(ctx *gin.Context) {
 			Content:    response.MessageList[i].Content,
 			CreateTime: response.MessageList[i].CreateTime,
 			ID:         response.MessageList[i].Id,
+			UserID:     response.MessageList[i].UserId,
+			ToUserID:   response.MessageList[i].ToUserId,
 		}
 		messageResponse.MessageList = append(messageResponse.MessageList, message)
 	}
