@@ -11,7 +11,7 @@ import (
 )
 
 func Comment() {
-	c := models.Router.Group("/douyin/Comment")
+	c := models.Router.Group("/douyin/comment")
 	{
 		c.Use(milddlewares.JWTAuth())
 		c.POST("/action", services.Comment)

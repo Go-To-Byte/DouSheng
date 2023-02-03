@@ -46,14 +46,8 @@ func Comment(ctx *gin.Context) {
 
 	// Parse commentID
 	var commentID int64
-	if commentID, err = strconv.ParseInt(ctx.Query("ActionType"), 10, 32); err != nil {
+	if commentID, err = strconv.ParseInt(ctx.Query("comment_id"), 10, 64); err != nil {
 		zap.S().Errorf("Parse ActionType value failed(id: %v): %v", ctx.Query("to_user_id"), err)
-		ctx.JSON(http.StatusBadRequest, models.FollowResponse{
-			StatusCode: 1,
-			StatusMsg:  fmt.Sprintf("Parse ActionType value failed: %v", ctx.Query("to_user_id")),
-		})
-		ctx.Abort()
-		return
 	}
 
 	var response *proto.CommentResponse
