@@ -47,7 +47,7 @@ func Comment(ctx *gin.Context) {
 	// Parse commentID
 	var commentID int64
 	if commentID, err = strconv.ParseInt(ctx.Query("comment_id"), 10, 64); err != nil {
-		zap.S().Errorf("Parse ActionType value failed(id: %v): %v", ctx.Query("to_user_id"), err)
+		zap.S().Errorf("Parse commentID value failed(id: %v): %v", ctx.Query("to_user_id"), err)
 	}
 
 	var response *proto.CommentResponse
