@@ -51,6 +51,7 @@ func Message(ctx *gin.Context) {
 		Content:    ctx.Query("content"),
 	}
 	if _, err = c.MessageAction(ctx, &request); err != nil {
+		zap.S().Debugf("MessageAction failed: %v", err)
 		ctx.JSON(http.StatusBadRequest, models.MessageResponse{
 			StatusCode: 1,
 			StatusMsg:  "failed",

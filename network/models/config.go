@@ -35,7 +35,7 @@ type grpcConfig struct {
 	User     string `mapstructure:"user"`
 	Video    string `mapstructure:"video"`
 	Comment  string `mapstructure:"comment"`
-	Massage  string `mapstructure:"massage"`
+	Message  string `mapstructure:"message"`
 	Relation string `mapstructure:"relation"`
 	Favorite string `mapstructure:"favorite"`
 }

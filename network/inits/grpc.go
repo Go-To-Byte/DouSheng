@@ -75,7 +75,7 @@ func initCommentClient() {
 
 func initMessageClient() {
 
-	targetMessage := fmt.Sprintf("consul://%v:%v/%v?wait=14s", models.Config.Consul.Host, models.Config.Consul.Port, models.Config.GrpcName.Massage)
+	targetMessage := fmt.Sprintf("consul://%v:%v/%v?wait=14s", models.Config.Consul.Host, models.Config.Consul.Port, models.Config.GrpcName.Message)
 	if dial, err := grpc.Dial(targetMessage,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`)); err != nil {
