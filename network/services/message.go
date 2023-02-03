@@ -33,7 +33,7 @@ func Message(ctx *gin.Context) {
 
 	// Parse ActionType
 	var actionType int64
-	if actionType, err = strconv.ParseInt(ctx.Query("ActionType"), 10, 32); err != nil {
+	if actionType, err = strconv.ParseInt(ctx.Query("action_type"), 10, 32); err != nil {
 		zap.S().Errorf("Parse ActionType value failed(id: %v): %v", ctx.Query("to_user_id"), err)
 		ctx.JSON(http.StatusBadRequest, models.FollowResponse{
 			StatusCode: 1,

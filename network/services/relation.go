@@ -15,7 +15,7 @@ import (
 
 func Follow(ctx *gin.Context) {
 	userID, _ := ctx.Get("userID")
-	zap.S().Debugf("Follow: %v", userID)
+	zap.S().Debugf("Follow: %v", userID.(int64))
 	c := proto.NewRelationClient(models.Dials["relation"])
 
 	// Parse to_user_id to int64
@@ -33,7 +33,7 @@ func Follow(ctx *gin.Context) {
 
 	// Parse ActionType
 	var actionType int64
-	if actionType, err = strconv.ParseInt(ctx.Query("ActionType"), 10, 32); err != nil {
+	if actionType, err = strconv.ParseInt(ctx.Query("action_type"), 10, 32); err != nil {
 		zap.S().Errorf("Parse ActionType value failed(id: %v): %v", ctx.Query("to_user_id"), err)
 		ctx.JSON(http.StatusBadRequest, models.FollowResponse{
 			StatusCode: 1,
@@ -70,10 +70,22 @@ func FollowList(ctx *gin.Context) {
 	zap.S().Debugf("FollowList: %v", userID)
 	c := proto.NewRelationClient(models.Dials["relation"])
 
-	// 发出请求, 获取关注列表 && 处理响应
+	// Parse to_user_id to int64
 	var err error
+	var toUserID int64
+	if toUserID, err = strconv.ParseInt(ctx.Query("user_id"), 10, 64); err != nil {
+		zap.S().Errorf("Parse to_user_id value failed(id: %v): %v", ctx.Query("to_user_id"), err)
+		ctx.JSON(http.StatusBadRequest, models.FollowResponse{
+			StatusCode: 1,
+			StatusMsg:  "failed",
+		})
+		ctx.Abort()
+		return
+	}
+
+	// 发出请求, 获取关注列表 && 处理响应
 	var response *proto.FollowListResponse
-	request := proto.FollowListRequest{UserId: userID.(int64)}
+	request := proto.FollowListRequest{UserId: toUserID}
 	if response, err = c.FollowList(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FollowListResponse{
 			StatusCode: "1",
@@ -106,10 +118,22 @@ func FollowerList(ctx *gin.Context) {
 	zap.S().Debugf("FollowerList: %v", userID)
 	c := proto.NewRelationClient(models.Dials["relation"])
 
-	// 发出请求, 获取粉丝列表 && 处理响应
+	// Parse to_user_id to int64
 	var err error
+	var toUserID int64
+	if toUserID, err = strconv.ParseInt(ctx.Query("user_id"), 10, 64); err != nil {
+		zap.S().Errorf("Parse to_user_id value failed(id: %v): %v", ctx.Query("to_user_id"), err)
+		ctx.JSON(http.StatusBadRequest, models.FollowResponse{
+			StatusCode: 1,
+			StatusMsg:  "failed",
+		})
+		ctx.Abort()
+		return
+	}
+
+	// 发出请求, 获取粉丝列表 && 处理响应
 	var response *proto.FollowerListResponse
-	request := proto.FollowerListRequest{UserId: userID.(int64)}
+	request := proto.FollowerListRequest{UserId: toUserID}
 	if response, err = c.FollowerList(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FollowerListResponse{
 			StatusCode: "1",
@@ -139,13 +163,25 @@ func FollowerList(ctx *gin.Context) {
 
 func FriendList(ctx *gin.Context) {
 	userID, _ := ctx.Get("userID")
-	zap.S().Debugf("FollowerList")
+	zap.S().Debugf("FollowerList: %v", userID)
 	c := proto.NewRelationClient(models.Dials["relation"])
 
-	// 发出请求, 获取好友列表 && 处理响应
+	// Parse to_user_id to int64
 	var err error
+	var toUserID int64
+	if toUserID, err = strconv.ParseInt(ctx.Query("user_id"), 10, 64); err != nil {
+		zap.S().Errorf("Parse to_user_id value failed(id: %v): %v", ctx.Query("to_user_id"), err)
+		ctx.JSON(http.StatusBadRequest, models.FollowResponse{
+			StatusCode: 1,
+			StatusMsg:  "failed",
+		})
+		ctx.Abort()
+		return
+	}
+
+	// 发出请求, 获取好友列表 && 处理响应
 	var response *proto.FriendListResponse
-	request := proto.FriendListRequest{UserId: userID.(int64)}
+	request := proto.FriendListRequest{UserId: toUserID}
 	if response, err = c.FriendList(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FriendListResponse{
 			StatusCode: "1",

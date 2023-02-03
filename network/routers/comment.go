@@ -13,8 +13,8 @@ import (
 func Comment() {
 	c := models.Router.Group("/douyin/Comment")
 	{
+		c.Use(milddlewares.JWTAuth())
 		c.POST("/action", services.Comment)
 		c.GET("/list", services.CommentList)
 	}
-	c.Use(milddlewares.JWTAuth())
 }

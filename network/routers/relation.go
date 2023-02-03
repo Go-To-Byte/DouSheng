@@ -13,10 +13,10 @@ import (
 func Relation() {
 	r := models.Router.Group("/douyin/relation")
 	{
+		r.Use(milddlewares.JWTAuth())
 		r.POST("/action", services.Follow)
 		r.GET("/follow/list", services.FollowList)
 		r.GET("/follower/list", services.FollowerList)
 		r.GET("/friend/list", services.FriendList)
 	}
-	r.Use(milddlewares.JWTAuth())
 }

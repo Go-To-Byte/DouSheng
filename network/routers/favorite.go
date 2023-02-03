@@ -13,8 +13,8 @@ import (
 func Favorite() {
 	f := models.Router.Group("/douyin/favorite")
 	{
+		f.Use(milddlewares.JWTAuth())
 		f.POST("/action", services.Favorite)
 		f.GET("/list", services.FavoriteList)
 	}
-	f.Use(milddlewares.JWTAuth())
 }
