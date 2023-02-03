@@ -55,3 +55,60 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 
 	return response, err
 }
+
+func getVideoInfo(userID int64, videoID int64) (response models.Video, err error) {
+	zap.S().Debugf("get videoInfo: %d", videoID)
+
+	// TODO: goroutine
+	video := proto.NewVideoClient(models.Dials["video"])
+	comment := proto.NewCommentClient(models.Dials["comment"])
+	favorite := proto.NewFavoriteClient(models.Dials["favorite"])
+	videoRequest := proto.VideoInfoRequest{VideoId: videoID}
+	commentListRequest := proto.CommentListRequest{VideoId: videoID}
+	FavoriteListRequest := proto.FavoriteListRequest{UserId: videoID}
+
+	// 获取video info
+	var authorID int64 // 作者id
+	if r, e := video.Info(context.Background(), &videoRequest); err != nil {
+		zap.S().Errorf("error getting video info: (%v) ==> %v", videoID, e)
+	} else {
+		response.ID = r.Video.Id
+		authorID = r.Video.Author
+		response.Title = r.Video.Title
+		response.PlayURL = r.Video.PlayUrl
+		response.CoverURL = r.Video.CoverUrl
+	}
+
+	// 获取author info
+	if r, e := getUserInfo(userID, authorID); err != nil {
+		zap.S().Errorf("error getting author info: (%v) ==> %v", userID, e)
+	} else {
+		response.Author = r
+	}
+
+	// 获取 CommentCount
+	if r, e := comment.CommentList(context.Background(), &commentListRequest); err != nil {
+		zap.S().Errorf("error getting comment list: (%v) ==> %v", videoID, e)
+	} else {
+		response.CommentCount = int64(len(r.CommentList))
+	}
+
+	// 获取 FavoriteCount && IsFavorite
+	if r, e := favorite.FavoriteList(context.Background(), &FavoriteListRequest); err != nil {
+		zap.S().Errorf("error getting comment list: (%v) ==> %v", videoID, e)
+	} else {
+		response.CommentCount = int64(len(r.VideoList))
+	}
+
+	response = models.Video{
+		Author:        models.User{},
+		CommentCount:  0,
+		CoverURL:      "",
+		FavoriteCount: 0,
+		ID:            0,
+		IsFavorite:    false,
+		PlayURL:       "",
+		Title:         "",
+	}
+	return
+}

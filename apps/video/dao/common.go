@@ -63,3 +63,14 @@ func VideoFindByUserID(userID int64) []*model.Video {
 	}
 	return r
 }
+
+func VideoFindByVideoID(videoID int64) []*model.Video {
+	q := query.Use(models.DB)
+	v := q.Video
+
+	r, err := v.WithContext(context.Background()).Where(v.ID.Eq(videoID)).Find()
+	if err != nil {
+		zap.S().Panicf("Failed find videoID: %v", videoID)
+	}
+	return r
+}

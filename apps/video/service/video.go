@@ -46,8 +46,8 @@ func (v *Video) PublishList(ctx context.Context, req *proto.PublishListRequest) 
 
 	for i := range r {
 		video := &proto.Video{
-			VideoId:       r[i].ID,
-			UserId:        r[i].AuthID,
+			Id:            r[i].ID,
+			Author:        r[i].AuthID,
 			PlayUrl:       r[i].PlayURL,
 			CoverUrl:      r[i].CoverURL,
 			FavoriteCount: 0,
@@ -63,5 +63,31 @@ func (v *Video) PublishList(ctx context.Context, req *proto.PublishListRequest) 
 		StatusCode: 0,
 		StatusMsg:  "success",
 		VideoList:  list,
+	}, nil
+}
+
+func (v *Video) Info(ctx context.Context, req *proto.VideoInfoRequest) (*proto.VideoInfoResponse, error) {
+	r := dao.VideoFindByVideoID(req.VideoId)
+	list := make([]*proto.Video, 0)
+
+	for i := range r {
+		video := &proto.Video{
+			Id:            r[i].ID,
+			Author:        r[i].AuthID,
+			PlayUrl:       r[i].PlayURL,
+			CoverUrl:      r[i].CoverURL,
+			FavoriteCount: 0,
+			CommentCount:  0,
+			IsFavorite:    false,
+			Title:         r[i].Titel,
+		}
+		list = append(list, video)
+	}
+
+	zap.S().Debugf("success to get video info %+v", list[0])
+	return &proto.VideoInfoResponse{
+		StatusCode: 0,
+		StatusMsg:  "success",
+		Video:      list[0],
 	}, nil
 }

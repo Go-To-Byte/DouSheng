@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type FavoriteClient interface {
 	Favorite(ctx context.Context, in *FavoriteRequest, opts ...grpc.CallOption) (*FavoriteResponse, error)
 	FavoriteList(ctx context.Context, in *FavoriteListRequest, opts ...grpc.CallOption) (*FavoriteListResponse, error)
+	FavoriteJudge(ctx context.Context, in *FavoriteJudgeRequest, opts ...grpc.CallOption) (*FavoriteJudgeResponse, error)
 }
 
 type favoriteClient struct {
@@ -52,12 +53,22 @@ func (c *favoriteClient) FavoriteList(ctx context.Context, in *FavoriteListReque
 	return out, nil
 }
 
+func (c *favoriteClient) FavoriteJudge(ctx context.Context, in *FavoriteJudgeRequest, opts ...grpc.CallOption) (*FavoriteJudgeResponse, error) {
+	out := new(FavoriteJudgeResponse)
+	err := c.cc.Invoke(ctx, "/favorite/favorite_judge", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FavoriteServer is the server API for Favorite service.
 // All implementations must embed UnimplementedFavoriteServer
 // for forward compatibility
 type FavoriteServer interface {
 	Favorite(context.Context, *FavoriteRequest) (*FavoriteResponse, error)
 	FavoriteList(context.Context, *FavoriteListRequest) (*FavoriteListResponse, error)
+	FavoriteJudge(context.Context, *FavoriteJudgeRequest) (*FavoriteJudgeResponse, error)
 	mustEmbedUnimplementedFavoriteServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedFavoriteServer) Favorite(context.Context, *FavoriteRequest) (
 }
 func (UnimplementedFavoriteServer) FavoriteList(context.Context, *FavoriteListRequest) (*FavoriteListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FavoriteList not implemented")
+}
+func (UnimplementedFavoriteServer) FavoriteJudge(context.Context, *FavoriteJudgeRequest) (*FavoriteJudgeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FavoriteJudge not implemented")
 }
 func (UnimplementedFavoriteServer) mustEmbedUnimplementedFavoriteServer() {}
 
@@ -120,6 +134,24 @@ func _Favorite_FavoriteList_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Favorite_FavoriteJudge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FavoriteJudgeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FavoriteServer).FavoriteJudge(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/favorite/favorite_judge",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FavoriteServer).FavoriteJudge(ctx, req.(*FavoriteJudgeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Favorite_ServiceDesc is the grpc.ServiceDesc for Favorite service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var Favorite_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "favorite_list",
 			Handler:    _Favorite_FavoriteList_Handler,
+		},
+		{
+			MethodName: "favorite_judge",
+			Handler:    _Favorite_FavoriteJudge_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
