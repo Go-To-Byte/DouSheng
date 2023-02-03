@@ -13,9 +13,8 @@ import (
 func User() {
 	u := models.Router.Group("/douyin/user")
 	{
-		u.GET("/", services.Info)
+		u.GET("/", milddlewares.JWTAuth(), services.Info)
 		u.POST("/login", services.Login)
 		u.POST("/register", services.Register)
 	}
-	u.Use(milddlewares.JWTAuth())
 }

@@ -5,6 +5,7 @@
 package routers
 
 import (
+	"github.com/Go-To-Byte/DouSheng/network/milddlewares"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	"github.com/Go-To-Byte/DouSheng/network/services"
 )
@@ -17,4 +18,5 @@ func Relation() {
 		r.GET("/follower/list", services.FollowerList)
 		r.GET("/friend/list", services.FriendList)
 	}
+	r.Use(milddlewares.JWTAuth())
 }
