@@ -25,6 +25,7 @@ type VideoClient interface {
 	Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
 	PublishList(ctx context.Context, in *PublishListRequest, opts ...grpc.CallOption) (*PublishListResponse, error)
 	Info(ctx context.Context, in *VideoInfoRequest, opts ...grpc.CallOption) (*VideoInfoResponse, error)
+	Feed(ctx context.Context, in *FeedRequest, opts ...grpc.CallOption) (*FeedResponse, error)
 }
 
 type videoClient struct {
@@ -62,6 +63,15 @@ func (c *videoClient) Info(ctx context.Context, in *VideoInfoRequest, opts ...gr
 	return out, nil
 }
 
+func (c *videoClient) Feed(ctx context.Context, in *FeedRequest, opts ...grpc.CallOption) (*FeedResponse, error) {
+	out := new(FeedResponse)
+	err := c.cc.Invoke(ctx, "/video/feed", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VideoServer is the server API for Video service.
 // All implementations must embed UnimplementedVideoServer
 // for forward compatibility
@@ -69,6 +79,7 @@ type VideoServer interface {
 	Publish(context.Context, *PublishRequest) (*PublishResponse, error)
 	PublishList(context.Context, *PublishListRequest) (*PublishListResponse, error)
 	Info(context.Context, *VideoInfoRequest) (*VideoInfoResponse, error)
+	Feed(context.Context, *FeedRequest) (*FeedResponse, error)
 	mustEmbedUnimplementedVideoServer()
 }
 
@@ -84,6 +95,9 @@ func (UnimplementedVideoServer) PublishList(context.Context, *PublishListRequest
 }
 func (UnimplementedVideoServer) Info(context.Context, *VideoInfoRequest) (*VideoInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Info not implemented")
+}
+func (UnimplementedVideoServer) Feed(context.Context, *FeedRequest) (*FeedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Feed not implemented")
 }
 func (UnimplementedVideoServer) mustEmbedUnimplementedVideoServer() {}
 
@@ -152,6 +166,24 @@ func _Video_Info_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Video_Feed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FeedRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServer).Feed(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/video/feed",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServer).Feed(ctx, req.(*FeedRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Video_ServiceDesc is the grpc.ServiceDesc for Video service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +202,10 @@ var Video_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "info",
 			Handler:    _Video_Info_Handler,
+		},
+		{
+			MethodName: "feed",
+			Handler:    _Video_Feed_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

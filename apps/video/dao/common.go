@@ -74,3 +74,19 @@ func VideoFindByVideoID(videoID int64) []*model.Video {
 	}
 	return r
 }
+
+// VideoFindByTimeStamp 因为雪花id自带时间戳，直接根据id排序查找
+func VideoFindByTimeStamp(timeStamp int64) []*model.Video {
+	q := query.Use(models.DB)
+	v := q.Video
+
+	r, err := v.WithContext(context.Background()).
+		Where(v.ID.Lte(timeStamp)).
+		Order(v.ID.Desc()).
+		Find()
+
+	if err != nil {
+		zap.S().Panicf("Failed find video time stamp: %v", timeStamp)
+	}
+	return r
+}

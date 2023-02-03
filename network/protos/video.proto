@@ -8,6 +8,7 @@ service video{
   rpc publish(PublishRequest) returns (PublishResponse);
   rpc publish_list(PublishListRequest) returns (PublishListResponse);
   rpc info(VideoInfoRequest) returns (VideoInfoResponse);
+  rpc feed(FeedRequest) returns (FeedResponse);
 }
 
 message PublishRequest {
@@ -29,7 +30,7 @@ message PublishListRequest {
 message PublishListResponse {
   int32 status_code = 1; // 状态码，0-成功，其他值-失败
   string status_msg = 2; // 返回状态描述
-  repeated Video video_list = 3; // 用户发布的视频列表
+  repeated int64 video_list = 3; // 用户发布的视频列表
 }
 
 message Video {
@@ -51,4 +52,15 @@ message VideoInfoResponse{
   int32 status_code = 1; // 状态码，0-成功，其他值-失败
   string status_msg = 2; // 返回状态描述
   Video video = 3; // 视频信息
+}
+
+message FeedRequest{
+  optional int64 latest_time = 1;  // 可选参数，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
+}
+
+message FeedResponse{
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+  int64 next_time = 3;  // 本次返回的视频中，发布最早的时间，作为下次请求时的latest_time
+  repeated int64 VideoList = 4; // 视频id列表
 }

@@ -10,8 +10,8 @@ import (
 	"github.com/Go-To-Byte/DouSheng/apps/video/dao/dal/model"
 	"github.com/Go-To-Byte/DouSheng/apps/video/models"
 	"github.com/Go-To-Byte/DouSheng/apps/video/proto"
-
 	"go.uber.org/zap"
+	"time"
 )
 
 func (v *Video) Publish(ctx context.Context, req *proto.PublishRequest) (*proto.PublishResponse, error) {
@@ -42,20 +42,10 @@ func (v *Video) Publish(ctx context.Context, req *proto.PublishRequest) (*proto.
 
 func (v *Video) PublishList(ctx context.Context, req *proto.PublishListRequest) (*proto.PublishListResponse, error) {
 	r := dao.VideoFindByUserID(req.UserId)
-	list := make([]*proto.Video, 0)
+	list := make([]int64, 0)
 
 	for i := range r {
-		video := &proto.Video{
-			Id:            r[i].ID,
-			Author:        r[i].AuthID,
-			PlayUrl:       r[i].PlayURL,
-			CoverUrl:      r[i].CoverURL,
-			FavoriteCount: 0,
-			CommentCount:  0,
-			IsFavorite:    false,
-			Title:         r[i].Titel,
-		}
-		list = append(list, video)
+		list = append(list, r[i].ID)
 	}
 
 	zap.S().Debugf("success to get comment list ==> len(comment_list): %v", len(list))
@@ -89,5 +79,26 @@ func (v *Video) Info(ctx context.Context, req *proto.VideoInfoRequest) (*proto.V
 		StatusCode: 0,
 		StatusMsg:  "success",
 		Video:      list[0],
+	}, nil
+}
+
+func (v *Video) Feed(ctx context.Context, req *proto.FeedRequest) (*proto.FeedResponse, error) {
+	var timeStamp = (time.Now().UnixNano() - 1288834974657) << 22
+	if req.LatestTime != nil {
+		timeStamp = *req.LatestTime
+	}
+	r := dao.VideoFindByTimeStamp(timeStamp)
+	list := make([]int64, 0)
+
+	for i := range r {
+		list = append(list, r[i].ID)
+	}
+
+	zap.S().Debugf("success to get video list ==> len(comment_list): %v", len(list))
+	return &proto.FeedResponse{
+		StatusCode: 0,
+		StatusMsg:  "success",
+		VideoList:  list,
+		NextTime:   r[len(r)-1].ID,
 	}, nil
 }

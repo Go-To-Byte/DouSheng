@@ -6,6 +6,7 @@ package routers
 
 func Init() {
 	User()
+	Video()
 	Comment()
 	Message()
 	Relation()
