@@ -6,10 +6,11 @@ option go_package = ".;proto";
 // protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative favorite.proto
 service favorite{
   rpc favorite(FavoriteRequest) returns (FavoriteResponse);
-  rpc favored_list(FavoriteListRequest) returns (FavoriteListResponse);
+  rpc favored_list(FavoredListRequest) returns (FavoredListResponse);
   rpc favorite_list(FavoriteListRequest) returns (FavoriteListResponse);
   rpc favorite_judge(FavoriteJudgeRequest) returns (FavoriteJudgeResponse);
 }
+
 
 message FavoriteRequest {
   int64 user_id = 1; // 用户id
@@ -22,6 +23,17 @@ message FavoriteResponse {
   string status_msg = 2; // 返回状态描述
 }
 
+message FavoredListRequest {
+  int64 video_id = 1; // 视频id
+}
+
+message FavoredListResponse {
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+  repeated int64 user_list = 3; // 用户点赞视频列表
+}
+
+
 message FavoriteListRequest {
   int64 user_id = 1; // 用户id
 }
@@ -31,6 +43,7 @@ message FavoriteListResponse {
   string status_msg = 2; // 返回状态描述
   repeated int64 video_list = 3; // 用户点赞视频列表
 }
+
 
 message FavoriteJudgeRequest {
   int64 user_id = 1; // 用户id

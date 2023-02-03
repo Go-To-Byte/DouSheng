@@ -102,8 +102,10 @@ func FavoriteList(ctx *gin.Context) {
 		StatusMsg:  "success",
 	}
 	for i := 0; i < len(response.VideoList); i++ {
-		// TODO:
-		video, _ := getVideoInfo(response.VideoList[i])
+		video, err := getVideoInfo(userID.(int64), response.VideoList[i])
+		if err != nil {
+			continue
+		}
 		favoriteList.VideoList = append(favoriteList.VideoList, video)
 	}
 	ctx.JSON(http.StatusOK, favoriteList)

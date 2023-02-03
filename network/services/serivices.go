@@ -65,7 +65,11 @@ func getVideoInfo(userID int64, videoID int64) (response models.Video, err error
 	favorite := proto.NewFavoriteClient(models.Dials["favorite"])
 	videoRequest := proto.VideoInfoRequest{VideoId: videoID}
 	commentListRequest := proto.CommentListRequest{VideoId: videoID}
-	FavoriteListRequest := proto.FavoriteListRequest{UserId: videoID}
+	favoredListRequest := proto.FavoredListRequest{VideoId: videoID}
+	favoriteJudgeRequest := proto.FavoriteJudgeRequest{
+		UserId:  userID,
+		VideoId: videoID,
+	}
 
 	// 获取video info
 	var authorID int64 // 作者id
@@ -94,21 +98,16 @@ func getVideoInfo(userID int64, videoID int64) (response models.Video, err error
 	}
 
 	// 获取 FavoriteCount && IsFavorite
-	if r, e := favorite.FavoriteList(context.Background(), &FavoriteListRequest); err != nil {
-		zap.S().Errorf("error getting comment list: (%v) ==> %v", videoID, e)
+	if r, e := favorite.FavoredList(context.Background(), &favoredListRequest); err != nil {
+		zap.S().Errorf("error getting favored list: (%v) ==> %v", videoID, e)
 	} else {
-		response.CommentCount = int64(len(r.VideoList))
+		response.FavoriteCount = int64(len(r.UserList))
+	}
+	if r, e := favorite.FavoriteJudge(context.Background(), &favoriteJudgeRequest); err != nil {
+		zap.S().Errorf("error getting favorite judge: (%v:%v) ==> %v", userID, videoID, e)
+	} else {
+		response.IsFavorite = r.IsFavorite != 0
 	}
 
-	response = models.Video{
-		Author:        models.User{},
-		CommentCount:  0,
-		CoverURL:      "",
-		FavoriteCount: 0,
-		ID:            0,
-		IsFavorite:    false,
-		PlayURL:       "",
-		Title:         "",
-	}
 	return
 }
