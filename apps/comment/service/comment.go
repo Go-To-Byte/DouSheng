@@ -47,7 +47,7 @@ func (c *Comment) Comment(ctx context.Context, req *proto.CommentRequest) (*prot
 			Id:         comment.ID,
 			User:       comment.UserID,
 			Content:    comment.Content,
-			CreateDate: time.Unix(comment.ID>>22, 0).Format("2006-01-02 15:04:05"),
+			CreateDate: time.Unix((comment.ID>>22)/1000+1288834974657/1000, 0).Format("2006-01-02 15:04:05"),
 		},
 	}, nil
 }
@@ -61,7 +61,7 @@ func (c *Comment) CommentList(ctx context.Context, req *proto.CommentListRequest
 			Id:         r[i].ID,
 			User:       r[i].UserID,
 			Content:    r[i].Content,
-			CreateDate: time.Unix(r[i].ID>>22, 0).Format("2006-01-02 15:04:05"),
+			CreateDate: time.Unix((r[i].ID>>22)/1000+1288834974657/1000, 0).Format("2006-01-02 15:04:05"),
 		}
 		list = append(list, comment)
 	}
