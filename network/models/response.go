@@ -120,12 +120,12 @@ type MessageResponse struct {
 }
 
 type MessageListResponse struct {
-	MessageList []MessageList `json:"message_list"`
-	StatusCode  string        `json:"status_code"`
-	StatusMsg   string        `json:"status_msg"`
+	MessageList []Message `json:"message_list"`
+	StatusCode  string    `json:"status_code"`
+	StatusMsg   string    `json:"status_msg"`
 }
 
-type MessageList struct {
+type Message struct {
 	Content    string `json:"content"`
 	CreateTime string `json:"create_time"`
 	ID         int64  `json:"id"`

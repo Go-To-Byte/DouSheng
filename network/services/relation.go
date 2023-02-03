@@ -55,12 +55,14 @@ func Follow(ctx *gin.Context) {
 			StatusMsg:  "failed",
 		})
 		ctx.Abort()
-	} else {
-		ctx.JSON(http.StatusOK, models.FollowResponse{
-			StatusCode: 0,
-			StatusMsg:  "success",
-		})
+		return
 	}
+
+	// 处理response 响应
+	ctx.JSON(http.StatusOK, models.FollowResponse{
+		StatusCode: 0,
+		StatusMsg:  "success",
+	})
 }
 
 func FollowList(ctx *gin.Context) {
@@ -74,7 +76,7 @@ func FollowList(ctx *gin.Context) {
 	request := proto.FollowListRequest{UserId: userID.(int64)}
 	if response, err = c.FollowList(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FollowListResponse{
-			StatusCode: strconv.Itoa(1),
+			StatusCode: "1",
 			StatusMsg:  "failed",
 		})
 		ctx.Abort()
@@ -83,7 +85,7 @@ func FollowList(ctx *gin.Context) {
 
 	// 获得关注用户的id列表后，处理响应数据
 	followListResponse := models.FollowListResponse{
-		StatusCode: strconv.Itoa(0),
+		StatusCode: "0",
 		StatusMsg:  "success",
 	}
 	zap.S().Debugf("relation follow list: len(user_list) = %d", len(response.UserList))
@@ -110,7 +112,7 @@ func FollowerList(ctx *gin.Context) {
 	request := proto.FollowerListRequest{UserId: userID.(int64)}
 	if response, err = c.FollowerList(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FollowerListResponse{
-			StatusCode: strconv.Itoa(1),
+			StatusCode: "1",
 			StatusMsg:  "failed",
 		})
 		ctx.Abort()
@@ -119,7 +121,7 @@ func FollowerList(ctx *gin.Context) {
 
 	// 获得关注用户的id列表后，处理响应数据
 	followerListResponse := models.FollowerListResponse{
-		StatusCode: strconv.Itoa(0),
+		StatusCode: "0",
 		StatusMsg:  "success",
 	}
 	zap.S().Debugf("relation follower list: len(user_list) = %d", len(response.UserList))
@@ -146,7 +148,7 @@ func FriendList(ctx *gin.Context) {
 	request := proto.FriendListRequest{UserId: userID.(int64)}
 	if response, err = c.FriendList(ctx, &request); err != nil {
 		ctx.JSON(http.StatusBadRequest, models.FriendListResponse{
-			StatusCode: strconv.Itoa(1),
+			StatusCode: "1",
 			StatusMsg:  "failed",
 		})
 		ctx.Abort()
@@ -155,7 +157,7 @@ func FriendList(ctx *gin.Context) {
 
 	// 获得好友的id列表后，处理响应数据
 	friendListResponse := models.FriendListResponse{
-		StatusCode: strconv.Itoa(0),
+		StatusCode: "0",
 		StatusMsg:  "success",
 	}
 	zap.S().Debugf("relation follower list: len(user_list) = %d", len(response.UserList))
