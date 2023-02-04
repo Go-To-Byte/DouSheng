@@ -1,4 +1,4 @@
-module github.com/Go-To-Byte/DouSheng
+module github.com/Go-To-Byte/DouSheng/user_center
 
 go 1.19
 
