@@ -2,8 +2,8 @@
 package conf_test
 
 import (
-	"Go-To-Byte/DouSheng/user_center/conf"
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"

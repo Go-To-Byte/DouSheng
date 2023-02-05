@@ -2,9 +2,9 @@
 package cmd
 
 import (
-	"Go-To-Byte/DouSheng/user_center/conf"
-	"Go-To-Byte/DouSheng/user_center/ioc"
-	"Go-To-Byte/DouSheng/user_center/protocol"
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
+	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
+	"github.com/Go-To-Byte/DouSheng/user_center/protocol"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/spf13/cobra"
@@ -13,7 +13,7 @@ import (
 	"syscall"
 
 	// 驱动加载所有需要放入IOC的实例
-	_ "Go-To-Byte/DouSheng/user_center/apps/all"
+	_ "github.com/Go-To-Byte/DouSheng/user_center/apps/all"
 )
 
 var (

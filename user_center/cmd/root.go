@@ -2,8 +2,8 @@
 package cmd
 
 import (
-	"Go-To-Byte/DouSheng/user_center/version"
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/user_center/version"
 	"github.com/spf13/cobra"
 	"os"
 )

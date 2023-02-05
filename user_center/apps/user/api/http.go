@@ -2,8 +2,8 @@
 package api
 
 import (
-	"Go-To-Byte/DouSheng/user_center/apps/user"
-	"Go-To-Byte/DouSheng/user_center/ioc"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
 	"github.com/gin-gonic/gin"
 )
 

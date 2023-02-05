@@ -2,7 +2,7 @@
 package api
 
 import (
-	"Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

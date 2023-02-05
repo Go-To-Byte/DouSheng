@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package dousheng.user;
-option go_package="Go-To-Byte/DouSheng/user_center/apps/user";
+option go_package="github.com/Go-To-Byte/DouSheng/user_center/apps/user";
 
 
 // 定义 user 模块的接口

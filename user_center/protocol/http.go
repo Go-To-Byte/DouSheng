@@ -2,10 +2,10 @@
 package protocol
 
 import (
-	"Go-To-Byte/DouSheng/user_center/conf"
-	"Go-To-Byte/DouSheng/user_center/ioc"
 	"context"
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
+	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
 	"github.com/gin-gonic/gin"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"

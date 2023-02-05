@@ -2,10 +2,10 @@
 package rpc_test
 
 import (
-	"Go-To-Byte/DouSheng/user_center/apps/user"
-	"Go-To-Byte/DouSheng/user_center/client/rpc"
-	"Go-To-Byte/DouSheng/user_center/conf"
 	"context"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

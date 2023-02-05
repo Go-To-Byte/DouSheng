@@ -2,11 +2,11 @@
 package impl_test
 
 import (
-	"Go-To-Byte/DouSheng/user_center/apps/user"
-	"Go-To-Byte/DouSheng/user_center/conf"
-	"Go-To-Byte/DouSheng/user_center/ioc"
 	"context"
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
+	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/stretchr/testify/assert"
 	"testing"

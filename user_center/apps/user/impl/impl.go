@@ -2,9 +2,9 @@
 package impl
 
 import (
-	"Go-To-Byte/DouSheng/user_center/apps/user"
-	"Go-To-Byte/DouSheng/user_center/conf"
-	"Go-To-Byte/DouSheng/user_center/ioc"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
+	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"

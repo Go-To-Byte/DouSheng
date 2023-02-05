@@ -1,6 +1,6 @@
 PROJECT_NAME=user_center
 MAIN_FILE=main.go
-PKG := "Go-To-Byte/DouSheng/$(PROJECT_NAME)"
+PKG := "github.com/Go-To-Byte/DouSheng/$(PROJECT_NAME)"
 MOD_DIR := $(shell go env GOMODCACHE)
 PKG_LIST := $(shell go list ${PKG}/... | grep -v /vendor/)
 GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
