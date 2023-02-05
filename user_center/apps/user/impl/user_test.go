@@ -16,11 +16,11 @@ var (
 	service user.ServiceServer
 )
 
-func TestCreateUser(t *testing.T) {
+func TestRegister(t *testing.T) {
 	should := assert.New(t)
 	newUser := user.NewLoginAndRegisterRequest()
 	newUser.Username = "ciusyan"
-	newUser.Password = "111"
+	newUser.Password = "222"
 	token, err := service.Register(context.Background(), newUser)
 
 	if should.NoError(err) {
@@ -28,8 +28,20 @@ func TestCreateUser(t *testing.T) {
 		fmt.Println(token.UserId)
 		fmt.Println(token.Token)
 	}
+}
 
-	_ = conf.C().MySQL.GetDB()
+func TestLogin(t *testing.T) {
+	should := assert.New(t)
+	newUser := user.NewLoginAndRegisterRequest()
+	newUser.Username = "ciusyan"
+	newUser.Password = "222"
+	token, err := service.Login(context.Background(), newUser)
+
+	if should.NoError(err) {
+		fmt.Println(token)
+		fmt.Println(token.UserId)
+		fmt.Println(token.Token)
+	}
 }
 
 func init() {

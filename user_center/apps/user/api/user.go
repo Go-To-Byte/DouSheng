@@ -13,26 +13,23 @@ func (h *Handler) Register(c *gin.Context) {
 
 	// 1、接收参数
 	if err := c.Bind(req); err != nil {
-		// TODO：字符串转字符串指针的小工具
+
 		msg := err.Error()
 		c.JSON(http.StatusBadRequest, user.TokenResponse{
 			StatusCode: 1,
 			StatusMsg:  &msg,
 		})
+		return
 	}
 
 	// 2、进行接口调用
 	resp, err := h.service.Register(c.Request.Context(), req)
 	if err != nil {
-		msg := err.Error()
-		c.JSON(http.StatusBadRequest, user.TokenResponse{
-			StatusCode: 1,
-			StatusMsg:  &msg,
-		})
+		c.JSON(http.StatusBadRequest, resp)
+		return
 	}
-	resp.StatusCode = 0
 
-	c.JSON(http.StatusBadRequest, resp)
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h *Handler) Login(c *gin.Context) {
@@ -41,26 +38,21 @@ func (h *Handler) Login(c *gin.Context) {
 
 	// 1、接收参数
 	if err := c.Bind(req); err != nil {
-		// TODO：字符串转字符串指针的小工具
 		msg := err.Error()
 		c.JSON(http.StatusBadRequest, user.TokenResponse{
 			StatusCode: 1,
 			StatusMsg:  &msg,
 		})
+		return
 	}
 
 	// 2、进行接口调用
 	resp, err := h.service.Login(c.Request.Context(), req)
 	if err != nil {
-		msg := err.Error()
-		c.JSON(http.StatusBadRequest, user.TokenResponse{
-			StatusCode: 1,
-			StatusMsg:  &msg,
-		})
+		c.JSON(http.StatusBadRequest, resp)
+		return
 	}
-	resp.StatusCode = 0
-
-	c.JSON(http.StatusBadRequest, resp)
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h *Handler) GetUserInfo(c *gin.Context) {

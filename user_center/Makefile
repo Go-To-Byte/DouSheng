@@ -44,6 +44,9 @@ gen: ## generate protobuf file
 	@protoc-go-inject-tag -input=apps/*/*.pb.go
 	# @protoc-go-inject-tag -input=common/*.pb.go
 
+init: dep ## Initial project
+	@go run $(MAIN_FILE) init
+
 run: # Run Develop server
 	@go run $(MAIN_FILE) start -f etc/dousheng.toml
 
