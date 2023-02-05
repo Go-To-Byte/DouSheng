@@ -17,6 +17,8 @@
 
 etc/dousheng.toml
 
+etc/unit_test.env
+
 dist
 
 *.idea

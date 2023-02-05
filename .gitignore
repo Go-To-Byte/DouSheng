@@ -15,8 +15,9 @@
 # vendor/
 
 
-etc/dousheng.toml
+*/etc/dousheng.toml
+*/etc/unit_test.env
 
-dist
+*/dist
 
 *.idea

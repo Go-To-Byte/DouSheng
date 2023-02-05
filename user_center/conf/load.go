@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/BurntSushi/toml"
 	"github.com/caarlos0/env"
+	"github.com/hashicorp/consul/api"
 	"github.com/infraboard/mcube/logger/zap"
 )
 
@@ -15,26 +16,39 @@ import (
 // LoadConfigFromToml 从Toml配置文件加载
 func LoadConfigFromToml(filePath string) error {
 	// 初始化全局对象
-	config = NewDefaultConfig()
-	_, err := toml.DecodeFile(filePath, config)
+	cfg := NewDefaultConfig()
+	_, err := toml.DecodeFile(filePath, cfg)
 	if err != nil {
 		return fmt.Errorf("load config file error，path：%s，%s", filePath, err)
 	}
 
-	return nil
+	return cfg.LoadGlobal()
 }
 
 // LoadConfigFromEnv 从环境变量加载
 func LoadConfigFromEnv() error {
-	config = NewDefaultConfig()
-	return env.Parse(config)
+	config := NewDefaultConfig()
+	if err := env.Parse(config); err != nil {
+		return err
+	}
+	return config.LoadGlobal()
 }
 
 // LoadGlobal 或者可以这样加载全局实例s
-func LoadGlobal() error {
-	var err error
-	db, err = config.MySQL.getDBConn()
-	return err
+func (c *Config) LoadGlobal() error {
+	// 给全局配置赋值
+	global = c
+
+	// 初始化 consul 客户端
+	consulCfg := api.DefaultConfig()
+	consulCfg.Address = c.Consul.Addr()
+	client, err := api.NewClient(consulCfg)
+	if err != nil {
+		return err
+	}
+
+	globalConsulClient = client
+	return nil
 }
 
 // log 为全局变量, 只需要load 即可全局使用, 依赖全局配置先初始化

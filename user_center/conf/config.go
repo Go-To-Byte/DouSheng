@@ -10,20 +10,27 @@ type Config struct {
 	App   *app   `toml:"app"`
 	Log   *log   `toml:"log"`
 	MySQL *mySQL `toml:"mysql"`
+
+	// consul 注册中心
+	Consul *consul `toml:"consul"`
 }
 
 func NewDefaultConfig() *Config {
 	return &Config{
-		App:   NewDefaultApp(),
-		Log:   NewDefaultLog(),
-		MySQL: NewDefaultMySQL(),
+		App:    NewDefaultApp(),
+		Log:    NewDefaultLog(),
+		MySQL:  NewDefaultMySQL(),
+		Consul: NewDefaultConsul(),
 	}
 }
 
 // 防止配置文件在运行时被更改，设置为私有的
-var config *Config
+var global *Config
 
 // C 获取总的配置对象
 func C() *Config {
-	return config
+	if global == nil {
+		panic("加载全局配置失败")
+	}
+	return global
 }

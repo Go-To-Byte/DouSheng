@@ -9,8 +9,8 @@ import "fmt"
 
 type app struct {
 	Name string `toml:"name" env:"APP_NAME"`
-	HTTP *http  `toml:"http"`
-	GRPC *grpc  `toml:"grpc"`
+	HTTP *http  `toml:"http" env:"HTTP"`
+	GRPC *grpc  `toml:"grpc" env:"GRPC"`
 }
 
 // HTTP 服务配置
@@ -22,7 +22,7 @@ type http struct {
 // GRPC 服务配置
 type grpc struct {
 	Host string `toml:"host" env:"GRPC_HOST"`
-	Port string `toml:"port" env:"GRPC_PORT"`
+	Port int    `toml:"port" env:"GRPC_PORT"`
 }
 
 func NewDefaultApp() *app {
@@ -43,7 +43,7 @@ func newDefaultHTTP() *http {
 func newDefaultGRPC() *grpc {
 	return &grpc{
 		Host: "127.0.0.1",
-		Port: "8505",
+		Port: 8505,
 	}
 }
 
@@ -54,5 +54,5 @@ func (h *http) Addr() string {
 
 // Addr 获取 GRPC 服务配置的 IP + 端口
 func (g *grpc) Addr() string {
-	return fmt.Sprintf("%s:%s", g.Host, g.Port)
+	return fmt.Sprintf("%s:%d", g.Host, g.Port)
 }
