@@ -2,6 +2,8 @@
 package utils
 
 import (
+	"github.com/Go-To-Byte/DouSheng/user_center/constant"
+	"github.com/gin-gonic/gin"
 	"math/rand"
 	"strings"
 	"time"
@@ -19,4 +21,26 @@ func MakeBearer(length int) string {
 	}
 
 	return strings.Join(t, "")
+}
+
+// GetToken 从gin的Ctx种获取Token
+func GetToken(ctx *gin.Context) string {
+
+	// 1、从 header 中获取
+	// ...我们这里都是从参数中获取的
+
+	// 2、从query string 中获取
+	tk := ctx.Query(constant.REQUEST_TOKEN)
+	if tk != "" {
+		return tk
+	}
+
+	// 3、从 body 中获取
+	tk = ctx.PostForm(constant.REQUEST_TOKEN)
+	if tk != "" {
+		return tk
+	}
+
+	// 4、都没有，就返回 ""
+	return ""
 }
