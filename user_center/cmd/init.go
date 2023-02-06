@@ -35,7 +35,10 @@ var initCmd = &cobra.Command{
 }
 
 func createTables() error {
-	db := conf.C().MySQL.GetDB()
+	db, err := conf.C().MySQL.GetDB()
+	if err != nil {
+		panic(err)
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

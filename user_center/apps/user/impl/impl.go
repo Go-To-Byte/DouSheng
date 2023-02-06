@@ -15,10 +15,16 @@ import (
 var impl = &userServiceImpl{}
 
 func NewUserServiceImpl() *userServiceImpl {
+
+	db, err := conf.C().MySQL.GetDB()
+	if err != nil {
+		panic(err)
+	}
+
 	return &userServiceImpl{
 		// User模块服务的子Logger
 		l:  zap.L().Named("User"),
-		db: conf.C().MySQL.GetDB(),
+		db: db,
 	}
 }
 
@@ -32,7 +38,12 @@ type userServiceImpl struct {
 
 func (u *userServiceImpl) Init() error {
 	u.l = zap.L().Named("User")
-	u.db = conf.C().MySQL.GetDB()
+
+	db, err := conf.C().MySQL.GetDB()
+	if err != nil {
+		return err
+	}
+	u.db = db
 
 	return nil
 }
