@@ -10,10 +10,10 @@ type Config struct {
 	App     *app     `toml:"app"`
 	Log     *log     `toml:"log"`
 	MySQL   *mySQL   `toml:"mysql"`
-	Mongodb *mongodb `toml:"mongo"`
+	Mongodb *mongodb `toml:"mongodb"`
 
-	// consul 注册中心
-	Consul *consul `toml:"consul"`
+	// Consul 注册中心
+	Consul *Consul `toml:"consul"`
 }
 
 func NewDefaultConfig() *Config {

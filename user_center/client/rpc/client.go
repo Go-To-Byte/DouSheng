@@ -2,7 +2,7 @@
 package rpc
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -10,10 +10,10 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func NewClientSet() (*ClientSet, error) {
+func NewClientSet(consulConf *conf.Consul) (*ClientSet, error) {
 
 	conn, err := grpc.Dial(
-		conf.C().Consul.GrpcDailUrl(),
+		consulConf.GrpcDailUrl(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
 	)
@@ -36,6 +36,6 @@ type ClientSet struct {
 	l    logger.Logger
 }
 
-func (c *ClientSet) User() user.ServiceClient {
-	return user.NewServiceClient(c.conn)
+func (c *ClientSet) Token() token.ServiceClient {
+	return token.NewServiceClient(c.conn)
 }

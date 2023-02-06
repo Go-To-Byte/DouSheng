@@ -39,7 +39,7 @@ func (c *Config) LoadGlobal() error {
 	// 给全局配置赋值
 	global = c
 
-	// 初始化 consul 客户端
+	// 初始化 Consul 客户端
 	consulCfg := api.DefaultConfig()
 	consulCfg.Address = c.Consul.Addr()
 	client, err := api.NewClient(consulCfg)
@@ -51,7 +51,7 @@ func (c *Config) LoadGlobal() error {
 	return nil
 }
 
-// log 为全局变量, 只需要load 即可全局使用, 依赖全局配置先初始化
+// LoadGlobalLogger log 为全局变量, 只需要load 即可全局使用, 依赖全局配置先初始化
 func LoadGlobalLogger() error {
 	var (
 		logInitMsg string
