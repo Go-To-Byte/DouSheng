@@ -2,7 +2,7 @@
 package utils
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/constant"
+	"github.com/Go-To-Byte/DouSheng/user_center/common/constant"
 	"github.com/gin-gonic/gin"
 	"math/rand"
 	"strings"

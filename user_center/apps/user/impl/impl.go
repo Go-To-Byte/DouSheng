@@ -2,6 +2,7 @@
 package impl
 
 import (
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
@@ -34,6 +35,9 @@ type userServiceImpl struct {
 	db *gorm.DB
 
 	user.UnimplementedServiceServer
+
+	// 用于管理Token
+	tokenService token.ServiceServer
 }
 
 func (u *userServiceImpl) Init() error {
@@ -44,6 +48,7 @@ func (u *userServiceImpl) Init() error {
 		return err
 	}
 	u.db = db
+	u.tokenService = ioc.GetGrpcDependency(token.AppName).(token.ServiceServer)
 
 	return nil
 }

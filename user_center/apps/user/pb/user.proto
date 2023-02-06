@@ -27,12 +27,6 @@ message LoginAndRegisterRequest {
 
 // 用户注册 & 登录 的接口响应 model
 message TokenResponse {
-  // 状态码，0-成功， 其他值-失败
-  // @gotags: json:"status_code"
-  int32 status_code = 1;
-  // 返回状态描述信息
-  // @gotags: json:"status_msg"
-  optional string status_msg = 2;
   // 用户ID
   // @gotags: json:"user_id"
   int64 user_id = 3;
@@ -53,12 +47,6 @@ message UserInfoRequest {
 
 // 获取用户信息 的接口响应 model
 message UserInfoResponse {
-  // 状态码，0-成功， 其他值-失败
-  // @gotags: json:"status_code"
-  int32 status_code = 1;
-  // 返回状态描述信息
-  // @gotags: json:"status_msg"
-  optional string status_msg = 2;
   // 用户信息
   // @gotags: json:"user"
   User user = 3;

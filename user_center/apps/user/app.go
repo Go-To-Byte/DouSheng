@@ -4,6 +4,7 @@ package user
 import (
 	"github.com/Go-To-Byte/DouSheng/user_center/utils"
 	"github.com/go-playground/validator/v10"
+	"google.golang.org/protobuf/proto"
 )
 
 const (
@@ -23,8 +24,11 @@ func (r *LoginAndRegisterRequest) Validate() error {
 	return validate.Struct(r)
 }
 
-func NewTokenResponse() *TokenResponse {
-	return &TokenResponse{}
+func NewTokenResponse(id int64, token string) *TokenResponse {
+	return &TokenResponse{
+		UserId: id,
+		Token:  token,
+	}
 }
 
 func NewDefaultUser() *User {
@@ -56,4 +60,9 @@ func (u *UserPo) CheckHash(data any) bool {
 // TableName 指明表名
 func (UserPo) TableName() string {
 	return "user"
+}
+
+// Clone 只拷贝数据
+func (r *TokenResponse) Clone() *TokenResponse {
+	return proto.Clone(r).(*TokenResponse)
 }
