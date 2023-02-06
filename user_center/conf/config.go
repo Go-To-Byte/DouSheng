@@ -7,9 +7,10 @@ package conf
 
 // Config 将配置文件抽成一个对象
 type Config struct {
-	App   *app   `toml:"app"`
-	Log   *log   `toml:"log"`
-	MySQL *mySQL `toml:"mysql"`
+	App     *app     `toml:"app"`
+	Log     *log     `toml:"log"`
+	MySQL   *mySQL   `toml:"mysql"`
+	Mongodb *mongodb `toml:"mongo"`
 
 	// consul 注册中心
 	Consul *consul `toml:"consul"`
@@ -17,10 +18,11 @@ type Config struct {
 
 func NewDefaultConfig() *Config {
 	return &Config{
-		App:    NewDefaultApp(),
-		Log:    NewDefaultLog(),
-		MySQL:  NewDefaultMySQL(),
-		Consul: NewDefaultConsul(),
+		App:     NewDefaultApp(),
+		Log:     NewDefaultLog(),
+		MySQL:   NewDefaultMySQL(),
+		Mongodb: NewMongodb(),
+		Consul:  NewDefaultConsul(),
 	}
 }
 

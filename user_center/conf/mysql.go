@@ -47,20 +47,20 @@ func NewDefaultMySQL() *mySQL {
 	}
 }
 
-var db *gorm.DB
+var mysqlDb *gorm.DB
 
 func (m *mySQL) GetDB() *gorm.DB {
 	m.lock.Lock() // 锁住临界区，保证线程安全
 	defer m.lock.Unlock()
 
-	if db == nil {
+	if mysqlDb == nil {
 		conn, err := m.getDBConn()
 		if err != nil {
 			panic(err)
 		}
-		db = conn
+		mysqlDb = conn
 	}
-	return db
+	return mysqlDb
 }
 
 // gorm获取数据库连接

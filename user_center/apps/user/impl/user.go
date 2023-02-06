@@ -13,21 +13,17 @@ import (
 // Register TODO：完成注册逻辑
 func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
 
-	// ====
 	// 1、请求参数校验
-	// ====
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
 
-	// ====
 	// 2、根据 Username 查询此用户是否已经注册
-	// ====
-
 	userRes, err := s.GetUserByName(ctx, req.Username)
 
 	response := user.NewTokenResponse()
 	var msg string
+
 	// 用户已存在
 	if userRes != nil {
 		// TODO：1、小工具：取指针的值，2、封装响应[成功、失败]
@@ -37,9 +33,7 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 		return response, err
 	}
 
-	// ====
 	// 3、未注册-创建用户，注册-返回提示
-	// ====
 	po := user.NewUserPo(req.Hash())
 	insertRes, err := s.Insert(ctx, po)
 
