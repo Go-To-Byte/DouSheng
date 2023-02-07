@@ -127,6 +127,6 @@ func managerStartAndStop() error {
 func init() {
 	f := StartCmd.PersistentFlags()
 	f.StringVarP(&configFile, "config", "f",
-		"etc/dousheng.toml", "视频服务的配置文件路径")
+		"etc/config.toml", "视频服务的配置文件路径")
 	RootCmd.AddCommand(StartCmd)
 }

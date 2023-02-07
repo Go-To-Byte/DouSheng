@@ -51,7 +51,7 @@ func TestLogin(t *testing.T) {
 func init() {
 
 	// 加载配置文件
-	if err := conf.LoadConfigFromToml("../../../etc/dousheng.toml"); err != nil {
+	if err := conf.LoadConfigFromToml("../../../etc/config.toml"); err != nil {
 		panic(err)
 	}
 

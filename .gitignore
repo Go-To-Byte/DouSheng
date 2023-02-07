@@ -15,7 +15,7 @@
 # vendor/
 
 
-*/etc/dousheng.toml
+*/etc/config.toml
 */etc/unit_test.env
 
 */dist

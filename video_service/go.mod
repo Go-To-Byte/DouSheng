@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/Go-To-Byte/DouSheng/dou_common v0.0.0-20230207095222-9a80c0906e3e
+	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-gonic/gin v1.8.2
 	github.com/hashicorp/consul/api v1.18.0
@@ -15,6 +16,7 @@ require (
 	github.com/stretchr/testify v1.8.1
 	go.mongodb.org/mongo-driver v1.8.3
 	google.golang.org/grpc v1.52.3
+	google.golang.org/protobuf v1.28.1
 	gorm.io/driver/mysql v1.4.5
 	gorm.io/gorm v1.24.5
 )
@@ -69,8 +71,8 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
+	golang.org/x/time v0.3.0 // indirect
 	google.golang.org/genproto v0.0.0-20221118155620-16455021b5e6 // indirect
-	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

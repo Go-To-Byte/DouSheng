@@ -14,6 +14,8 @@ type Config struct {
 
 	// Consul 注册中心
 	Consul *Consul `toml:"consul"`
+	// aliyun oss 服务
+	Aliyun *aliyun `toml:"aliyun"`
 }
 
 func NewDefaultConfig() *Config {

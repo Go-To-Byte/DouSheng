@@ -48,7 +48,7 @@ init: dep ## Initial project
 	@go run $(MAIN_FILE) init
 
 run: # Run Develop server
-	@go run $(MAIN_FILE) start -f etc/dousheng.toml
+	@go run $(MAIN_FILE) start -f etc/config.toml
 
 clean: ## Remove previous build
 	@rm -f dist/*
