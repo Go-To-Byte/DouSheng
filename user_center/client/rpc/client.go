@@ -11,10 +11,25 @@ import (
 	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 )
 
-func NewClientSet(consulConf *conf.Consul) (*ClientSet, error) {
+func NewConfig(consul *conf.Consul, discoverName string) *Config {
+	return &Config{
+		Consul:       *consul,
+		DiscoverName: discoverName,
+	}
+}
+
+// Config 客户端配置对象
+type Config struct {
+	// Consul 的配置通过配置文件or环境变量获取
+	conf.Consul
+	// 服务发现的名称手动传入，因为只有使用方才知道需要去发现谁
+	DiscoverName string
+}
+
+func NewClientSet(cfg *Config) (*ClientSet, error) {
 
 	conn, err := grpc.Dial(
-		consulConf.GrpcDailUrl(),
+		cfg.GrpcDailUrl(cfg.DiscoverName),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
 	)
@@ -37,6 +52,7 @@ type ClientSet struct {
 	l    logger.Logger
 }
 
+// Token Token模块
 func (c *ClientSet) Token() token.ServiceClient {
 	return token.NewServiceClient(c.conn)
 }

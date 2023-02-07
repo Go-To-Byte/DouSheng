@@ -2,14 +2,15 @@
 package api
 
 import (
-	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
-	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
+	"github.com/Go-To-Byte/DouSheng/dou_common/exception"
 	"github.com/gin-gonic/gin"
 	"net/http"
 
 	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
 
+	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	videoconst "github.com/Go-To-Byte/DouSheng/video_service/common/constant"
+	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
 )
 
 func (h *Handler) publishAction(ctx *gin.Context) {
@@ -35,7 +36,13 @@ func (h *Handler) publishAction(ctx *gin.Context) {
 	req.CoverUrl = uploaded.CoverRelativeURI
 	req.PlayUrl = uploaded.RelativeURI
 
-	ctx.JSON(http.StatusOK, uploaded)
+	_, err = h.service.PublishVideo(ctx.Request.Context(), req)
+	if err != nil {
+		e := err.(exception.CustomException)
+		ctx.JSON(http.StatusBadRequest, e.GetCodeMsg())
+	}
+
+	ctx.JSON(http.StatusOK, constant.OPERATE_OK)
 }
 
 func (h *Handler) publishList(ctx *gin.Context) {

@@ -62,9 +62,9 @@ func (u *UserPo) CheckHash(data any) bool {
 	return utils.VerifyBcryptHash(data, u.Password)
 }
 
-// TableName 指明表名
-func (UserPo) TableName() string {
-	return "user"
+// TableName 指明表名 -> gorm 参数映射
+func (*UserPo) TableName() string {
+	return AppName
 }
 
 // Clone 只拷贝数据

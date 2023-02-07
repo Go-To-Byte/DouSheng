@@ -2,8 +2,11 @@
 package token
 
 import (
+	"strconv"
 	"time"
 
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user_center/common/constant"
 	"github.com/Go-To-Byte/DouSheng/user_center/common/utils"
 )
 
@@ -17,6 +20,10 @@ func NewToken(req *IssueTokenRequest, expiredDuration time.Duration) *Token {
 	expired := now.Add(expiredDuration)
 	refresh := now.Add(expiredDuration * 5)
 
+	// 额外携带个用户ID
+	m := make(map[string]string, 1)
+	m[constant.USER_ID] = strconv.Itoa(int(req.UserId))
+
 	return &Token{
 		AccessToken:           utils.MakeBearer(24),
 		IssueAt:               now.UnixMilli(),
@@ -24,6 +31,7 @@ func NewToken(req *IssueTokenRequest, expiredDuration time.Duration) *Token {
 		AccessTokenExpiredAt:  expired.UnixMilli(),
 		RefreshToken:          utils.MakeBearer(32),
 		RefreshTokenExpiredAt: refresh.UnixMilli(),
+		Meta:                  m,
 	}
 }
 
@@ -49,9 +57,10 @@ func (t *Token) Extend(expiredDuration time.Duration) *Token {
 	return t
 }
 
-func NewIssueTokenRequest(username string) *IssueTokenRequest {
+func NewIssueTokenRequest(po *user.UserPo) *IssueTokenRequest {
 	return &IssueTokenRequest{
-		Username: username,
+		Username: po.Username,
+		UserId:   po.Id,
 	}
 }
 
@@ -59,4 +68,14 @@ func NewValidateTokenRequest(ak string) *ValidateTokenRequest {
 	return &ValidateTokenRequest{
 		AccessToken: ak,
 	}
+}
+
+// GetUserId 从Meta中获取 用户ID
+func (t *Token) GetUserId() int64 {
+	userId, err := strconv.Atoi(t.Meta[constant.USER_ID])
+	// 因为此方法是内部使用，所以基本不会乱传ID的情况
+	if err != nil {
+		panic(err)
+	}
+	return int64(userId)
 }

@@ -46,9 +46,9 @@ func (s *userServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.
 	return user, nil
 }
 
-func (s *userServiceImpl) token(ctx context.Context, name string) (accessToken string) {
+func (s *userServiceImpl) token(ctx context.Context, po *user.UserPo) (accessToken string) {
 	// 颁发Token
-	tkReq := token.NewIssueTokenRequest(name)
+	tkReq := token.NewIssueTokenRequest(po)
 	tk, err := s.tokenService.IssueToken(ctx, tkReq)
 
 	// 若Token颁发失败，不要报错，打印日志即可

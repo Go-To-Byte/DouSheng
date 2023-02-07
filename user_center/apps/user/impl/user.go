@@ -38,7 +38,7 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	}
 
 	// 4、颁发Token并返回
-	response := user.NewTokenResponse(insertRes.Id, s.token(ctx, insertRes.Username))
+	response := user.NewTokenResponse(insertRes.Id, s.token(ctx, insertRes))
 
 	return response, nil
 }
@@ -61,7 +61,7 @@ func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 	}
 
 	// 3、颁发Token 并返回
-	response := user.NewTokenResponse(userRes.Id, s.token(ctx, userRes.Username))
+	response := user.NewTokenResponse(userRes.Id, s.token(ctx, userRes))
 	return response, nil
 }
 

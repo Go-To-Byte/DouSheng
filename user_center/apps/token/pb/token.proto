@@ -42,9 +42,12 @@ message Token {
 }
 
 message IssueTokenRequest {
-  // 更新人
+  // 颁发人名称
   // @gotags: json:"username" bson:"username"
   string username = 1;
+  // 颁发人ID
+  // @gotags: json:"user_id" bson:"user_id"
+  int64 user_id = 2;
 }
 
 message ValidateTokenRequest {

@@ -9,3 +9,7 @@ var (
 	OK_REGISTER       = constant.NewCodeMsg(0, "注册成功")
 	BAD_NAME_PASSWORD = constant.NewCodeMsg(70001, "用户名或密码错误")
 )
+
+const (
+	USER_ID = "user_id"
+)

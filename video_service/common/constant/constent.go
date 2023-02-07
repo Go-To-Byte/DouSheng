@@ -10,6 +10,6 @@ var (
 	BAD_UPLOAD_FILE = constant.NewCodeMsg(80002, "上传文件失败")
 )
 
-var (
+const (
 	REQUEST_FILE = "data"
 )

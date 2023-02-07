@@ -28,8 +28,8 @@ func (h *Handler) Version() string {
 
 // Registry 用于注册Handler所需要暴露的路由
 func (h *Handler) Registry(r gin.IRouter) {
-	r.POST("/register", h.Register)
-	r.POST("/login", h.Login)
+	r.POST("/register/", h.Register)
+	r.POST("/login/", h.Login)
 	r.GET("/", h.GetUserInfo)
 }
 
