@@ -2,7 +2,7 @@
 package user
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/utils"
+	"github.com/Go-To-Byte/DouSheng/user_center/common/utils"
 	"github.com/go-playground/validator/v10"
 	"google.golang.org/protobuf/proto"
 )

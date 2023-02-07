@@ -3,8 +3,8 @@ package middlerware
 
 import (
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
-	constant2 "github.com/Go-To-Byte/DouSheng/user_center/common/constant"
-	"github.com/Go-To-Byte/DouSheng/user_center/utils"
+	"github.com/Go-To-Byte/DouSheng/user_center/common/constant"
+	"github.com/Go-To-Byte/DouSheng/user_center/common/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -38,13 +38,13 @@ func (a *httpAuther) GinAuthHandlerFunc() gin.HandlerFunc {
 		tk, err := a.authenticator.ValidateToken(ctx.Request.Context(), req)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, constant2.BAD_TOKEN_ERROR)
+			ctx.JSON(http.StatusBadRequest, constant.BAD_TOKEN_ERROR)
 			return
 		}
 
 		a.l.Infof("Token认证成功")
 		// 把Token传递给下一个链路
-		ctx.Set(constant2.REQUEST_TOKEN, tk)
+		ctx.Set(constant.REQUEST_TOKEN, tk)
 		// 把请求传递下去
 		ctx.Next()
 	}

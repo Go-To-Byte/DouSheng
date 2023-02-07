@@ -2,7 +2,7 @@
 package token
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/utils"
+	"github.com/Go-To-Byte/DouSheng/user_center/common/utils"
 	"time"
 )
 

@@ -2,8 +2,8 @@
 package version_test
 
 import (
-	"Go-To-Byte/DouSheng/user_center/version"
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/user_center/version"
 	"testing"
 )
 
