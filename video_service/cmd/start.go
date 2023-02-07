@@ -1,4 +1,4 @@
-// @Author: Ciusyan 2023/1/24
+// @Author: Ciusyan 2023/2/7
 package cmd
 
 import (
@@ -11,10 +11,10 @@ import (
 
 	"github.com/Go-To-Byte/DouSheng/dou_common/ioc"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
-	"github.com/Go-To-Byte/DouSheng/user_center/protocol"
+	"github.com/Go-To-Byte/DouSheng/video_service/conf"
+	"github.com/Go-To-Byte/DouSheng/video_service/protocol"
 	// 驱动加载所有需要放入IOC的实例
-	_ "github.com/Go-To-Byte/DouSheng/user_center/apps/all"
+	_ "github.com/Go-To-Byte/DouSheng/video_service/apps/all"
 )
 
 var (
@@ -23,8 +23,8 @@ var (
 
 var StartCmd = &cobra.Command{
 	Use:     "start",
-	Long:    "启动 用户中心 API服务",
-	Short:   "启动 用户中心 API服务",
+	Long:    "启动 视频服务 API服务",
+	Short:   "启动 视频服务 API服务",
 	Example: "go run main start",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// ========
@@ -127,6 +127,6 @@ func managerStartAndStop() error {
 func init() {
 	f := StartCmd.PersistentFlags()
 	f.StringVarP(&configFile, "config", "f",
-		"etc/dousheng.toml", "用户中心的配置文件路径")
+		"etc/dousheng.toml", "视频服务的配置文件路径")
 	RootCmd.AddCommand(StartCmd)
 }
