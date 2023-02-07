@@ -4,13 +4,15 @@ package protocol
 import (
 	"context"
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
-	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
 	"github.com/gin-gonic/gin"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"net/http"
 	"time"
+
+	"github.com/Go-To-Byte/DouSheng/dou_common/ioc"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 )
 
 // =====

@@ -2,12 +2,13 @@
 package rpc
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 )
 
 func NewClientSet(consulConf *conf.Consul) (*ClientSet, error) {

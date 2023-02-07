@@ -3,9 +3,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/user_center/version"
 	"github.com/spf13/cobra"
 	"os"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/version"
 )
 
 var (

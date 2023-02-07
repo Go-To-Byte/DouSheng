@@ -4,8 +4,9 @@ package impl
 import (
 	"context"
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"time"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 )
 
 var (

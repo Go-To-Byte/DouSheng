@@ -2,13 +2,15 @@
 package middlerware
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
-	"github.com/Go-To-Byte/DouSheng/user_center/common/constant"
-	"github.com/Go-To-Byte/DouSheng/user_center/common/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"net/http"
+
+	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
+	"github.com/Go-To-Byte/DouSheng/user_center/common/utils"
 )
 
 func NewHttpAuther(auther token.ServiceClient) *httpAuther {
@@ -38,7 +40,8 @@ func (a *httpAuther) GinAuthHandlerFunc() gin.HandlerFunc {
 		tk, err := a.authenticator.ValidateToken(ctx.Request.Context(), req)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, constant.BAD_TOKEN_ERROR)
+			// TODO：下次公共模块更新后。更改名称 ——> constant.ERROR_TOKEN_VALIDATE
+			ctx.JSON(http.StatusBadRequest, constant.ERROR_USER_INFO)
 			return
 		}
 

@@ -4,6 +4,7 @@ package impl
 import (
 	"context"
 	"fmt"
+
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
@@ -12,11 +13,11 @@ import (
 func (s *userServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.UserPo, error) {
 
 	if po.Username != "" {
-		s.db.Where("username = ?", po.Username)
+		s.db = s.db.Where("username = ?", po.Username)
 	}
 
 	if po.Id != 0 {
-		s.db.Where("id = ?", po.Id)
+		s.db = s.db.Where("id = ?", po.Id)
 	}
 
 	res := s.db.WithContext(ctx).Find(po)

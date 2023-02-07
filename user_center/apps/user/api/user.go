@@ -2,11 +2,14 @@
 package api
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	"github.com/Go-To-Byte/DouSheng/user_center/common/constant"
-	"github.com/Go-To-Byte/DouSheng/user_center/common/exception"
 	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_common/exception"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	userconstant "github.com/Go-To-Byte/DouSheng/user_center/common/constant"
 )
 
 // loginAndRegisterResp 登录和注册的响应对象
@@ -27,7 +30,7 @@ func (h *Handler) Register(c *gin.Context) {
 
 	// 1、接收参数
 	if err := c.Bind(req); err != nil {
-		c.JSON(http.StatusBadRequest, constant.BAD_ARGS_VALIDATE)
+		c.JSON(http.StatusBadRequest, constant.ERROR_ARGS_VALIDATE)
 		return
 	}
 
@@ -41,7 +44,7 @@ func (h *Handler) Register(c *gin.Context) {
 
 	c.JSON(http.StatusOK,
 		loginAndRegisterResp{
-			CodeMsg:       *constant.OK_REGISTER,
+			CodeMsg:       *userconstant.OK_REGISTER,
 			TokenResponse: *resp.Clone(),
 		})
 }
@@ -52,7 +55,7 @@ func (h *Handler) Login(c *gin.Context) {
 
 	// 1、接收参数
 	if err := c.Bind(req); err != nil {
-		c.JSON(http.StatusBadRequest, constant.BAD_ARGS_VALIDATE)
+		c.JSON(http.StatusBadRequest, constant.ERROR_ARGS_VALIDATE)
 		return
 	}
 
@@ -66,7 +69,7 @@ func (h *Handler) Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK,
 		loginAndRegisterResp{
-			CodeMsg:       *constant.OK_OPERATER,
+			CodeMsg:       *constant.OPERATE_OK,
 			TokenResponse: *resp.Clone(),
 		})
 }
@@ -76,7 +79,7 @@ func (h *Handler) GetUserInfo(c *gin.Context) {
 
 	// 1、接收参数
 	if err := c.ShouldBindQuery(req); err != nil {
-		c.JSON(http.StatusBadRequest, constant.BAD_ARGS_VALIDATE)
+		c.JSON(http.StatusBadRequest, constant.ERROR_ARGS_VALIDATE)
 		return
 	}
 
@@ -89,7 +92,7 @@ func (h *Handler) GetUserInfo(c *gin.Context) {
 
 	c.JSON(http.StatusOK,
 		userInfoResp{
-			CodeMsg:          *constant.OK_OPERATER,
+			CodeMsg:          *constant.OPERATE_OK,
 			UserInfoResponse: *info.Clone(),
 		})
 }

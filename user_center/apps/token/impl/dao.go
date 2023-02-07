@@ -4,9 +4,10 @@ package impl
 import (
 	"context"
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 )
 
 // 获取Token

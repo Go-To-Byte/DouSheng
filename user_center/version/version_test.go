@@ -3,8 +3,9 @@ package version_test
 
 import (
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/user_center/version"
 	"testing"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/version"
 )
 
 func TestFullVersion(t *testing.T) {

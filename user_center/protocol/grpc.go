@@ -2,8 +2,7 @@
 package protocol
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
-	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
+	"github.com/hashicorp/consul/api"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/rs/xid"
@@ -13,7 +12,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/hashicorp/consul/api"
+	"github.com/Go-To-Byte/DouSheng/dou_common/ioc"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 )
 
 // =====

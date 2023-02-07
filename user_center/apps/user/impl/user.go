@@ -3,17 +3,20 @@ package impl
 
 import (
 	"context"
+
+	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_common/exception"
+
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	"github.com/Go-To-Byte/DouSheng/user_center/common/constant"
-	"github.com/Go-To-Byte/DouSheng/user_center/common/exception"
+	userconstant "github.com/Go-To-Byte/DouSheng/user_center/common/constant"
 )
 
 func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
-		return nil, exception.WithCodeMsg(constant.BAD_ARGS_VALIDATE)
+		return nil, exception.WithCodeMsg(constant.ERROR_ARGS_VALIDATE)
 	}
 
 	// 2、根据 Username 查询此用户是否已经注册
@@ -23,7 +26,7 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 
 	// 用户已存在
 	if userRes != nil {
-		return nil, exception.WithCodeMsg(constant.WARNING_USER_EXIST)
+		return nil, exception.WithCodeMsg(constant.WRONG_EXIST_USERS)
 	}
 
 	// 3、未注册-创建用户，注册-返回提示
@@ -31,7 +34,7 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	insertRes, err := s.Insert(ctx, po)
 
 	if err != nil {
-		return nil, exception.WithCodeMsg(constant.BAD_SAVE)
+		return nil, exception.WithCodeMsg(constant.ERROR_SAVE)
 	}
 
 	// 4、颁发Token并返回
@@ -54,7 +57,7 @@ func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 
 	// 若用户名或密码有误，不返回具体的用户名或者密码错误
 	if userRes == nil || !userRes.CheckHash(req.Password) {
-		return nil, exception.WithCodeMsg(constant.BAD_NAME_PASSWORD)
+		return nil, exception.WithCodeMsg(userconstant.BAD_NAME_PASSWORD)
 	}
 
 	// 3、颁发Token 并返回
@@ -66,7 +69,7 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
-		return nil, exception.WithCodeMsg(constant.BAD_ARGS_VALIDATE)
+		return nil, exception.WithCodeMsg(constant.ERROR_ARGS_VALIDATE)
 	}
 
 	// 同一服务直接走内部服务调用，不用GRPC调用

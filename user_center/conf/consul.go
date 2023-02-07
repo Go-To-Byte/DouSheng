@@ -4,7 +4,6 @@ package conf
 import (
 	"fmt"
 	"github.com/hashicorp/consul/api"
-
 	_ "github.com/mbobakov/grpc-consul-resolver"
 )
 

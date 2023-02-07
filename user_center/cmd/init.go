@@ -3,11 +3,11 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
+	"github.com/spf13/cobra"
 	"os"
 	"time"
 
-	"github.com/spf13/cobra"
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 )
 
 var (

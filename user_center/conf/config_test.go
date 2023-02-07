@@ -3,10 +3,11 @@ package conf_test
 
 import (
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 )
 
 func TestLoadConfigFromToml(t *testing.T) {

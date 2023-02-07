@@ -2,11 +2,12 @@
 package utils
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/common/constant"
 	"github.com/gin-gonic/gin"
 	"math/rand"
 	"strings"
 	"time"
+
+	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
 )
 
 // MakeBearer 生成Base64的字符串

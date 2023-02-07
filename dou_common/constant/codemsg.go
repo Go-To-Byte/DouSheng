@@ -30,12 +30,12 @@ var (
 )
 
 var (
-	ERROR_OPERATE       = NewCodeMsg(40001, "操作失败")
-	ERROR_SAVE          = NewCodeMsg(40002, "保存失败")
-	ERROR_REMOVE        = NewCodeMsg(40003, "删除失败")
-	ERROR_UPLOAD_IMG    = NewCodeMsg(40004, "图片上传失败")
-	ERROR_USER_INFO     = NewCodeMsg(40005, "Token校验失败")
-	ERROR_ARGS_VALIDATE = NewCodeMsg(40006, "参数校验失败")
+	ERROR_OPERATE        = NewCodeMsg(40001, "操作失败")
+	ERROR_SAVE           = NewCodeMsg(40002, "保存失败")
+	ERROR_REMOVE         = NewCodeMsg(40003, "删除失败")
+	ERROR_UPLOAD_IMG     = NewCodeMsg(40004, "图片上传失败")
+	ERROR_TOKEN_VALIDATE = NewCodeMsg(40005, "Token校验失败")
+	ERROR_ARGS_VALIDATE  = NewCodeMsg(40006, "参数校验失败")
 )
 
 var (

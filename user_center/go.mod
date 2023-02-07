@@ -4,11 +4,12 @@ go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.2.1
+	github.com/Go-To-Byte/DouSheng/dou_common v0.0.0-20230207095222-9a80c0906e3e
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/hashicorp/consul/api v1.18.0
-	github.com/infraboard/mcube v1.9.7
+	github.com/infraboard/mcube v1.9.6
 	github.com/mbobakov/grpc-consul-resolver v1.4.4
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.6.1
@@ -24,7 +25,6 @@ require (
 require (
 	github.com/armon/go-metrics v0.3.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/emicklei/go-restful/v3 v3.10.1 // indirect
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/form v3.1.4+incompatible // indirect
@@ -73,5 +73,4 @@ require (
 	google.golang.org/genproto v0.0.0-20221118155620-16455021b5e6 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	sigs.k8s.io/yaml v1.3.0 // indirect
 )

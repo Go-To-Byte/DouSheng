@@ -2,9 +2,11 @@
 package api
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
 	"github.com/gin-gonic/gin"
+
+	"github.com/Go-To-Byte/DouSheng/dou_common/ioc"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
 // 用于注入IOC中

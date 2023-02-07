@@ -2,14 +2,16 @@
 package impl
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
-	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
+
+	"github.com/Go-To-Byte/DouSheng/dou_common/ioc"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 )
 
 // 用于注入IOC中

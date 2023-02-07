@@ -4,12 +4,16 @@ package impl_test
 import (
 	"context"
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
-	"github.com/Go-To-Byte/DouSheng/user_center/ioc"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/Go-To-Byte/DouSheng/dou_common/ioc"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user_center/conf"
+	// 驱动加载所有需要放入IOC的实例
+	_ "github.com/Go-To-Byte/DouSheng/user_center/apps/all"
 )
 
 var (
