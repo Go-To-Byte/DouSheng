@@ -24,6 +24,10 @@ func (r *LoginAndRegisterRequest) Validate() error {
 	return validate.Struct(r)
 }
 
+func (r *UserInfoRequest) Validate() error {
+	return validate.Struct(r)
+}
+
 func NewTokenResponse(id int64, token string) *TokenResponse {
 	return &TokenResponse{
 		UserId: id,
@@ -65,4 +69,24 @@ func (UserPo) TableName() string {
 // Clone 只拷贝数据
 func (r *TokenResponse) Clone() *TokenResponse {
 	return proto.Clone(r).(*TokenResponse)
+}
+
+// Clone 只拷贝数据
+func (r *UserInfoResponse) Clone() *UserInfoResponse {
+	return proto.Clone(r).(*UserInfoResponse)
+}
+
+func NewUserWithPo(po *UserPo) *User {
+	return &User{
+		Id:   po.Id,
+		Name: po.Username,
+	}
+}
+
+func NewUserInfoResponse() *UserInfoResponse {
+	return &UserInfoResponse{}
+}
+
+func NewUserInfoRequest() *UserInfoRequest {
+	return &UserInfoRequest{}
 }

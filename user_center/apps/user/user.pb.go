@@ -147,11 +147,11 @@ type UserInfoRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户ID
-	// @gotags: json:"user_id" validate:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" validate:"required"`
+	// @gotags: json:"user_id" form:"user_id" validate:"required"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required"`
 	// 用户鉴权Token
-	// @gotags: json:"token" validate:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" validate:"required"`
+	// @gotags: json:"token" form:"token" validate:"required"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" validate:"required"`
 }
 
 func (x *UserInfoRequest) Reset() {

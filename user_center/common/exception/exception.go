@@ -1,7 +1,10 @@
 // @Author: Ciusyan 2023/2/7
 package exception
 
-import "github.com/Go-To-Byte/DouSheng/user_center/common/constant"
+import (
+	"fmt"
+	"github.com/Go-To-Byte/DouSheng/user_center/common/constant"
+)
 
 type CustomException interface {
 	error
@@ -22,6 +25,12 @@ func WithCodeMsg(msg *constant.CodeMsg) *Exception {
 		Msg:  msg.StatusMsg,
 		Meta: msg,
 	}
+}
+
+// WithMsg 传递Msg
+func WithMsg(format string, a ...any) *Exception {
+	// 错误只带 msg，返回的 code 默认为 1
+	return WithCodeMsg(constant.NewCodeMsg(1, fmt.Sprintf(format, a...)))
 }
 
 func (e *Exception) GetCodeMsg() *constant.CodeMsg {

@@ -3,15 +3,12 @@ package impl
 
 import (
 	"context"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/user_center/common/constant"
 	"github.com/Go-To-Byte/DouSheng/user_center/common/exception"
-	"github.com/rs/xid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
-// Register TODO：完成注册逻辑
 func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
 
 	// 1、请求参数校验
@@ -20,7 +17,9 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	}
 
 	// 2、根据 Username 查询此用户是否已经注册
-	userRes, err := s.GetUserByName(ctx, req.Username)
+	userPo := user.NewDefaultUserPo()
+	userPo.Username = req.Username
+	userRes, err := s.GetUser(ctx, userPo)
 
 	// 用户已存在
 	if userRes != nil {
@@ -35,14 +34,12 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 		return nil, exception.WithCodeMsg(constant.BAD_SAVE)
 	}
 
-	token := xid.New().String()
-	response := user.NewTokenResponse(insertRes.Id, token)
+	// 4、颁发Token并返回
+	response := user.NewTokenResponse(insertRes.Id, s.token(ctx, insertRes.Username))
 
-	// TODO：存储token[redis or mongo] 加上验证中间件
 	return response, nil
 }
 
-// Login TODO：完成登录逻辑
 func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
 
 	// 1、请求参数校验
@@ -51,18 +48,46 @@ func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 	}
 
 	// 2、根据用户名查询用户信息
-	userRes, _ := s.GetUserByName(ctx, req.Username)
-	// 3、不返回具体的用户名或者密码错误
+	userPo := user.NewDefaultUserPo()
+	userPo.Username = req.Username
+	userRes, _ := s.GetUser(ctx, userPo)
+
+	// 若用户名或密码有误，不返回具体的用户名或者密码错误
 	if userRes == nil || !userRes.CheckHash(req.Password) {
 		return nil, exception.WithCodeMsg(constant.BAD_NAME_PASSWORD)
 	}
 
-	// 4、TODO:将Token放入缓存
-	token := xid.New().String()
-
-	response := user.NewTokenResponse(userRes.Id, token)
+	// 3、颁发Token 并返回
+	response := user.NewTokenResponse(userRes.Id, s.token(ctx, userRes.Username))
 	return response, nil
 }
-func (u *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (*user.UserInfoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UserInfo not implemented")
+
+func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (*user.UserInfoResponse, error) {
+
+	// 1、请求参数校验
+	if err := req.Validate(); err != nil {
+		return nil, exception.WithCodeMsg(constant.BAD_ARGS_VALIDATE)
+	}
+
+	// 同一服务直接走内部服务调用，不用GRPC调用
+	_, err := s.tokenService.ValidateToken(ctx, token.NewValidateTokenRequest(req.Token))
+	if err != nil {
+		return nil, exception.WithMsg("校验Token失败：%s", err.Error())
+	}
+
+	// 1、根据 Id 查询此用户
+	userPo := user.NewDefaultUserPo()
+	userPo.Id = req.UserId
+	userPoRes, err := s.GetUser(ctx, userPo)
+
+	if err != nil {
+		return nil, exception.WithMsg(err.Error())
+	}
+
+	response := user.NewUserInfoResponse()
+	response.User = user.NewUserWithPo(userPoRes)
+
+	// TODO：组合其他参数[如：关注数、粉丝数]
+
+	return response, nil
 }

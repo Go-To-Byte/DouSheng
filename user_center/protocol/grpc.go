@@ -54,7 +54,7 @@ func (s *GRPCService) Start() {
 	listener, err := net.Listen("tcp", addr)
 	s.l.Infof("[GRPC] 服务监听地址：%s", addr)
 	if err != nil {
-		s.l.Errorf("启动HTTP服务错误：%s", err.Error())
+		s.l.Errorf("启动GRPC服务错误：%s", err.Error())
 		return
 	}
 

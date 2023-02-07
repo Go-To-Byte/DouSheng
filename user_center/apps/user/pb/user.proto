@@ -38,10 +38,10 @@ message TokenResponse {
 // 获取用户信息 的接口请求 model
 message UserInfoRequest {
   // 用户ID
-  // @gotags: json:"user_id" validate:"required"
+  // @gotags: json:"user_id" form:"user_id" validate:"required"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" validate:"required"
+  // @gotags: json:"token" form:"token" validate:"required"
   string token = 2;
 }
 

@@ -4,14 +4,22 @@ package impl
 import (
 	"context"
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
-// GetUserByName 根据用户名称获取用户
-func (s *userServiceImpl) GetUserByName(ctx context.Context, name string) (*user.UserPo, error) {
+// GetUser 根据用户名称获取用户
+func (s *userServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.UserPo, error) {
 
-	po := user.NewDefaultUserPo()
-	res := s.db.WithContext(ctx).Where("username = ?", name).Find(po)
+	if po.Username != "" {
+		s.db.Where("username = ?", po.Username)
+	}
+
+	if po.Id != 0 {
+		s.db.Where("id = ?", po.Id)
+	}
+
+	res := s.db.WithContext(ctx).Find(po)
 
 	if res.RowsAffected == 0 {
 		return nil, fmt.Errorf("用户不存在")
@@ -35,4 +43,20 @@ func (s *userServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.
 	}
 
 	return user, nil
+}
+
+func (s *userServiceImpl) token(ctx context.Context, name string) (accessToken string) {
+	// 颁发Token
+	tkReq := token.NewIssueTokenRequest(name)
+	tk, err := s.tokenService.IssueToken(ctx, tkReq)
+
+	// 若Token颁发失败，不要报错，打印日志即可
+	if err != nil {
+		accessToken = ""
+		s.l.Errorf("Token颁发失败：%s", err.Error())
+	} else {
+		accessToken = tk.AccessToken
+		s.l.Infof("Token颁发成功：%s", accessToken)
+	}
+	return
 }
