@@ -24,7 +24,6 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	userPo.Username = req.Username
 	userRes, err := s.GetUser(ctx, userPo)
 
-	// 用户已存在
 	if userRes != nil {
 		return nil, exception.WithCodeMsg(constant.WRONG_EXIST_USERS)
 	}

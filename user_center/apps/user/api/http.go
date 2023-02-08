@@ -19,15 +19,13 @@ func NewUserHttpHandler() *Handler {
 // Handler 通过一个实体类，把内部接口用HTTP暴露出去【控制层Controller】
 type Handler struct {
 	service user.ServiceServer
-}
 
-// Version 当前模块API的版本
-func (h *Handler) Version() string {
-	return ""
+	// 提供一个空结构体，用于默认实现方法
+	ioc.GinDefault
 }
 
 // Registry 用于注册Handler所需要暴露的路由
-func (h *Handler) Registry(r gin.IRouter) {
+func (h *Handler) Registry(r gin.IRoutes) {
 	r.POST("/register/", h.Register)
 	r.POST("/login/", h.Login)
 	r.GET("/", h.GetUserInfo)

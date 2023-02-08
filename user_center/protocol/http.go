@@ -53,11 +53,9 @@ type HttpService struct {
 // Start 开启服务
 func (s *HttpService) Start() error {
 	// 1、将所有的Gin服务对象注册到IOC中
+	option := ioc.NewGinOption(s.r, "/"+s.c.App.Name)
+	ioc.RegistryGin(option)
 
-	// 拼接好前缀再注册："/douying"
-	ioc.RegistryGin("/"+s.c.App.Name, s.r)
-
-	s.l.Infof("[HTTP] 服务监听地址：%s", s.c.App.HTTP.Addr())
 	if err := s.server.ListenAndServe(); err != nil {
 		// 如果错误是正常关闭，则不报错
 		if err == http.ErrServerClosed {
@@ -67,6 +65,7 @@ func (s *HttpService) Start() error {
 		return fmt.Errorf("开启 [HTTP] 服务异常：%s", err.Error())
 	}
 
+	s.l.Infof("[HTTP] 服务监听地址：%s", s.c.App.HTTP.Addr())
 	return nil
 }
 

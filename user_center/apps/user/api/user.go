@@ -9,7 +9,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	userconstant "github.com/Go-To-Byte/DouSheng/user_center/common/constant"
+	userconst "github.com/Go-To-Byte/DouSheng/user_center/common/constant"
 )
 
 // loginAndRegisterResp 登录和注册的响应对象
@@ -44,7 +44,7 @@ func (h *Handler) Register(c *gin.Context) {
 
 	c.JSON(http.StatusOK,
 		loginAndRegisterResp{
-			CodeMsg:       *userconstant.OK_REGISTER,
+			CodeMsg:       *userconst.OK_REGISTER,
 			TokenResponse: *resp.Clone(),
 		})
 }

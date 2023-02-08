@@ -14,6 +14,9 @@ import (
 type Handler struct {
 	service video.ServiceServer
 	l       logger.Logger
+
+	// 提供一个空结构体，用于默认实现方法
+	ioc.GinDefault
 }
 
 func (h *Handler) Init() error {
@@ -30,10 +33,13 @@ func (h *Handler) Version() string {
 	return ""
 }
 
-func (h *Handler) Registry(r gin.IRouter) {
+func (h *Handler) Registry(r gin.IRoutes) {
+	r.GET("/feed/", h.feed)
+}
+
+func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
 	r.POST("/publish/action/", h.publishAction)
 	r.GET("/publish/list/", h.publishList)
-	r.GET("/feed/", h.feed)
 }
 
 func init() {

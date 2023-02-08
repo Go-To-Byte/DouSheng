@@ -56,14 +56,17 @@ type HttpService struct {
 // Start 开启服务
 func (s *HttpService) Start() error {
 
-	// 1、添加中间件
-	if err := s.addMiddle(); err != nil {
+	// 1、获取中间件
+	mids, err := s.getMiddle()
+	if err != nil {
 		return err
 	}
 
 	// 2、将所有的Gin服务对象注册到IOC中
-	// 拼接好前缀再注册："/douying"
-	ioc.RegistryGin("/"+s.c.App.Name, s.r)
+	option := ioc.NewGinOption(s.r, "/"+s.c.App.Name, mids...)
+	option.NotVersion = true
+	option.NotName = true
+	ioc.RegistryGin(option)
 
 	// 3、监听 TCP（HTTP）地址
 	if err := s.server.ListenAndServe(); err != nil {
@@ -91,18 +94,17 @@ func (s *HttpService) Stop() error {
 	return nil
 }
 
-// 给路由添加中间件
-func (s *HttpService) addMiddle() error {
+// 获取路由中间件
+func (s *HttpService) getMiddle() ([]gin.HandlerFunc, error) {
 	// 从配置文件中获取 user_center 的Client
 	center, err := rpcservice.NewUserCenterFromCfg()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Token认证中间件
 	auther := middlerware.NewHttpAuther(center.TokenService())
+	middles := []gin.HandlerFunc{auther.GinAuthHandlerFunc()}
 
-	// 路由使用中间件（因为不是浏览器，所以不需要配置跨域问题）
-	s.r.Use(auther.GinAuthHandlerFunc())
-	return nil
+	return middles, nil
 }
