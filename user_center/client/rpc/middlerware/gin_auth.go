@@ -41,10 +41,12 @@ func (a *httpAuther) GinAuthHandlerFunc() gin.HandlerFunc {
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, constant.ERROR_TOKEN_VALIDATE)
-			return
+			// 有错误、直接终止传递
+			ctx.Abort()
+		} else {
+			a.l.Infof("Token认证成功")
 		}
 
-		a.l.Infof("Token认证成功")
 		// 把Token传递给下一个链路
 		ctx.Set(constant.REQUEST_TOKEN, tk)
 		// 把请求传递下去

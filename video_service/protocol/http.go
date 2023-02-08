@@ -12,6 +12,9 @@ import (
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
+	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc/middlerware"
+
+	"github.com/Go-To-Byte/DouSheng/video_service/apps/rpcservice"
 )
 
 // =====
@@ -52,12 +55,17 @@ type HttpService struct {
 
 // Start 开启服务
 func (s *HttpService) Start() error {
-	// 1、将所有的Gin服务对象注册到IOC中
 
+	// 1、添加中间件
+	if err := s.addMiddle(); err != nil {
+		return err
+	}
+
+	// 2、将所有的Gin服务对象注册到IOC中
 	// 拼接好前缀再注册："/douying"
 	ioc.RegistryGin("/"+s.c.App.Name, s.r)
 
-	s.l.Infof("[HTTP] 服务监听地址：%s", s.c.App.HTTP.Addr())
+	// 3、监听 TCP（HTTP）地址
 	if err := s.server.ListenAndServe(); err != nil {
 		// 如果错误是正常关闭，则不报错
 		if err == http.ErrServerClosed {
@@ -66,7 +74,7 @@ func (s *HttpService) Start() error {
 		}
 		return fmt.Errorf("开启 [HTTP] 服务异常：%s", err.Error())
 	}
-
+	s.l.Infof("[HTTP] 服务监听地址：%s", s.c.App.HTTP.Addr())
 	return nil
 }
 
@@ -80,5 +88,21 @@ func (s *HttpService) Stop() error {
 		s.l.Warnf("关闭服务异常：%s", err)
 		return err
 	}
+	return nil
+}
+
+// 给路由添加中间件
+func (s *HttpService) addMiddle() error {
+	// 从配置文件中获取 user_center 的Client
+	center, err := rpcservice.NewUserCenterFromCfg()
+	if err != nil {
+		return err
+	}
+
+	// Token认证中间件
+	auther := middlerware.NewHttpAuther(center.TokenService())
+
+	// 路由使用中间件（因为不是浏览器，所以不需要配置跨域问题）
+	s.r.Use(auther.GinAuthHandlerFunc())
 	return nil
 }
