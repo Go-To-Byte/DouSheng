@@ -47,7 +47,7 @@ func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
-		return nil, err
+		return nil, exception.WithCodeMsg(constant.ERROR_ARGS_VALIDATE)
 	}
 
 	// 2、根据用户名查询用户信息

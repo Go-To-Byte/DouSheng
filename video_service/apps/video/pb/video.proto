@@ -40,6 +40,24 @@ message Video {
   string title = 8;
 }
 
+message VideoPo {
+  // 视频唯一标识
+  // @gotags: json:"id"
+  int64 id = 1;
+  // 视频作者ID TODO：若从视频列表中获取数据过多，这里可以直接用User[二次遍历]
+  // 视频播放地址
+  // @gotags: json:"play_url"
+  string play_url = 2;
+  // 视频封面地址
+  // @gotags: json:"cover_url"
+  string cover_url = 3;
+  // 视频标题
+  // @gotags: json:"title"
+  string title = 4;
+  // @gotags: json:"author_id"
+  int64 author_id = 5;
+}
+
 // 分页请求参数 TODO：可以放在公共模块
 message PageRequest {
   // 每页数据数量
@@ -66,11 +84,11 @@ message FeedVideosRequest {
 }
 
 message PublishVideoRequest {
-  // 用户鉴权token
-  // @gotags: json:"token" validate:"token"
+  // 用户鉴权Token
+  // @gotags: json:"token" form:"token" validate:"required"
   string token = 1;
-  // 视频标题
-  // @gotags: json:"title" validate:"title"
+  // 用户鉴权Token
+  // @gotags: json:"title" form:"title" validate:"required"
   string title = 2;
   // 视频播放地址
   // @gotags: json:"play_url"

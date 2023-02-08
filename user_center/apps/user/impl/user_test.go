@@ -38,13 +38,26 @@ func TestLogin(t *testing.T) {
 	should := assert.New(t)
 	newUser := user.NewLoginAndRegisterRequest()
 	newUser.Username = "ciusyan"
-	newUser.Password = "222"
+	// newUser.Password = "222"
 	token, err := service.Login(context.Background(), newUser)
 
 	if should.NoError(err) {
 		fmt.Println(token)
 		fmt.Println(token.UserId)
 		fmt.Println(token.Token)
+	}
+}
+
+func TestUserInfo(t *testing.T) {
+	should := assert.New(t)
+	req := user.NewUserInfoRequest()
+	req.Token = "TgFCArASZIB5uXpJEgtvC2nB"
+	req.UserId = 5
+	info, err := service.UserInfo(context.Background(), req)
+
+	if should.NoError(err) {
+		fmt.Println(info)
+		fmt.Println(info.User)
 	}
 }
 

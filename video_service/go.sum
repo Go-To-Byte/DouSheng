@@ -5,6 +5,8 @@ github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbi
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
 github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230208074952-62e9ac2e9017 h1:vKvPG55CdbkXVDFcCJZ/LiaqHSCRRIgGmfyfnndmFss=
 github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230208074952-62e9ac2e9017/go.mod h1:TCu8nAlzjoOeO5US2Fm9gisE3VJ5ff5HbgZr92LgL2k=
+github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230208081024-80cf48c7a29d h1:WNk9dNSW3tgeV/YD1cFsO2OW0DS6qudhCt0cAoj2Zg0=
+github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230208081024-80cf48c7a29d/go.mod h1:rfKqYZ6P+N7rhCgoJlDNPCv9rqYggW1pDcbsAyuK378=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=

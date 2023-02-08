@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230208074952-62e9ac2e9017
+	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230208081024-80cf48c7a29d
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-gonic/gin v1.8.2

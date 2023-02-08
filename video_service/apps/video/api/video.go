@@ -27,6 +27,8 @@ func (h *Handler) publishAction(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, videoconst.BAD_UPLOAD_FILE)
 		return
 	}
+
+	// TODO：若在下面发生错误，需要将已上传的视频 Delete
 	req := video.NewPublishVideoRequest()
 	// 2、接收参数
 	if err = ctx.Bind(req); err != nil {
@@ -38,8 +40,9 @@ func (h *Handler) publishAction(ctx *gin.Context) {
 
 	_, err = h.service.PublishVideo(ctx.Request.Context(), req)
 	if err != nil {
-		e := err.(exception.CustomException)
+		e := err.(*exception.Exception)
 		ctx.JSON(http.StatusBadRequest, e.GetCodeMsg())
+		return
 	}
 
 	ctx.JSON(http.StatusOK, constant.OPERATE_OK)
