@@ -4,10 +4,11 @@ go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.2.1
-	github.com/Go-To-Byte/DouSheng/dou_common v0.0.0-20230207095222-9a80c0906e3e
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230208074952-62e9ac2e9017
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-gonic/gin v1.8.2
+	github.com/go-playground/validator/v10 v10.11.2
 	github.com/hashicorp/consul/api v1.18.0
 	github.com/infraboard/mcube v1.9.6
 	github.com/mbobakov/grpc-consul-resolver v1.4.4
@@ -29,7 +30,6 @@ require (
 	github.com/go-playground/form v3.1.4+incompatible // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.11.2 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/goccy/go-json v0.9.11 // indirect
