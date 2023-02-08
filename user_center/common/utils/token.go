@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 )
 
 // MakeBearer 生成Base64的字符串

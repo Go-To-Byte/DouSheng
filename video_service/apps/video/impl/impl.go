@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 
-	"github.com/Go-To-Byte/DouSheng/dou_common/ioc"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	"github.com/Go-To-Byte/DouSheng/video_service/conf"

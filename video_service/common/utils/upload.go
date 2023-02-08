@@ -7,7 +7,7 @@ import (
 	"mime/multipart"
 	"path"
 
-	"github.com/Go-To-Byte/DouSheng/dou_common/exception"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 
 	"github.com/Go-To-Byte/DouSheng/video_service/conf"
 	"github.com/Go-To-Byte/DouSheng/video_service/store"

@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
-	"github.com/Go-To-Byte/DouSheng/dou_common/exception"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 )

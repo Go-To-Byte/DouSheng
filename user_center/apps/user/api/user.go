@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 
-	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
-	"github.com/Go-To-Byte/DouSheng/dou_common/exception"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	userconstant "github.com/Go-To-Byte/DouSheng/user_center/common/constant"

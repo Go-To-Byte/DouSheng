@@ -2,11 +2,11 @@
 package api
 
 import (
-	"github.com/Go-To-Byte/DouSheng/dou_common/exception"
 	"github.com/gin-gonic/gin"
 	"net/http"
 
-	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	videoconst "github.com/Go-To-Byte/DouSheng/video_service/common/constant"

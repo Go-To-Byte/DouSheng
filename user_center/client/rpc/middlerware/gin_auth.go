@@ -7,7 +7,7 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"net/http"
 
-	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/common/utils"

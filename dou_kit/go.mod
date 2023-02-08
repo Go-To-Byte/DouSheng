@@ -1,4 +1,4 @@
-module github.com/Go-To-Byte/DouSheng/dou_common
+module github.com/Go-To-Byte/DouSheng/dou_kit
 
 go 1.19
 

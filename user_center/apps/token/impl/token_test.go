@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 
-	"github.com/Go-To-Byte/DouSheng/dou_common/ioc"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/conf"

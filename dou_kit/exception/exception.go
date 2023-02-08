@@ -3,7 +3,7 @@ package exception
 
 import (
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/dou_common/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 )
 
 type CustomException interface {

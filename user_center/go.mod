@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.2.1
-	github.com/Go-To-Byte/DouSheng/dou_common v0.0.0-20230207095222-9a80c0906e3e
+	github.com/Go-To-Byte/DouSheng/dou_kit/ioc v0.0.1
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-playground/validator/v10 v10.11.2
@@ -20,6 +20,10 @@ require (
 	google.golang.org/protobuf v1.28.1
 	gorm.io/driver/mysql v1.4.5
 	gorm.io/gorm v1.24.5
+)
+
+replace (
+	github.com/Go-To-Byte/DouSheng/dou_common  => github.com/Go-To-Byte/DouSheng/dou_kit
 )
 
 require (

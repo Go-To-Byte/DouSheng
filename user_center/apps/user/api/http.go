@@ -4,7 +4,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/Go-To-Byte/DouSheng/dou_common/ioc"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )

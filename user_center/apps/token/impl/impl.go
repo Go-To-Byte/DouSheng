@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/x/bsonx"
 	"google.golang.org/grpc"
 
-	"github.com/Go-To-Byte/DouSheng/dou_common/ioc"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/conf"

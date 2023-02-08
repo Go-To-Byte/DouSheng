@@ -1,7 +1,7 @@
 // @Author: Ciusyan 2023/2/7
 package constant
 
-import "github.com/Go-To-Byte/DouSheng/dou_common/constant"
+import "github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 
 // video_service 服务的常量、枚举
 
