@@ -8,10 +8,11 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
+
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 )
 
 // user_center 客户端

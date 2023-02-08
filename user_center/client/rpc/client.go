@@ -7,8 +7,9 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
+
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 )
 
 func NewConfig(consul *conf.Consul, discoverName string) *Config {

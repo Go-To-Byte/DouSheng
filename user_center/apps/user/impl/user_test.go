@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 	// 驱动加载所有需要放入IOC的实例
 	_ "github.com/Go-To-Byte/DouSheng/user_center/apps/all"
 )

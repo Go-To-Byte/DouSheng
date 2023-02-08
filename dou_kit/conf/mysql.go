@@ -39,11 +39,11 @@ func NewDefaultMySQL() *mySQL {
 	return &mySQL{
 		Host:        "127.0.0.1",
 		Port:        "3306",
-		UserName:    "",
-		Password:    "",
-		Database:    "",
-		MaxOpenConn: 200,
-		MaxIdleConn: 100,
+		UserName:    "root",
+		Password:    "root",
+		Database:    "test_db",
+		MaxOpenConn: 10,
+		MaxIdleConn: 10,
 	}
 }
 

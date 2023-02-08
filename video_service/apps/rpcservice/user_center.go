@@ -10,9 +10,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
-
-	videoCfg "github.com/Go-To-Byte/DouSheng/video_service/conf"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 )
 
 // 用户中心的 rpc 服务
@@ -31,9 +29,9 @@ type userCenter struct {
 // NewUserCenterFromCfg 从配置文件读取注册中心配置
 func NewUserCenterFromCfg() (*userCenter, error) {
 	// 注册中心配置 [从配置文件中读取]
-	consulCfg := videoCfg.C().Consul
+	consulCfg := conf.C().Consul
 	// 去发现 user_center 服务
-	rpcCfg := rpc.NewConfig((*conf.Consul)(consulCfg), discoverName)
+	rpcCfg := rpc.NewConfig(consulCfg, discoverName)
 
 	// 根据注册中心的配置，获取用户中心的客户端
 	clientSet, err := rpc.NewClientSet(rpcCfg)
@@ -48,9 +46,9 @@ func NewUserCenterFromCfg() (*userCenter, error) {
 // NewUserCenterFromEnv 从环境变量读取注册中心配置
 func NewUserCenterFromEnv() (*userCenter, error) {
 	// 注册中心配置 [从环境变量文件中读取]
-	consulCfg := videoCfg.NewDefaultConsul()
+	consulCfg := conf.NewDefaultConsul()
 	// 去发现 user_center 服务
-	rpcCfg := rpc.NewConfig((*conf.Consul)(consulCfg), "user_center")
+	rpcCfg := rpc.NewConfig(consulCfg, discoverName)
 	// 根据注册中心的配置，获取用户中心的客户端
 	clientSet, err := rpc.NewClientSet(rpcCfg)
 

@@ -8,7 +8,7 @@ import (
 	"github.com/rs/xid"
 	"mime/multipart"
 
-	"github.com/Go-To-Byte/DouSheng/video_service/conf"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/video_service/store"
 )
 

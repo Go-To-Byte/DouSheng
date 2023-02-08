@@ -9,9 +9,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
 	"github.com/Go-To-Byte/DouSheng/user_center/protocol"
 	// 驱动加载所有需要放入IOC的实例
 	_ "github.com/Go-To-Byte/DouSheng/user_center/apps/all"

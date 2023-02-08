@@ -12,9 +12,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 )
 
 // =====

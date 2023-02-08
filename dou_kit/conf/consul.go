@@ -4,6 +4,8 @@ package conf
 import (
 	"fmt"
 	"github.com/hashicorp/consul/api"
+
+	// consul 用于服务发现解析出对应的服务
 	_ "github.com/mbobakov/grpc-consul-resolver"
 )
 
@@ -20,10 +22,10 @@ type Consul struct {
 
 func NewDefaultConsul() *Consul {
 	return &Consul{
-		RegistryName: "video_service",
+		RegistryName: "注册名称",
 		Host:         "127.0.0.1",
 		Port:         8500,
-		Tags:         []string{"视频服务", "video_service"},
+		Tags:         []string{"测试标签", "test_tag"},
 	}
 }
 

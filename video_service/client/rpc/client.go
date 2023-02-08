@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/Go-To-Byte/DouSheng/video_service/conf"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 )
 
 // Config 客户端配置对象

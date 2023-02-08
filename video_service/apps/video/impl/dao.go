@@ -3,9 +3,11 @@ package impl
 
 import (
 	"context"
+
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
+
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/rpcservice"
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 )

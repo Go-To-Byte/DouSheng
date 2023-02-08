@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/conf"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 )
 
 var (

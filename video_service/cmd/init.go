@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Go-To-Byte/DouSheng/video_service/conf"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 )
 
 var (

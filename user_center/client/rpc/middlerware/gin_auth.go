@@ -40,8 +40,7 @@ func (a *httpAuther) GinAuthHandlerFunc() gin.HandlerFunc {
 		tk, err := a.authenticator.ValidateToken(ctx.Request.Context(), req)
 
 		if err != nil {
-			// TODO：下次公共模块更新后。更改名称 ——> constant.ERROR_TOKEN_VALIDATE
-			ctx.JSON(http.StatusBadRequest, constant.ERROR_USER_INFO)
+			ctx.JSON(http.StatusBadRequest, constant.ERROR_TOKEN_VALIDATE)
 			return
 		}
 

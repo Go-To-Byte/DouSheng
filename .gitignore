@@ -5,7 +5,7 @@
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
+# Test binary, built with `go work -c`
 *.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
@@ -21,3 +21,7 @@
 */dist
 
 *.idea
+
+# 本地工作区：查看帮助 go help work
+go.work
+go.work.sum
