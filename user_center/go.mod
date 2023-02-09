@@ -3,7 +3,7 @@ module github.com/Go-To-Byte/DouSheng/user_center
 go 1.19
 
 require (
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230208234410-380aeeb931f7
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230209195129-e05e661db12b
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/hashicorp/consul/api v1.18.0
