@@ -7,8 +7,8 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
+	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 
-	"github.com/Go-To-Byte/DouSheng/video_service/apps/rpcservice"
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 )
 
@@ -33,7 +33,7 @@ func (s *videoServiceImpl) Insert(ctx context.Context, req *video.PublishVideoRe
 
 func (s *videoServiceImpl) getVideoPo(ctx context.Context, req *video.PublishVideoRequest) (*video.VideoPo, error) {
 	// 获取用户中心的客户端[GRPC调用]
-	userCenter, err := rpcservice.NewUserCenterFromCfg()
+	userCenter, err := rpc.NewUserCenterClientFromCfg()
 	if err != nil {
 		s.l.Errorf(err.Error())
 		return nil, err

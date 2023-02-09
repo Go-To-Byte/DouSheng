@@ -10,7 +10,6 @@
 
 这里会采用 mongodb + redis 的认证方式
 
-
 ## 安装mongodb
 
 * 使用docker简单安装，docker自行安装

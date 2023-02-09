@@ -1,4 +1,4 @@
-// @Author: Ciusyan 2023/2/7
+// @Author: Ciusyan 2023/1/24
 package cmd
 
 import (
@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 
-	"github.com/Go-To-Byte/DouSheng/video_service/version"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/version"
 )
 
 var (
@@ -14,9 +14,9 @@ var (
 )
 
 var RootCmd = &cobra.Command{
-	Use:     "video",
-	Long:    "视频服务",
-	Short:   "视频服务",
+	Use:     "user",
+	Long:    "用户中心",
+	Short:   "用户中心",
 	Example: "go run main.go start",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if vers {
@@ -36,5 +36,5 @@ func Main() {
 
 func init() {
 	f := RootCmd.PersistentFlags()
-	f.BoolVarP(&vers, "version", "v", false, "视频服务的版本信息")
+	f.BoolVarP(&vers, "version", "v", false, "用户中心的版本信息")
 }

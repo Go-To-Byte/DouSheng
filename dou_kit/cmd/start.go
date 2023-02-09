@@ -11,10 +11,7 @@ import (
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
-
-	"github.com/Go-To-Byte/DouSheng/user_center/protocol"
-	// 驱动加载所有需要放入IOC的实例
-	_ "github.com/Go-To-Byte/DouSheng/user_center/apps/all"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/protocol"
 )
 
 var (
@@ -23,8 +20,8 @@ var (
 
 var StartCmd = &cobra.Command{
 	Use:     "start",
-	Long:    "启动 用户中心 API服务",
-	Short:   "启动 用户中心 API服务",
+	Long:    "启动 API服务",
+	Short:   "启动 API服务",
 	Example: "go run main start",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// ========
@@ -55,9 +52,14 @@ var StartCmd = &cobra.Command{
 	},
 }
 
+var (
+	// HttpStartAop 使用者可以传入一个切面，不传就使用默认值
+	HttpStartAop = protocol.DefaultHttpStartBefore()
+)
+
 func NewManager() *manager {
 	return &manager{
-		http: protocol.NewHttpService(),
+		http: protocol.NewHttpService(HttpStartAop),
 		grpc: protocol.NewGRPCService(),
 		l:    zap.L().Named("CLI"),
 	}

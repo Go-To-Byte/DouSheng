@@ -1,38 +1,28 @@
-# 用户中心[user_center]SDK
+# 视频服务[video_service]SDK
+
+使用此SDK的方式如下测试代码：
 
 ```go
+// @Author: Ciusyan 2023/2/9
+var (
+	videoService *rpc.VideoServiceClient
+)
 
-// user_center 客户端
-// 需要配置注册中心的[地址、服务名称]
-// 利用注册中心 获取user_center的客户端
-func TestToken(t *testing.T) {
-	should := assert.New(t)
-
-	// 配置Consul[地址、服务名称]
-	consulConf := conf.NewDefaultConsul()
-	consulConf.Host = os.Getenv("CONSUL_HOST")
-	consulConf.Port, _ = strconv.Atoi(os.Getenv("CONSUL_PORT"))
-	consulConf.Name = os.Getenv("CONSUL_NAME")
-
-	// 根据注册中心的配置，获取用户中心的客户端
-	client, err := rpc.NewClientSet(consulConf)
-	
-	// 下面就可以使用user_center提供的SDK了
-	if should.NoError(err) {
-		req := user.NewLoginAndRegisterRequest()
-		req.Username = "ciusyan"
-		req.Password = "111"
-
-		serviceClient := client.Token()
-
-		request := token.NewValidateTokenRequest("xxx")
-
-		resp, err := serviceClient.ValidateToken(context.Background(), request)
-		if err != nil {
-			t.Fatal(err)
-		}
-		t.Log(resp)
+func init() {
+	// 需要先加载配置
+	if err := conf.LoadConfigFromEnv(); err != nil {
+		panic(err)
 	}
+
+	// 获取视频服务的客户端[从环境变量中获取配置]
+	// 获取的配置去执行 kit 库中的 client.NewConfig(consulCfg, discoverName)
+	center, err := rpc.NewVideoServiceClientFromEnv()
+	if err != nil {
+		panic(err)
+	}
+	videoService = center
 }
 
 ```
+
+详细使用方式请看 client_test.go 文件

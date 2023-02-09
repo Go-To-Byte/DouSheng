@@ -1,59 +1,88 @@
-// @Author: Ciusyan 2023/2/5
+// @Author: Ciusyan 2023/2/8
 package rpc
 
 import (
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 
+	"github.com/Go-To-Byte/DouSheng/dou_kit/client"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
-func NewConfig(consul *conf.Consul, discoverName string) *Config {
-	return &Config{
-		Consul:       *consul,
-		DiscoverName: discoverName,
-	}
+// 用户中心 rpc 服务的 SDK
+
+var (
+	discoverName = "user_center"
+)
+
+type UserCenterClient struct {
+	tokenService token.ServiceClient
+	userService  user.ServiceClient
+
+	l logger.Logger
 }
 
-// Config 客户端配置对象
-type Config struct {
-	// Consul 的配置通过配置文件or环境变量获取
-	conf.Consul
-	// 服务发现的名称手动传入，因为只有使用方才知道需要去发现谁
-	DiscoverName string
-}
+// NewUserCenterClientFromCfg 从配置文件读取注册中心配置
+func NewUserCenterClientFromCfg() (*UserCenterClient, error) {
+	// 注册中心配置 [从配置文件中读取]
+	consulCfg := conf.C().Consul
+	// 去发现 user_center 服务
+	rpcCfg := client.NewConfig(consulCfg, discoverName)
 
-func NewClientSet(cfg *Config) (*ClientSet, error) {
-
-	conn, err := grpc.Dial(
-		cfg.GrpcDailUrl(cfg.DiscoverName),
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
-	)
+	// 根据注册中心的配置，获取用户中心的客户端
+	clientSet, err := client.NewClientSet(rpcCfg)
 
 	if err != nil {
-		return nil, err
+		return nil,
+			exception.WithMsg("获取服务[%s]失败：%s", discoverName, err.Error())
 	}
-
-	// 初始化client全局日志对象
-	zap.DevelopmentSetup()
-	return &ClientSet{
-		conn: conn,
-		l:    zap.L(),
-	}, nil
+	return newDefault(clientSet), nil
 }
 
-// ClientSet  客户端
-type ClientSet struct {
-	conn *grpc.ClientConn
-	l    logger.Logger
+// NewUserCenterClientFromEnv 从环境变量读取注册中心配置
+func NewUserCenterClientFromEnv() (*UserCenterClient, error) {
+	// 注册中心配置 [从环境变量文件中读取]
+	consulCfg := conf.NewDefaultConsul()
+	// 去发现 user_center 服务
+	rpcCfg := client.NewConfig(consulCfg, discoverName)
+	// 根据注册中心的配置，获取用户中心的客户端
+	clientSet, err := client.NewClientSet(rpcCfg)
+
+	if err != nil {
+		return nil,
+			exception.WithMsg("获取服务[%s]失败：%s", discoverName, err.Error())
+	}
+	return newDefault(clientSet), nil
 }
 
-// Token Token模块
-func (c *ClientSet) Token() token.ServiceClient {
-	return token.NewServiceClient(c.conn)
+func newDefault(clientSet *client.ClientSet) *UserCenterClient {
+	conn := clientSet.Conn()
+	return &UserCenterClient{
+		l: zap.L().Named("USER_CENTER_RPC"),
+
+		// Token 服务
+		tokenService: token.NewServiceClient(conn),
+		// User 服务
+		userService: user.NewServiceClient(conn),
+	}
+}
+
+func (c *UserCenterClient) TokenService() token.ServiceClient {
+	if c.tokenService == nil {
+		c.l.Errorf("获取用户中心[Token Client]失败")
+		return nil
+	}
+	return c.tokenService
+}
+
+func (c *UserCenterClient) UserService() user.ServiceClient {
+	if c.userService == nil {
+		c.l.Errorf("获取用户中心[Token Client]失败")
+		return nil
+	}
+	return c.userService
 }

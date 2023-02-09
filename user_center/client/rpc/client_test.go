@@ -1,57 +1,56 @@
-// @Author: Ciusyan 2023/2/5
+// @Author: Ciusyan 2023/2/9
 package rpc_test
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"os"
-	"strconv"
 	"testing"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 )
 
-// user_center 客户端
-// 需要配置注册中心的[地址、服务名称]
-// 利用注册中心 获取user_center的客户端
-func TestToken(t *testing.T) {
+var (
+	userCenter *rpc.UserCenterClient
+)
+
+func TestUserCenter(t *testing.T) {
 	should := assert.New(t)
 
-	// 配置Consul[地址、服务名称]
-	consulCfg := conf.NewDefaultConsul()
-	consulCfg.Host = os.Getenv("CONSUL_HOST")
-	consulCfg.Port, _ = strconv.Atoi(os.Getenv("CONSUL_PORT"))
-	consulCfg.RegistryName = os.Getenv("CONSUL_NAME")
-
-	// 去发现 user_center 服务
-	rpcCfg := rpc.NewConfig(consulCfg, "user_center")
-	// 根据注册中心的配置，获取用户中心的客户端
-	client, err := rpc.NewClientSet(rpcCfg)
-
-	// 下面就可以使用user_center提供的SDK了
+	tokenReq := token.NewValidateTokenRequest("xxx")
+	// 这里主要是为了获取 用户ID
+	validatedToken, err := userCenter.TokenService().ValidateToken(context.Background(), tokenReq)
 	if should.NoError(err) {
-		req := user.NewLoginAndRegisterRequest()
-		req.Username = "ciusyan"
-		req.Password = "111"
-
-		serviceClient := client.Token()
-
-		request := token.NewValidateTokenRequest("jYG8ai8OmXxvoUu2cSBfSmwe")
-
-		resp, err := serviceClient.ValidateToken(context.Background(), request)
-		if err != nil {
-			t.Fatal(err)
-		}
-		t.Log(resp.GetUserId())
+		t.Log(validatedToken)
 	}
+
+}
+
+func TestUserCenter_GinAuthHandlerFunc(t *testing.T) {
+	r := gin.New()
+	// 使用 auth 中间件
+	group := r.Group("/v1", userCenter.GinAuthHandlerFunc())
+
+	group.GET("/", func(c *gin.Context) {
+		c.String(200, "Get")
+	})
+	r.Run()
 }
 
 func init() {
+	// 需要先加载配置
 	if err := conf.LoadConfigFromEnv(); err != nil {
 		panic(err)
 	}
+
+	// 获取用户中心的客户端[从环境变量中获取配置]
+	// 获取的配置去执行 kit 库中的 client.NewConfig(consulCfg, discoverName)
+	center, err := rpc.NewUserCenterClientFromEnv()
+	if err != nil {
+		panic(err)
+	}
+	userCenter = center
 }

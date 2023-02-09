@@ -1,12 +1,7 @@
-// @Author: Ciusyan 2023/1/25
+// @Author: Ciusyan 2023/2/7
 package version
 
 import "fmt"
-
-const (
-	// ServiceName 服务名称
-	ServiceName = "user-api"
-)
 
 // 用来关联代码仓库的信息
 var (
