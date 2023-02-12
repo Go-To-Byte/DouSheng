@@ -13,7 +13,7 @@ import (
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	// 驱动加载所有需要放入IOC的实例
-	_ "github.com/Go-To-Byte/DouSheng/user_center/apps/all"
+	_ "github.com/Go-To-Byte/DouSheng/user_center/common/all"
 )
 
 var (

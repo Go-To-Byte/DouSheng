@@ -54,15 +54,22 @@ var StartCmd = &cobra.Command{
 
 var (
 	// HttpStartAop 使用者可以传入一个切面，不传就使用默认值
-	HttpStartAop = protocol.DefaultHttpStartBefore()
+	HttpStartAop protocol.StartFuncAop
 )
 
 func NewManager() *manager {
-	return &manager{
-		http: protocol.NewHttpService(HttpStartAop),
+	// GRPC服务都是需要启动的，
+	m := &manager{
 		grpc: protocol.NewGRPCService(),
 		l:    zap.L().Named("CLI"),
 	}
+
+	// 根据是否传入HTTP的切面，来判断是否需要去启动HTTP服务
+	if HttpStartAop != nil {
+		m.http = protocol.NewHttpService(HttpStartAop)
+	}
+
+	return m
 }
 
 // 用于管理服务的开启、和关闭
@@ -79,13 +86,18 @@ func (m *manager) start() error {
 	m.l.Infof("已加载的 [GRPC] 服务: %s", ioc.ExistingGrpcDependencies())
 	m.l.Infof("已加载的 [HTTP] 服务: %s", ioc.ExistingGinDependencies())
 
-	// 将GRPC放在后台跑
-	go m.grpc.Start()
-
-	// 注：这属于正常关闭："api: Server closed"
-	if err := m.http.Start(); err != nil && err.Error() != "api: Server closed" {
-		return err
+	// 如果不需要启动HTTP服务，需要才启动HTTP服务
+	if m.http != nil {
+		// 将HTTP放在后台跑
+		go func() {
+			// 注：这属于正常关闭："api: Server closed"
+			if err := m.http.Start(); err != nil && err.Error() != "api: Server closed" {
+				return
+			}
+		}()
 	}
+
+	m.grpc.Start()
 	return nil
 }
 
@@ -97,8 +109,10 @@ func (m *manager) waitStop(ch <-chan os.Signal) {
 		default:
 			m.l.Infof("接受到信号：%s", v)
 
-			if err := m.http.Stop(); err != nil {
-				m.l.Errorf("优雅关闭 [HTTP] 服务出错：%s", err.Error())
+			if m.http != nil {
+				if err := m.http.Stop(); err != nil {
+					m.l.Errorf("优雅关闭 [HTTP] 服务出错：%s", err.Error())
+				}
 			}
 
 			if err := m.grpc.Stop(); err != nil {

@@ -12,7 +12,7 @@ import (
 
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	// 驱动加载所有需要放入IOC的实例
-	_ "github.com/Go-To-Byte/DouSheng/video_service/apps/all"
+	_ "github.com/Go-To-Byte/DouSheng/video_service/common/all"
 )
 
 var (

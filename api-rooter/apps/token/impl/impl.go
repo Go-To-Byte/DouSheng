@@ -12,7 +12,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 )
 
 var (
@@ -57,4 +57,5 @@ func (s *tokenServiceImpl) Registry(server *grpc.Server) {
 
 func init() {
 	ioc.GrpcDI(impl)
+
 }

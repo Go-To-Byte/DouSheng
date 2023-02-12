@@ -31,7 +31,7 @@ db.auth("admin", "root") # 验证用户
 
 * 添加认证数据库用户
 ```shell
-use usercenter
-db.createUser({user: "usercenter", pwd: "123456", roles: [{ role: "dbOwner", db: "usercenter" }]})
-db.auth("usercenter", "123456")
+use apirooter
+db.createUser({user: "apirooter", pwd: "123456", roles: [{ role: "dbOwner", db: "apirooter" }]})
+db.auth("apirooter", "123456")
 ```

@@ -1,0 +1,35 @@
+[app]
+name = "douyin"
+
+[app.http]
+host = "127.0.0.1"
+port = "8080"
+
+[app.grpc]
+host = "192.168.1.8"
+port = 8505
+
+[mysql]
+host = "127.0.0.1"
+port = "3306"
+username = "root"
+password = "root"
+database = "dou_sheng"
+
+[mongodb]
+hosts = ["127.0.0.1:27017"]
+username = "usercenter"
+password = "123456"
+database = "usercenter"
+
+[log]
+level = "debug"
+dir = "logs"
+format = "text"
+to = "stdout"
+
+[consul.register]
+registry_name = "user_center"
+host = "127.0.0.1"
+port = 8500
+tags = ["用户中心", "user_center"]

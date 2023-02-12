@@ -4,10 +4,10 @@ package impl
 import (
 	"context"
 
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	userconstant "github.com/Go-To-Byte/DouSheng/user_center/common/constant"
 )

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 )
 
 var (

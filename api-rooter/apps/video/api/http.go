@@ -2,17 +2,17 @@
 package api
 
 import (
+	"github.com/Go-To-Byte/DouSheng/video_service/client/rpc"
 	"github.com/gin-gonic/gin"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
-
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 )
 
 type Handler struct {
-	service video.ServiceServer
+	service video.ServiceClient
 	l       logger.Logger
 
 	// 提供一个空结构体，用于默认实现方法
@@ -21,7 +21,13 @@ type Handler struct {
 
 func (h *Handler) Init() error {
 	h.l = zap.L().Named(video.AppName)
-	h.service = ioc.GetGrpcDependency(video.AppName).(video.ServiceServer)
+
+	client, err := rpc.NewVideoServiceClientFromCfg()
+	if err != nil {
+		return err
+	}
+
+	h.service = client.VideoService()
 	return nil
 }
 

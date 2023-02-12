@@ -5,20 +5,16 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
-
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 )
 
 // 用于注入IOC中
 var handler = &Handler{}
 
-func NewUserHttpHandler() *Handler {
-	return &Handler{}
-}
-
 // Handler 通过一个实体类，把内部接口用HTTP暴露出去【控制层Controller】
 type Handler struct {
-	service user.ServiceServer
+	service user.ServiceClient
 
 	// 提供一个空结构体，用于默认实现方法
 	ioc.GinDefault
@@ -33,8 +29,13 @@ func (h *Handler) Registry(r gin.IRoutes) {
 
 // Init 初始化Handler对象
 func (h *Handler) Init() error {
-	// 从IOC中获取UserServiceImpl实例
-	h.service = ioc.GetGrpcDependency(user.AppName).(user.ServiceServer)
+	// 从user_center拿到它对外提供的client，用这个Client去GRPC的调用用户中心的SDK
+	client, err := rpc.NewUserCenterClientFromCfg()
+
+	if err != nil {
+		return err
+	}
+	h.service = client.UserService()
 	return nil
 }
 

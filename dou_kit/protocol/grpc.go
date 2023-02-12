@@ -119,7 +119,7 @@ func (s *GRPCService) Register() {
 	}
 
 	s.registration = registration
-	s.l.Info("成功注册GRPC服务到consul")
+	s.l.Infof("成功注册GRPC服务[%s]到consul", consul.Register.RegistryName)
 }
 
 // DeRegister 注销在Consul的GRPC服务
@@ -129,7 +129,7 @@ func (s *GRPCService) DeRegister() {
 		if err != nil {
 			s.l.Errorf("注销实例失败：%s", err)
 		} else {
-			s.l.Info("注销实例成功")
+			s.l.Infof("服务[%s]注销成功", s.registration.Name)
 		}
 	}
 }
