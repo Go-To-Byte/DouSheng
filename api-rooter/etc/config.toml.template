@@ -9,18 +9,11 @@ port = "8080"
 host = "192.168.1.8"
 port = 8505
 
-[mysql]
-host = "127.0.0.1"
-port = "3306"
-username = "root"
-password = "root"
-database = "dou_sheng"
-
 [mongodb]
 hosts = ["127.0.0.1:27017"]
-username = "usercenter"
+username = "apirooter"
 password = "123456"
-database = "usercenter"
+database = "apirooter"
 
 [log]
 level = "debug"
@@ -29,7 +22,15 @@ format = "text"
 to = "stdout"
 
 [consul.register]
-registry_name = "user_center"
+registry_name = "api_rooter"
 host = "127.0.0.1"
 port = 8500
-tags = ["用户中心", "user_center"]
+tags = ["API路由", "api_rooter"]
+
+[consul.discovers.user_center]
+discover_name = "user_center"
+address = "127.0.0.1:8500"
+
+[consul.discovers.video_service]
+discover_name = "video_service"
+address = "127.0.0.1:8500"
