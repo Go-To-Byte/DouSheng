@@ -2,20 +2,19 @@
 package rpc
 
 import (
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
-
 	"github.com/Go-To-Byte/DouSheng/dou_kit/client"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
-
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/infraboard/mcube/logger"
+	"github.com/infraboard/mcube/logger/zap"
+	"os"
 )
 
 // 用户中心 rpc 服务的 SDK
 
-var (
+const (
 	discoverName = "user_center"
 )
 
@@ -29,16 +28,14 @@ type UserCenterClient struct {
 // NewUserCenterClientFromCfg 从配置文件读取注册中心配置
 func NewUserCenterClientFromCfg() (*UserCenterClient, error) {
 	// 注册中心配置 [从配置文件中读取]
-	consulCfg := conf.C().Consul
-	// 去发现 user_center 服务
-	rpcCfg := client.NewConfig(consulCfg, discoverName)
+	cfg := conf.C().Consul.Discovers[discoverName]
 
 	// 根据注册中心的配置，获取用户中心的客户端
-	clientSet, err := client.NewClientSet(rpcCfg)
+	clientSet, err := client.NewClientSet(cfg)
 
 	if err != nil {
 		return nil,
-			exception.WithMsg("获取服务[%s]失败：%s", discoverName, err.Error())
+			exception.WithMsg("获取服务[%s]失败：%s", cfg.DiscoverName, err.Error())
 	}
 	return newDefault(clientSet), nil
 }
@@ -46,15 +43,18 @@ func NewUserCenterClientFromCfg() (*UserCenterClient, error) {
 // NewUserCenterClientFromEnv 从环境变量读取注册中心配置
 func NewUserCenterClientFromEnv() (*UserCenterClient, error) {
 	// 注册中心配置 [从环境变量文件中读取]
-	consulCfg := conf.NewDefaultConsul()
+
+	cfg := conf.NewDefaultDiscover()
+	cfg.SetAddr(os.Getenv("CONSUL_ADDR"))
+	cfg.SetDiscoverName(os.Getenv("CONSUL_DISCOVER_NAME"))
+
 	// 去发现 user_center 服务
-	rpcCfg := client.NewConfig(consulCfg, discoverName)
 	// 根据注册中心的配置，获取用户中心的客户端
-	clientSet, err := client.NewClientSet(rpcCfg)
+	clientSet, err := client.NewClientSet(cfg)
 
 	if err != nil {
 		return nil,
-			exception.WithMsg("获取服务[%s]失败：%s", discoverName, err.Error())
+			exception.WithMsg("获取服务[%s]失败：%s", cfg.DiscoverName, err.Error())
 	}
 	return newDefault(clientSet), nil
 }

@@ -1,23 +1,35 @@
 [app]
-name = "项目名称"
+name = "douyin"
 
 [app.http]
-host = "HTTP服务的IP"
-port = "HTTP服务的端口"
+host = "127.0.0.1"
+port = "8080"
 
 [app.grpc]
-host = "GRPC服务的IP"
-port = "GRPC服务的端口"
+host = "192.168.1.8"
+port = 8505
 
 [mysql]
-host = "你数据库的IP"
+host = "127.0.0.1"
 port = "3306"
-username = "你的mysql用户名"
-password = "你的mysql密码"
-database = "你使用的数据库"
+username = "root"
+password = "root"
+database = "dou_sheng"
+
+[mongodb]
+hosts = ["127.0.0.1:27017"]
+username = "usercenter"
+password = "123456"
+database = "usercenter"
 
 [log]
-level = "日志等级"
-dir = "输出路径"
-format = "输出形式[JSON、TEXT]"
-to = "输出目的地[标准输出、文件输出]"
+level = "debug"
+dir = "logs"
+format = "text"
+to = "stdout"
+
+[consul.register]
+registry_name = "user_center"
+host = "127.0.0.1"
+port = 8500
+tags = ["用户中心", "user_center"]

@@ -41,7 +41,7 @@ func (c *Config) LoadGlobal() error {
 
 	// 初始化 Consul 客户端
 	consulCfg := api.DefaultConfig()
-	consulCfg.Address = c.Consul.Addr()
+	consulCfg.Address = c.Consul.Register.Addr()
 	client, err := api.NewClient(consulCfg)
 	if err != nil {
 		return err

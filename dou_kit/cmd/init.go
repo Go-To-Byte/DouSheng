@@ -10,6 +10,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 )
 
+// TODO：执行所有表结构的sql脚本
 var (
 	createTableFilePath string
 )

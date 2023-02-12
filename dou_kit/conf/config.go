@@ -13,7 +13,7 @@ type Config struct {
 	Mongodb *mongodb `toml:"mongodb"`
 
 	// Consul 注册中心
-	Consul *Consul `toml:"consul"`
+	Consul *consul `toml:"consul"`
 	// aliyun oss 服务
 	Aliyun *aliyun `toml:"aliyun"`
 }

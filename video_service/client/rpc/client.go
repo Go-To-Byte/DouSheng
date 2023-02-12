@@ -44,7 +44,7 @@ func NewVideoServiceClientFromCfg() (*VideoServiceClient, error) {
 // NewVideoServiceClientFromEnv 从环境变量读取注册中心配置
 func NewVideoServiceClientFromEnv() (*VideoServiceClient, error) {
 	// 注册中心配置 [从环境变量文件中读取]
-	consulCfg := conf.NewDefaultConsul()
+	consulCfg := conf.NewDefaultRegister()
 	// 去发现 user_center 服务
 	rpcCfg := client.NewConfig(consulCfg, discoverName)
 	// 根据注册中心的配置，获取用户中心的客户端
@@ -74,4 +74,3 @@ func (c *VideoServiceClient) TokenService() video.ServiceClient {
 	}
 	return c.videoService
 }
-

@@ -12,12 +12,11 @@ import (
 
 func TestLoadConfigFromToml(t *testing.T) {
 	should := assert.New(t)
-	err := conf.LoadConfigFromToml("../etc/config.toml")
+	err := conf.LoadConfigFromToml("./test.toml")
 
 	if should.NoError(err) {
 		should.Equal("DouSheng", conf.C().App.Name)
 	}
-
 }
 
 func TestLoadConfigFromEnv(t *testing.T) {
@@ -34,8 +33,18 @@ func TestLoadConfigFromEnv(t *testing.T) {
 
 func TestMySQLGetDB(t *testing.T) {
 	should := assert.New(t)
-	err := conf.LoadConfigFromToml("../etc/config.toml")
+	err := conf.LoadConfigFromToml("./test.toml")
 	if should.NoError(err) {
 		fmt.Println(conf.C().MySQL.GetDB())
+	}
+}
+
+func TestMap(t *testing.T) {
+	should := assert.New(t)
+	err := conf.LoadConfigFromToml("./test.toml")
+	if should.NoError(err) {
+		fmt.Println(conf.C().Consul.Discovers["user_center"])
+		fmt.Println(conf.C().Consul.Discovers["user_center"].DiscoverName)
+		fmt.Println(conf.C().Consul.Register.Addr())
 	}
 }
