@@ -4,8 +4,9 @@ go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230209195129-e05e661db12b
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230209195129-e05e661db12b
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230212190542-9f65c519f596
+	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230212190542-9f65c519f596
+	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230212190542-9f65c519f596
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-playground/validator/v10 v10.11.2
