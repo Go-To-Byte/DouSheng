@@ -23,6 +23,7 @@ func (a *UserCenterClient) GinAuthHandlerFunc() gin.HandlerFunc {
 		tk, err := a.tokenService.ValidateToken(ctx.Request.Context(), req)
 
 		if err != nil {
+			a.l.Errorf("Token认证失败：%s", err.Error())
 			ctx.JSON(http.StatusBadRequest, constant.ERROR_TOKEN_VALIDATE)
 			// 有错误、直接终止传递
 			ctx.Abort()

@@ -1,23 +1,48 @@
 [app]
-name = "项目名称"
+name = "douyin"
 
 [app.http]
-host = "HTTP服务的IP"
-port = "HTTP服务的端口"
+host = "127.0.0.1"
+port = "8081"
 
 [app.grpc]
-host = "GRPC服务的IP"
-port = "GRPC服务的端口"
+host = "192.168.1.8"
+port = 8506
 
 [mysql]
-host = "你数据库的IP"
+host = "127.0.0.1"
 port = "3306"
-username = "你的mysql用户名"
-password = "你的mysql密码"
-database = "你使用的数据库"
+username = "root"
+password = "root"
+database = "dou_sheng"
+
+[mongodb]
+hosts = ["127.0.0.1:27017"]
+username = "videoservice"
+password = "123456"
+database = "videoservice"
 
 [log]
-level = "日志等级"
-dir = "输出路径"
-format = "输出形式[JSON、TEXT]"
-to = "输出目的地[标准输出、文件输出]"
+level = "debug"
+dir = "logs"
+format = "text"
+to = "stdout"
+
+[consul.register]
+registry_name = "video_service"
+host = "127.0.0.1"
+port = 8500
+tags = ["视频服务", "video_service"]
+
+[consul.discovers.user_center]
+discover_name = "user_center"
+address = "127.0.0.1:8500"
+
+[aliyun]
+endpoint = "oss-cn-shenzhen.aliyuncs.com"
+access_key = "LTAI5tKCmtLpL9fZaE6qSxNP"
+access_secret = "oVEjgMVliXgBZme51RDUAXH4SeW3Py"
+bucket = "ciusyan-dousheng"
+video_dir = "upload/video/"
+image_dir = "upload/image/"
+cover_style = "video/snapshot,t_300,f_jpg,m_fast"

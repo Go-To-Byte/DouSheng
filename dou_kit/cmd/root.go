@@ -14,10 +14,10 @@ var (
 )
 
 var RootCmd = &cobra.Command{
-	Use:     "user",
-	Long:    "用户中心",
-	Short:   "用户中心",
-	Example: "go run main.go start",
+	Use:     "dousheng",
+	Long:    "极简版抖音Api",
+	Short:   "doushengApi",
+	Example: "go run main.go [Commands] [Flags]",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if vers {
 			fmt.Println(version.FullVersion())

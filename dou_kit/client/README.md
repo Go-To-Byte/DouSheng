@@ -4,12 +4,11 @@
 
 ## 一、定义配置对象
 
-先说结论：配置以下的 `DiscoverConfig` 对象
+先说结论：配置以下的 `Discover` 对象
 ```go
-type DiscoverConfig struct {
-    DiscoverName string `json:"discover_name"`
-    Host         string `json:"host"`
-    Port         int    `json:"port"`
+type Discover struct {
+    DiscoverName string `toml:"discover_name" env:"DISCOVER_NAME"`
+    Addr         string `toml:"address" env:"DISCOVER_ADDRESS"`
 }
 ```
 
@@ -17,9 +16,8 @@ type DiscoverConfig struct {
 
 ```go
 // SetAddr 设置Consul的地址
-func (c *DiscoverConfig) SetAddr(host string, port int) {
-    c.Host = host
-    c.Port = port
+func (c *DiscoverConfig) SetAddr(addr string) {
+    c.Addr = addr
 }
 
 // SetDiscoverName 设置Consul的名称
@@ -41,7 +39,7 @@ func (c *DiscoverConfig) SetDiscoverName(name string) {
 
 ```go
 conn, err := grpc.Dial(
-		cfg.GrpcDailUrl(cfg.DiscoverName),
+		cfg.GrpcDailUrl(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
 	)
@@ -57,21 +55,15 @@ func (c *DiscoverConfig) GrpcDailUrl(discoverName string) string {
 测试案例详见：[client_test.go]
 
 ```go
-
-const (
-	Addr         = "127.0.0.1:8500"
-	DiscoverName = "user_center"
-)
-
 // rpc服务通用客户端
 // 需要配置注册中心的[地址、服务名称]
 func TestClient(t *testing.T) {
 	should := assert.New(t)
 
 	// 配置Consul[地址、服务名称]
-	cfg := client.NewDefaultDiscoverCfg()
-	cfg.SetAddr(Addr)
-	cfg.SetDiscoverName(DiscoverName)
+	cfg := conf.NewDefaultDiscover()
+	cfg.SetAddr(os.Getenv("DISCOVER_ADDRESS"))
+	cfg.SetDiscoverName("DISCOVER_NAME")
 
 	// 比如这里去发现 user_center 服务
 	// 根据注册中心的配置，获取用户中心的客户端
@@ -81,6 +73,10 @@ func TestClient(t *testing.T) {
 	if should.NoError(err) {
 		t.Log(client)
 	}
+}
+
+func init() {
+	conf.LoadConfigFromEnv()
 }
 
 ```

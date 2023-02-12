@@ -2,10 +2,12 @@
 package client
 
 import (
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"log"
 )
 
 // ClientSet  客户端
@@ -14,15 +16,16 @@ type ClientSet struct {
 	l    logger.Logger
 }
 
-func NewClientSet(cfg *DiscoverConfig) (*ClientSet, error) {
+func NewClientSet(cfg *conf.Discover) (*ClientSet, error) {
 
 	conn, err := grpc.Dial(
-		cfg.GrpcDailUrl(cfg.DiscoverName),
+		cfg.GrpcDailUrl(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
 	)
 
 	if err != nil {
+		log.Print(err.Error())
 		return nil, err
 	}
 

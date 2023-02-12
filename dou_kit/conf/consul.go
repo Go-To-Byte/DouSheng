@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/hashicorp/consul/api"
 
-	// consul 用于服务发现解析出对应的服务
+	// register 用于服务发现解析出对应的服务
 	_ "github.com/mbobakov/grpc-consul-resolver"
 )
 
@@ -14,14 +14,27 @@ import (
 //=====
 
 type consul struct {
+	Register  *register            `toml:"register" env:"CONSUL_REGISTER"`
+	Discovers map[string]*Discover `toml:"discovers" env:"CONSUL_DISCOVERS"`
+}
+
+func NewDefaultConsul() *consul {
+	return &consul{
+		Register:  NewDefaultRegister(),
+		Discovers: make(map[string]*Discover, 1),
+	}
+}
+
+// register Consul 用于服务注册
+type register struct {
 	RegistryName string   `toml:"registry_name" env:"CONSUL_REGISTRY_NAME"`
 	Host         string   `toml:"host" env:"CONSUL_HOST"`
 	Port         int      `toml:"port" env:"CONSUL_PORT"`
 	Tags         []string `toml:"tags" env:"CONSUL_TAGS"`
 }
 
-func NewDefaultConsul() *consul {
-	return &consul{
+func NewDefaultRegister() *register {
+	return &register{
 		RegistryName: "注册名称",
 		Host:         "127.0.0.1",
 		Port:         8500,
@@ -29,8 +42,39 @@ func NewDefaultConsul() *consul {
 	}
 }
 
+// Discover ：Discover Consul 用于服务发现
+// 为什么服务发现和注册的配置对象要分开？
+// 因为服务注册和服务发现的地址可能不一样：
+// [比如：A部门的服务A是放在注册中心A的，B部门的服务B是放在注册中心B的，
+// 然后A部门想要去内部调用B服务，它注册中心的地址总不能是自己的吧！]
+// 当然，也可能是放在一起的。
+type Discover struct {
+	DiscoverName string `toml:"discover_name" env:"CONSUL_DISCOVER_NAME"`
+	Addr         string `toml:"address" env:"CONSUL_ADDR"`
+}
+
+func NewDefaultDiscover() *Discover {
+	return &Discover{
+		DiscoverName: "发现名称",
+		Addr:         "127.0.0.1:8500",
+	}
+}
+
+func (d *Discover) SetDiscoverName(name string) {
+	d.DiscoverName = name
+}
+
+func (d *Discover) SetAddr(addr string) {
+	d.DiscoverName = addr
+}
+
+// GrpcDailUrl 获取待发现服务的 URL [用于grpc解析出对应的服务]
+func (c *Discover) GrpcDailUrl() string {
+	return fmt.Sprintf("Consul://%s/%s?wait=14s", c.Addr, c.DiscoverName)
+}
+
 // Addr 获取配置中心地址
-func (c *consul) Addr() string {
+func (c *register) Addr() string {
 	return fmt.Sprintf("%s:%d", c.Host, c.Port)
 }
 

@@ -105,10 +105,10 @@ func (s *GRPCService) Register() {
 
 	// 生成注册对象
 	registration := new(api.AgentServiceRegistration)
-	registration.Name = consul.RegistryName
+	registration.Name = consul.Register.RegistryName
 	registration.ID = xid.New().String()
 	registration.Port = s.cfg.App.GRPC.Port
-	registration.Tags = consul.Tags
+	registration.Tags = consul.Register.Tags
 	registration.Address = s.cfg.App.GRPC.Host
 	registration.Check = check
 
