@@ -4,6 +4,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
@@ -22,9 +23,9 @@ type Handler struct {
 
 // Registry 用于注册Handler所需要暴露的路由
 func (h *Handler) Registry(r gin.IRoutes) {
-	r.POST("/register/", h.Register)
-	r.POST("/login/", h.Login)
-	r.GET("/", h.GetUserInfo)
+	r.POST("/register/", exception.GinErrWrapper(h.Register))
+	r.POST("/login/", exception.GinErrWrapper(h.Login))
+	r.GET("/", exception.GinErrWrapper(h.GetUserInfo))
 }
 
 // Init 初始化Handler对象

@@ -7,9 +7,6 @@ import (
 	"log"
 	"path"
 	"strings"
-
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 )
 
 // ========
@@ -102,8 +99,8 @@ func RegistryGin(opts *GinOptions) {
 type AppName string
 
 const (
-	USER_API  = AppName(user.AppName)
-	VIDEO_API = AppName(video.AppName)
+	USER_API  = "user"
+	VIDEO_API = "video"
 )
 
 // GinOptions 注册IOC中Gin服务的路由时，可传入配置

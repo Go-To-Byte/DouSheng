@@ -36,7 +36,7 @@ func NewVideoServiceClientFromCfg() (*VideoServiceClient, error) {
 
 	if err != nil {
 		return nil,
-			exception.WithMsg("获取服务[%s]失败：%s", cfg.DiscoverName, err.Error())
+			exception.WithStatusMsgf("获取服务[%s]失败：%s", cfg.DiscoverName, err.Error())
 	}
 	return newDefault(clientSet), nil
 }
@@ -52,7 +52,7 @@ func NewVideoServiceClientFromEnv() (*VideoServiceClient, error) {
 
 	if err != nil {
 		return nil,
-			exception.WithMsg("获取服务[%s]失败：%s", discoverName, err.Error())
+			exception.WithStatusMsgf("获取服务[%s]失败：%s", discoverName, err.Error())
 	}
 	return newDefault(clientSet), nil
 }

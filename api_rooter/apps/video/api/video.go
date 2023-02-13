@@ -6,8 +6,6 @@ import (
 	"net/http"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
-
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	videoconst "github.com/Go-To-Byte/DouSheng/video_service/common/constant"
 	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
@@ -40,8 +38,8 @@ func (h *Handler) publishAction(ctx *gin.Context) {
 
 	_, err = h.service.PublishVideo(ctx.Request.Context(), req)
 	if err != nil {
-		e := err.(*exception.Exception)
-		ctx.JSON(http.StatusBadRequest, e.GetCodeMsg())
+		//e := err.(*exception.Exception)
+		//ctx.JSON(http.StatusBadRequest, e.GetCodeMsg())
 		return
 	}
 

@@ -35,7 +35,7 @@ func NewApiRooterClientFromCfg() (*ApiRooterClient, error) {
 
 	if err != nil {
 		return nil,
-			exception.WithMsg("获取服务[%s]失败：%s", cfg.DiscoverName, err.Error())
+			exception.WithStatusMsgf("获取服务[%s]失败：%s", cfg.DiscoverName, err.Error())
 	}
 	return newDefault(clientSet), nil
 }
@@ -54,7 +54,7 @@ func NewApiRooterClientFromEnv() (*ApiRooterClient, error) {
 
 	if err != nil {
 		return nil,
-			exception.WithMsg("获取服务[%s]失败：%s", cfg.DiscoverName, err.Error())
+			exception.WithStatusMsgf("获取服务[%s]失败：%s", cfg.DiscoverName, err.Error())
 	}
 	return newDefault(clientSet), nil
 }

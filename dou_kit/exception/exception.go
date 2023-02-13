@@ -5,39 +5,42 @@ import (
 	"fmt"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception/custom"
 )
 
-type CustomException interface {
-	error
-	GetCodeMsg() *constant.CodeMsg
+// WithStatusMsgf 传递Msg
+func WithStatusMsgf(format string, a ...any) *custom.Exception {
+	// 错误只带 msg，返回的 code 默认为 1
+	return WithStatusMsg(fmt.Sprintf(format, a...))
 }
 
-// Exception 异常对象
-type Exception struct {
-	Code int32       `json:"error_code"`
-	Msg  string      `json:"message"`
-	Meta interface{} `json:"meta"`
+func WithStatusMsg(msg string) *custom.Exception {
+	return WithCodeMsg(custom.NewWithMsg(msg))
+}
+
+func WithStatusCode(code constant.StatusCode) *custom.Exception {
+	return WithStatusMsg(constant.Code2Msg(code))
 }
 
 // WithCodeMsg 传递CodeMsg
-func WithCodeMsg(msg *constant.CodeMsg) *Exception {
-	return &Exception{
-		Code: msg.StatusCode,
-		Msg:  msg.StatusMsg,
-		Meta: msg,
+func WithCodeMsg(codeMsg *custom.CodeMsg) *custom.Exception {
+	return WithDetails(codeMsg.Code(), codeMsg.Message())
+}
+
+// WithDetails 传递Details
+func WithDetails(code int32, msg string, details ...interface{}) *custom.Exception {
+	return &custom.Exception{
+		S:       custom.New(code, msg),
+		Details: details,
 	}
 }
 
-// WithMsg 传递Msg
-func WithMsg(format string, a ...any) *Exception {
-	// 错误只带 msg，返回的 code 默认为 1
-	return WithCodeMsg(constant.NewCodeMsg(1, fmt.Sprintf(format, a...)))
+// Err returns an error representing c and msg.  If c is OK, returns nil.
+func Err(c int32, msg string) error {
+	return custom.New(c, msg).Err()
 }
 
-func (e *Exception) GetCodeMsg() *constant.CodeMsg {
-	return e.Meta.(*constant.CodeMsg)
-}
-
-func (e *Exception) Error() string {
-	return e.Msg
+// Errorf returns Error(c, fmt.Sprintf(format, a...)).
+func Errorf(c int32, format string, a ...interface{}) error {
+	return Err(c, fmt.Sprintf(format, a...))
 }

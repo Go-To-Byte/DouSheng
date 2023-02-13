@@ -2,17 +2,18 @@
 package protocol
 
 import (
-	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
-	"github.com/Go-To-Byte/DouSheng/api_rooter/common/utils"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 	"github.com/gin-gonic/gin"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"net/http"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/cmd"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/protocol"
+
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
+	"github.com/Go-To-Byte/DouSheng/api_rooter/common/utils"
 )
 
 // =====

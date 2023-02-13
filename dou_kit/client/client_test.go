@@ -2,12 +2,12 @@
 package client_test
 
 import (
-	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/client"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 )
 
 // rpc服务通用客户端

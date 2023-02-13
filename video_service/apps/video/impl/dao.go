@@ -3,7 +3,6 @@ package impl
 
 import (
 	"context"
-
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
@@ -26,7 +25,7 @@ func (s *videoServiceImpl) Insert(ctx context.Context, req *video.PublishVideoRe
 	tx := s.db.WithContext(ctx).Create(po)
 	if tx.Error != nil {
 		s.l.Errorf(tx.Error.Error())
-		return nil, exception.WithCodeMsg(constant.ERROR_SAVE)
+		return nil, exception.WithStatusCode(constant.ERROR_SAVE)
 	}
 	return nil, err
 }
@@ -43,7 +42,7 @@ func (s *videoServiceImpl) getVideoPo(ctx context.Context, req *video.PublishVid
 	validatedToken, err := userCenter.TokenService().ValidateToken(ctx, tokenReq)
 	if err != nil {
 		s.l.Errorf(err.Error())
-		return nil, exception.WithCodeMsg(constant.ERROR_TOKEN_VALIDATE)
+		return nil, exception.WithStatusCode(constant.ERROR_TOKEN_VALIDATE)
 	}
 
 	VideoPo := video.NewVideoPo(req)

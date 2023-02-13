@@ -3,20 +3,19 @@ package utils
 
 import (
 	"fmt"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/rs/xid"
 	"mime/multipart"
 	"path"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
-
 	"github.com/Go-To-Byte/DouSheng/video_service/store"
 	"github.com/Go-To-Byte/DouSheng/video_service/store/aliyun"
 )
 
 func UploadFile(file *multipart.FileHeader) (*store.UploadResult, error) {
 	if file == nil || file.Size <= 0 {
-		return nil, exception.WithMsg("请正确的上传文件")
+		return nil, exception.WithStatusMsg("请正确的上传文件")
 	}
 
 	// 获取文件扩展名

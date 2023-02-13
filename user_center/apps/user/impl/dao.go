@@ -4,9 +4,9 @@ package impl
 import (
 	"context"
 	"fmt"
-
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
-
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
@@ -24,7 +24,7 @@ func (s *userServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.U
 	res := s.db.WithContext(ctx).Find(po)
 
 	if res.RowsAffected == 0 {
-		return nil, fmt.Errorf("用户不存在")
+		return nil, exception.WithStatusCode(constant.WRONG_USER_NOT_EXIST)
 	}
 
 	if res.Error != nil {
