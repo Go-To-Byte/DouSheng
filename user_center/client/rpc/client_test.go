@@ -3,13 +3,12 @@ package rpc_test
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"testing"
 
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 )
 
@@ -27,17 +26,6 @@ func TestUserCenter(t *testing.T) {
 		t.Log(validatedToken)
 	}
 
-}
-
-func TestUserCenter_GinAuthHandlerFunc(t *testing.T) {
-	r := gin.New()
-	// 使用 auth 中间件
-	group := r.Group("/v1", userCenter.GinAuthHandlerFunc())
-
-	group.GET("/", func(c *gin.Context) {
-		c.String(200, "Get")
-	})
-	r.Run()
 }
 
 func init() {
