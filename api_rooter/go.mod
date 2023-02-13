@@ -3,14 +3,13 @@ module github.com/Go-To-Byte/DouSheng/api_rooter
 go 1.19
 
 require (
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230213030016-213c404bb8c6
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230213030016-213c404bb8c6
-	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230213030016-213c404bb8c6
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230213220512-57ff67887812
+	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230213220512-57ff67887812
+	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230213220512-57ff67887812
 	github.com/gin-gonic/gin v1.8.2
 	github.com/infraboard/mcube v1.9.7
 	github.com/stretchr/testify v1.8.1
 	go.mongodb.org/mongo-driver v1.11.1
-	golang.org/x/crypto v0.5.0
 	google.golang.org/grpc v1.52.3
 	google.golang.org/protobuf v1.28.1
 )
@@ -67,6 +66,7 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.20.0 // indirect
+	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.5.0 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.4.0 // indirect

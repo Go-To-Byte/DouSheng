@@ -3,8 +3,8 @@ module github.com/Go-To-Byte/DouSheng/user_center
 go 1.19
 
 require (
-	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230213030016-213c404bb8c6
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230213030016-213c404bb8c6
+	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230213220512-57ff67887812
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230213220512-57ff67887812
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/infraboard/mcube v1.9.7
@@ -17,9 +17,8 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
-	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230213030016-213c404bb8c6 // indirect
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible // indirect
-	github.com/armon/go-metrics v0.3.2 // indirect
+	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/caarlos0/env v3.5.0+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.9.0 // indirect

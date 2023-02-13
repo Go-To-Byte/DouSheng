@@ -24,12 +24,3 @@ tags = ["视频服务", "video_service"]
 [consul.discovers.api_rooter]
 discover_name = "api_rooter"
 address = "127.0.0.1:8500"
-
-[aliyun]
-endpoint = "oss endpoint"
-access_key = "your access key"
-access_secret = "your access secret"
-bucket = "yore bucket"
-video_dir = "upload video file path"
-image_dir = "upload image file path"
-cover_style = "用于截取封面的样式"
