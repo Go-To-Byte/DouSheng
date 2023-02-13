@@ -19,6 +19,7 @@ func (s *videoServiceImpl) PublishVideo(ctx context.Context, req *video.PublishV
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
+		s.l.Errorf("video: PublishVideo 参数校验失败：%s", err.Error())
 		return nil, status.Error(codes.InvalidArgument,
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
@@ -26,7 +27,7 @@ func (s *videoServiceImpl) PublishVideo(ctx context.Context, req *video.PublishV
 	_, err := s.Insert(ctx, req)
 
 	// 这里不需要返回数据，若需要，可以包装在 Mate 中返回
-	return nil, err
+	return video.NewPublishVideoResponse(), err
 }
 
 func (s *videoServiceImpl) PublishList(ctx context.Context, req *video.PublishListRequest) (*video.PublishListResponse, error) {

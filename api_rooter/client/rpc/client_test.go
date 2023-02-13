@@ -19,7 +19,7 @@ var (
 func TestUserCenter(t *testing.T) {
 	should := assert.New(t)
 
-	tokenReq := token.NewValidateTokenRequest("xxx")
+	tokenReq := token.NewValidateTokenRequest("YkCotWjNZO7f6Axz4h06aQpx")
 	// 这里主要是为了获取 用户ID
 	validatedToken, err := apiRooter.TokenService().ValidateToken(context.Background(), tokenReq)
 	if should.NoError(err) {

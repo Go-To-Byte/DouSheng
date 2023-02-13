@@ -2,6 +2,7 @@
 package api
 
 import (
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/video_service/client/rpc"
 	"github.com/gin-gonic/gin"
 	"github.com/infraboard/mcube/logger"
@@ -40,12 +41,12 @@ func (h *Handler) Version() string {
 }
 
 func (h *Handler) Registry(r gin.IRoutes) {
-	r.GET("/feed/", h.feed)
+	r.GET("/feed/", exception.GinErrWrapper(h.feed))
 }
 
 func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
-	r.POST("/publish/action/", h.publishAction)
-	r.GET("/publish/list/", h.publishList)
+	r.POST("/publish/action/", exception.GinErrWrapper(h.publishAction))
+	r.GET("/publish/list/", exception.GinErrWrapper(h.publishList))
 }
 
 func init() {

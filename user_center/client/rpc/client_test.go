@@ -3,10 +3,10 @@ package rpc_test
 
 import (
 	"context"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/stretchr/testify/assert"
 	"testing"
 
-	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
@@ -19,9 +19,9 @@ var (
 func TestUserCenter(t *testing.T) {
 	should := assert.New(t)
 
-	tokenReq := token.NewValidateTokenRequest("xxx")
+	req := user.NewUserInfoRequest()
 	// 这里主要是为了获取 用户ID
-	validatedToken, err := userCenter.TokenService().ValidateToken(context.Background(), tokenReq)
+	validatedToken, err := userCenter.UserService().UserInfo(context.Background(), req)
 	if should.NoError(err) {
 		t.Log(validatedToken)
 	}

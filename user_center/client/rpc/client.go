@@ -6,7 +6,6 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"os"
 
-	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/client"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
@@ -21,8 +20,7 @@ const (
 )
 
 type UserCenterClient struct {
-	tokenService token.ServiceClient
-	userService  user.ServiceClient
+	userService user.ServiceClient
 
 	l logger.Logger
 }
@@ -66,19 +64,9 @@ func newDefault(clientSet *client.ClientSet) *UserCenterClient {
 	return &UserCenterClient{
 		l: zap.L().Named("USER_CENTER_RPC"),
 
-		// Token 服务
-		tokenService: token.NewServiceClient(conn),
 		// User 服务
 		userService: user.NewServiceClient(conn),
 	}
-}
-
-func (c *UserCenterClient) TokenService() token.ServiceClient {
-	if c.tokenService == nil {
-		c.l.Errorf("获取用户中心[Token Client]失败")
-		return nil
-	}
-	return c.tokenService
 }
 
 func (c *UserCenterClient) UserService() user.ServiceClient {

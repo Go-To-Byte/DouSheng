@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	"github.com/Go-To-Byte/DouSheng/user_center/common/constant"
 	"github.com/Go-To-Byte/DouSheng/user_center/common/utils"
 )
 

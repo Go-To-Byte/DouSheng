@@ -34,3 +34,7 @@ func NewVideoPo(req *PublishVideoRequest) *VideoPo {
 		CoverUrl: req.CoverUrl,
 	}
 }
+
+func NewPublishVideoResponse() *PublishVideoResponse {
+	return &PublishVideoResponse{}
+}

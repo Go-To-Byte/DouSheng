@@ -3,10 +3,10 @@ package impl
 
 import (
 	"context"
+
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
-	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 )
@@ -30,19 +30,18 @@ func (s *videoServiceImpl) Insert(ctx context.Context, req *video.PublishVideoRe
 	return nil, err
 }
 
-func (s *videoServiceImpl) getVideoPo(ctx context.Context, req *video.PublishVideoRequest) (*video.VideoPo, error) {
-	// 获取用户中心的客户端[GRPC调用]
-	userCenter, err := rpc.NewUserCenterClientFromCfg()
-	if err != nil {
-		s.l.Errorf(err.Error())
-		return nil, err
-	}
+func (s *videoServiceImpl) getVideoPo(ctx context.Context, req *video.PublishVideoRequest) (
+	*video.VideoPo, error) {
+
 	tokenReq := token.NewValidateTokenRequest(req.Token)
+
 	// 这里主要是为了获取 用户ID
-	validatedToken, err := userCenter.TokenService().ValidateToken(ctx, tokenReq)
+	validatedToken, err := s.tokenService.ValidateToken(ctx, tokenReq)
+
 	if err != nil {
 		s.l.Errorf(err.Error())
-		return nil, exception.WithStatusCode(constant.ERROR_TOKEN_VALIDATE)
+		// GRPC 调用，不需要继续包装了
+		return nil, err
 	}
 
 	VideoPo := video.NewVideoPo(req)

@@ -7,8 +7,6 @@ import (
 
 const (
 	REQUEST_TOKEN = "token"
-
-	USER_ID = "user_id"
 )
 
 type StatusCode int32
@@ -83,12 +81,24 @@ var msgToCode = map[string]StatusCode{
 
 	// user_center
 	"用户名或密码错误": BAD_NAME_PASSWORD,
+
+	// video_service
+	"读取文件数据失败": BAD_NO_FILE,
+	"上传文件失败":     BAD_UPLOAD_FILE,
 }
 
-// user_center
+// user_center 服务的常量、枚举
 const (
+	USER_ID                      = "user_id"
 	OK_REGISTER                  = "注册成功"
 	BAD_NAME_PASSWORD StatusCode = 70001
+)
+
+// video_service 服务的常量、枚举
+const (
+	REQUEST_FILE               = "data"
+	BAD_NO_FILE     StatusCode = 80001
+	BAD_UPLOAD_FILE StatusCode = 80002
 )
 
 func Msg2Code(msg string) int32 {

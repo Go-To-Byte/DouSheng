@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package dousheng.token;
-option go_package="github.com/Go-To-Byte/DouSheng/user_center/apps/token";
+option go_package="github.com/Go-To-Byte/DouSheng/api_rooter/apps/token";
 
 service Service {
   // 颁发 Token

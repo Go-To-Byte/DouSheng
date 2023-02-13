@@ -13,10 +13,10 @@ import (
 
 // 编写 gin 的中间件
 
-type appHandler func(c *gin.Context) error
+type AppHandler func(c *gin.Context) error
 
 // GinErrWrapper 用于统一处理控制层 error
-func GinErrWrapper(handler appHandler) func(c *gin.Context) {
+func GinErrWrapper(handler AppHandler) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		log := zap.L().Named("GinErrWrapper")
 		err := handler(c)

@@ -6,50 +6,46 @@ import (
 	"net/http"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception/custom"
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
-	videoconst "github.com/Go-To-Byte/DouSheng/video_service/common/constant"
 	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
 )
 
-func (h *Handler) publishAction(ctx *gin.Context) {
+func (h *Handler) publishAction(ctx *gin.Context) error {
 
 	// 1、读取文件数据并且上传
-	file, err := ctx.FormFile(videoconst.REQUEST_FILE)
+	file, err := ctx.FormFile(constant.REQUEST_FILE)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, videoconst.BAD_NO_FILE)
-		return
+		return exception.WithStatusCode(constant.BAD_NO_FILE)
 	}
 
 	uploaded, err := utils.UploadFile(file)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, videoconst.BAD_UPLOAD_FILE)
-		return
+		return exception.WithStatusCode(constant.BAD_UPLOAD_FILE)
 	}
 
 	// TODO：若在下面发生错误，需要将已上传的视频 Delete
 	req := video.NewPublishVideoRequest()
 	// 2、接收参数
 	if err = ctx.Bind(req); err != nil {
-		ctx.JSON(http.StatusBadRequest, constant.ERROR_ARGS_VALIDATE)
-		return
+		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
 	req.CoverUrl = uploaded.CoverRelativeURI
 	req.PlayUrl = uploaded.RelativeURI
-
 	_, err = h.service.PublishVideo(ctx.Request.Context(), req)
 	if err != nil {
-		//e := err.(*exception.Exception)
-		//ctx.JSON(http.StatusBadRequest, e.GetCodeMsg())
-		return
+		return exception.GrpcErrWrapper(err)
 	}
 
-	ctx.JSON(http.StatusOK, constant.OPERATE_OK)
+	ctx.JSON(http.StatusOK, custom.NewWithCode(constant.OPERATE_OK))
+	return nil
 }
 
-func (h *Handler) publishList(ctx *gin.Context) {
-
+func (h *Handler) publishList(ctx *gin.Context) error {
+	return nil
 }
 
-func (h *Handler) feed(ctx *gin.Context) {
-
+func (h *Handler) feed(ctx *gin.Context) error {
+	return nil
 }

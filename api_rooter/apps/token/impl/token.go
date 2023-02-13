@@ -3,8 +3,11 @@ package impl
 
 import (
 	"context"
-	"fmt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"time"
+
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 )
@@ -17,7 +20,7 @@ func (s *tokenServiceImpl) IssueToken(ctx context.Context, req *token.IssueToken
 	newToken := token.NewToken(req, DefaultTokenDuration)
 	_, err := s.col.InsertOne(ctx, newToken)
 	if err != nil {
-		return nil, fmt.Errorf("颁发Token失败：%s", err.Error())
+		return nil, status.Errorf(codes.Unavailable, "颁发Token失败：%s", err.Error())
 	}
 	return newToken, nil
 }
@@ -27,7 +30,9 @@ func (s *tokenServiceImpl) ValidateToken(ctx context.Context, req *token.Validat
 	// 获取 Token
 	tk, err := s.get(ctx, req.AccessToken)
 	if err != nil {
-		return nil, err
+		s.log.Errorf("token: ValidateToken出现错误：%s", err.Error())
+		return nil, status.Error(codes.Unknown,
+			constant.Code2Msg(constant.ERROR_TOKEN_VALIDATE))
 	}
 
 	// 校验过期时间[采取双Token的机制]
@@ -37,13 +42,16 @@ func (s *tokenServiceImpl) ValidateToken(ctx context.Context, req *token.Validat
 
 	// 来到这里说明 Access_Token 过期了，再看看 Refresh_Token
 	if tk.IsExpired(tk.RefreshTokenExpiredAt) {
-		return nil, fmt.Errorf("token已过期")
+		return nil, status.Error(codes.Unauthenticated,
+			constant.Code2Msg(constant.WRONG_TOKEN_EXPIRED))
 	}
 
 	// 来到这里说明 Access_Token 过期了，Refresh_Token 没过期
 
 	if err = s.update(ctx, tk.Extend(DefaultTokenDuration)); err != nil {
-		return nil, err
+		s.log.Errorf("token: ValidateToken出现错误：%s", err.Error())
+		return nil, status.Error(codes.Unknown,
+			constant.Code2Msg(constant.ERROR_TOKEN_VALIDATE))
 	}
 
 	return tk, nil

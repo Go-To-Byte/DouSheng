@@ -2,15 +2,14 @@
 package protocol
 
 import (
+	"github.com/Go-To-Byte/DouSheng/dou_kit/cmd"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/protocol"
 	"github.com/gin-gonic/gin"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
-	"net/http"
-
-	"github.com/Go-To-Byte/DouSheng/dou_kit/cmd"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/protocol"
 
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/api_rooter/common/utils"
@@ -37,8 +36,8 @@ func NewAuther() *Auther {
 }
 
 // GinAuthHandlerFunc HTTP auth中间件
-func (a *Auther) GinAuthHandlerFunc() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
+func (a *Auther) GinAuthHandlerFunc() exception.AppHandler {
+	return func(ctx *gin.Context) error {
 
 		// 从请求中解析出Token
 		ak := utils.GetToken(ctx)
@@ -49,9 +48,9 @@ func (a *Auther) GinAuthHandlerFunc() gin.HandlerFunc {
 
 		if err != nil {
 			a.l.Errorf("Token认证失败：%s", err.Error())
-			ctx.JSON(http.StatusBadRequest, constant.ERROR_TOKEN_VALIDATE)
 			// 有错误、直接终止传递
 			ctx.Abort()
+			return exception.WithStatusCode(constant.ERROR_TOKEN_VALIDATE)
 		} else {
 			a.l.Infof("Token认证成功")
 		}
@@ -60,6 +59,8 @@ func (a *Auther) GinAuthHandlerFunc() gin.HandlerFunc {
 		ctx.Set(constant.REQUEST_TOKEN, tk)
 		// 把请求传递下去
 		ctx.Next()
+
+		return nil
 	}
 }
 
@@ -67,7 +68,7 @@ func (a *Auther) GinAuthHandlerFunc() gin.HandlerFunc {
 func getMiddle() ([]gin.HandlerFunc, error) {
 	server := NewAuther()
 	// 添加Token认证中间件
-	middles := []gin.HandlerFunc{server.GinAuthHandlerFunc()}
+	middles := []gin.HandlerFunc{exception.GinErrWrapper(server.GinAuthHandlerFunc())}
 	return middles, nil
 }
 
