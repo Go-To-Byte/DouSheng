@@ -12,6 +12,11 @@ import (
 	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
 )
 
+type feedResp struct {
+	*custom.CodeMsg
+	*video.FeedSetResponse
+}
+
 func (h *Handler) publishAction(ctx *gin.Context) error {
 
 	// 1、读取文件数据并且上传
@@ -47,5 +52,22 @@ func (h *Handler) publishList(ctx *gin.Context) error {
 }
 
 func (h *Handler) feed(ctx *gin.Context) error {
+	req := video.NewFeedVideosRequest()
+	// 1、接收参数
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
+	}
+
+	// 业务请求
+	videos, err := h.service.FeedVideos(ctx, req)
+	if err != nil {
+		return exception.GrpcErrWrapper(err)
+	}
+
+	// 获取成功
+	ctx.JSON(http.StatusOK, feedResp{
+		CodeMsg:         custom.NewWithMsg(constant.ACQUIRE_OK),
+		FeedSetResponse: videos,
+	})
 	return nil
 }

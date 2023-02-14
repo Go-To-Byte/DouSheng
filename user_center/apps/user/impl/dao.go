@@ -4,8 +4,6 @@ package impl
 import (
 	"context"
 	"fmt"
-	"gorm.io/gorm"
-
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
@@ -15,21 +13,24 @@ import (
 
 // GetUser 根据用户名称获取用户
 func (s *userServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.UserPo, error) {
-	var res *gorm.DB
+	db := s.db.WithContext(ctx)
 	if po.Username != "" {
-		res = s.db.Where("username = ?", po.Username).WithContext(ctx).First(po)
+		db = db.Where("username = ?", po.Username)
 	}
 
 	if po.Id != 0 {
-		res = s.db.Where("id = ?", po.Id).WithContext(ctx).First(po)
+		db = db.Where("id = ?", po.Id)
 	}
 
-	if res.RowsAffected == 0 {
+	// 查询
+	db = db.Find(po)
+
+	if db.RowsAffected == 0 {
 		return nil, exception.WithStatusCode(constant.WRONG_USER_NOT_EXIST)
 	}
 
-	if res.Error != nil {
-		return nil, res.Error
+	if db.Error != nil {
+		return nil, db.Error
 	}
 
 	return po, nil

@@ -3,6 +3,8 @@ syntax = "proto3";
 package dousheng.video;
 option go_package="github.com/Go-To-Byte/DouSheng/video_service/apps/video";
 
+import "github.com/Go-To-Byte/DouSheng/user_center/apps/user/pb/user.proto";
+
 // 定义 Video 模块接口
 service Service {
   // 视频 feed 流
@@ -17,9 +19,9 @@ message Video {
   // 视频唯一标识
   // @gotags: json:"id"
   int64 id = 1;
-  // 视频作者ID TODO：若从视频列表中获取数据过多，这里可以直接用User[二次遍历]
-  // @gotags: json:"author_id"
-  int64 author_id = 2;
+  // 视频作者
+  // @gotags: json:"author"
+  user.User author = 2;
   // 视频播放地址
   // @gotags: json:"play_url"
   string play_url = 3;
@@ -56,6 +58,8 @@ message VideoPo {
   string title = 4;
   // @gotags: json:"author_id"
   int64 author_id = 5;
+  // @gotags: json:"created_at"
+  int64 created_at = 6;
 }
 
 // 分页请求参数 TODO：可以放在公共模块
@@ -85,10 +89,10 @@ message FeedVideosRequest {
 
 message PublishVideoRequest {
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" validate:"required"
+  // @gotags: json:"token" form:"token" binding:"required"
   string token = 1;
-  // 用户鉴权Token
-  // @gotags: json:"title" form:"title" validate:"required"
+  // 视频标题
+  // @gotags: json:"title" form:"title" binding:"required" validate:"required"
   string title = 2;
   // 视频播放地址
   // @gotags: json:"play_url"
@@ -101,20 +105,20 @@ message PublishVideoRequest {
 // 发布列表的 请求 model
 message PublishListRequest {
   // 用户ID
-  // @gotags: json:"user_id" form:"token" validate:"required"
+  // @gotags: json:"user_id" form:"token" validate:"required" binding:"required"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" validate:"required"
+  // @gotags: json:"token" form:"token" binding:"required"
   string token = 2;
 }
 
 message FeedSetResponse {
-  // 视频列表
-  // @gotags: json:"video_list"
-  repeated Video video_list = 1;
   // 本次返回的视频中，发布最早的时间，作为下次请求的latest_time
   // @gotags: json:"next_time"
   optional int64 next_time = 2;
+  // 视频列表
+  // @gotags: json:"video_list"
+  repeated Video video_list = 1;
 }
 
 message PublishVideoResponse {

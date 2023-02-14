@@ -43,6 +43,7 @@ const (
 	ERROR_UPLOAD         StatusCode = 40004
 	ERROR_TOKEN_VALIDATE StatusCode = 40005
 	ERROR_ARGS_VALIDATE  StatusCode = 40006
+	ERROR_ACQUIRE        StatusCode = 400007
 )
 
 const (
@@ -58,33 +59,34 @@ const (
 var msgToCode = map[string]StatusCode{
 	"操作成功": OPERATE_OK,
 
-	"请求出错":       BAD_REQUEST,
-	"未授权":         BAD_UNAUTHORIZED,
-	"禁止访问":       BAD_FORBIDDEN,
-	"资源不存在":     BAD_NOT_FOUND,
+	"请求出错":    BAD_REQUEST,
+	"未授权":     BAD_UNAUTHORIZED,
+	"禁止访问":    BAD_FORBIDDEN,
+	"资源不存在":   BAD_NOT_FOUND,
 	"服务器内部错误": BAD_SERVER_ERROR,
 
 	"操作失败":      ERROR_OPERATE,
 	"保存失败":      ERROR_SAVE,
 	"删除失败":      ERROR_REMOVE,
+	"获取失败":      ERROR_ACQUIRE,
 	"上传失败":      ERROR_UPLOAD,
 	"Token校验失败": ERROR_TOKEN_VALIDATE,
-	"参数校验失败":  ERROR_ARGS_VALIDATE,
+	"参数校验失败":    ERROR_ARGS_VALIDATE,
 
-	"用户不存在":           WRONG_USER_NOT_EXIST,
-	"密码错误":             WRONG_PASSWORD,
-	"验证码错误":           WRONG_CAPTCHA,
-	"用户已存在":           WRONG_EXIST_USERS,
-	"没有Token，请登录":     WRONG_NO_TOKEN,
+	"用户不存在":         WRONG_USER_NOT_EXIST,
+	"密码错误":          WRONG_PASSWORD,
+	"验证码错误":         WRONG_CAPTCHA,
+	"用户已存在":         WRONG_EXIST_USERS,
+	"没有Token，请登录":   WRONG_NO_TOKEN,
 	"Token过期，请重新登录": WRONG_NO_TOKEN,
-	"没有相关的操作权限":   WRONG_NO_PERMISSION,
+	"没有相关的操作权限":     WRONG_NO_PERMISSION,
 
 	// user_center
 	"用户名或密码错误": BAD_NAME_PASSWORD,
 
 	// video_service
 	"读取文件数据失败": BAD_NO_FILE,
-	"上传文件失败":     BAD_UPLOAD_FILE,
+	"上传文件失败":   BAD_UPLOAD_FILE,
 }
 
 // user_center 服务的常量、枚举

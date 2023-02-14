@@ -2,10 +2,8 @@
 package user
 
 import (
-	"github.com/go-playground/validator/v10"
-	"google.golang.org/protobuf/proto"
-
 	"github.com/Go-To-Byte/DouSheng/user_center/common/utils"
+	"github.com/go-playground/validator/v10"
 )
 
 const (
@@ -65,16 +63,6 @@ func (u *UserPo) CheckHash(data any) bool {
 // TableName 指明表名 -> gorm 参数映射
 func (*UserPo) TableName() string {
 	return AppName
-}
-
-// Clone 只拷贝数据
-func (r *TokenResponse) Clone() *TokenResponse {
-	return proto.Clone(r).(*TokenResponse)
-}
-
-// Clone 只拷贝数据
-func (r *UserInfoResponse) Clone() *UserInfoResponse {
-	return proto.Clone(r).(*UserInfoResponse)
 }
 
 func NewUserWithPo(po *UserPo) *User {

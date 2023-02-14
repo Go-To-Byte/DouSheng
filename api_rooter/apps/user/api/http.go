@@ -25,6 +25,9 @@ type Handler struct {
 func (h *Handler) Registry(r gin.IRoutes) {
 	r.POST("/register/", exception.GinErrWrapper(h.Register))
 	r.POST("/login/", exception.GinErrWrapper(h.Login))
+}
+
+func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
 	r.GET("/", exception.GinErrWrapper(h.GetUserInfo))
 }
 
