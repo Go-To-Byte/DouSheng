@@ -7,10 +7,11 @@ import (
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
+	"github.com/Go-To-Byte/DouSheng/api_rooter/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
@@ -39,7 +40,7 @@ type userServiceImpl struct {
 	user.UnimplementedServiceServer
 
 	// 用于管理Token
-	tokenService token.ServiceServer
+	tokenService token.ServiceClient
 }
 
 func (u *userServiceImpl) Init() error {
@@ -50,7 +51,13 @@ func (u *userServiceImpl) Init() error {
 		return err
 	}
 	u.db = db
-	u.tokenService = ioc.GetGrpcDependency(token.AppName).(token.ServiceServer)
+
+	client, err := rpc.NewApiRooterClientFromCfg()
+	if err != nil {
+		return err
+	}
+
+	u.tokenService = client.TokenService()
 
 	return nil
 }

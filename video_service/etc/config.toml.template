@@ -1,13 +1,6 @@
-[app]
-name = "douyin"
-
-[app.http]
-host = "127.0.0.1"
-port = "8081"
-
 [app.grpc]
 host = "192.168.1.8"
-port = 8506
+port = 8507
 
 [mysql]
 host = "127.0.0.1"
@@ -15,12 +8,6 @@ port = "3306"
 username = "root"
 password = "root"
 database = "dou_sheng"
-
-[mongodb]
-hosts = ["127.0.0.1:27017"]
-username = "videoservice"
-password = "123456"
-database = "videoservice"
 
 [log]
 level = "debug"
@@ -34,15 +21,6 @@ host = "127.0.0.1"
 port = 8500
 tags = ["视频服务", "video_service"]
 
-[consul.discovers.user_center]
-discover_name = "user_center"
+[consul.discovers.api_rooter]
+discover_name = "api_rooter"
 address = "127.0.0.1:8500"
-
-[aliyun]
-endpoint = "oss-cn-shenzhen.aliyuncs.com"
-access_key = "LTAI5tKCmtLpL9fZaE6qSxNP"
-access_secret = "oVEjgMVliXgBZme51RDUAXH4SeW3Py"
-bucket = "ciusyan-dousheng"
-video_dir = "upload/video/"
-image_dir = "upload/image/"
-cover_style = "video/snapshot,t_300,f_jpg,m_fast"

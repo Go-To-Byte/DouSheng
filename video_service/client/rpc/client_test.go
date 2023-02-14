@@ -2,13 +2,24 @@
 package rpc_test
 
 import (
+	"context"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
+	"testing"
+
+	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	"github.com/Go-To-Byte/DouSheng/video_service/client/rpc"
 )
 
 var (
 	videoService *rpc.VideoServiceClient
 )
+
+func TestPublishVideo(t *testing.T) {
+	request := video.NewPublishVideoRequest()
+	request.Title = "xxxx"
+	request.Token = "xxxx"
+	videoService.VideoService().PublishVideo(context.Background(), request)
+}
 
 func init() {
 	// 需要先加载配置

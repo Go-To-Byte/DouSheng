@@ -4,26 +4,28 @@ package impl
 import (
 	"context"
 	"fmt"
+	"gorm.io/gorm"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
+
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
 // GetUser 根据用户名称获取用户
 func (s *userServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.UserPo, error) {
-
+	var res *gorm.DB
 	if po.Username != "" {
-		s.db = s.db.Where("username = ?", po.Username)
+		res = s.db.Where("username = ?", po.Username).WithContext(ctx).First(po)
 	}
 
 	if po.Id != 0 {
-		s.db = s.db.Where("id = ?", po.Id)
+		res = s.db.Where("id = ?", po.Id).WithContext(ctx).First(po)
 	}
 
-	res := s.db.WithContext(ctx).Find(po)
-
 	if res.RowsAffected == 0 {
-		return nil, fmt.Errorf("用户不存在")
+		return nil, exception.WithStatusCode(constant.WRONG_USER_NOT_EXIST)
 	}
 
 	if res.Error != nil {

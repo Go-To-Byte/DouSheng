@@ -3,20 +3,22 @@ package impl
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception/custom"
 
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/token"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	userconstant "github.com/Go-To-Byte/DouSheng/user_center/common/constant"
 )
 
 func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
-		return nil, exception.WithCodeMsg(constant.ERROR_ARGS_VALIDATE)
+		return nil, status.Error(codes.InvalidArgument,
+			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 
 	// 2、根据 Username 查询此用户是否已经注册
@@ -25,7 +27,8 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	userRes, err := s.GetUser(ctx, userPo)
 
 	if userRes != nil {
-		return nil, exception.WithCodeMsg(constant.WRONG_EXIST_USERS)
+		return nil, status.Error(codes.AlreadyExists,
+			constant.Code2Msg(constant.WRONG_EXIST_USERS))
 	}
 
 	// 3、未注册-创建用户，注册-返回提示
@@ -33,7 +36,8 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	insertRes, err := s.Insert(ctx, po)
 
 	if err != nil {
-		return nil, exception.WithCodeMsg(constant.ERROR_SAVE)
+		return nil, status.Error(codes.Unknown,
+			constant.Code2Msg(constant.ERROR_SAVE))
 	}
 
 	// 4、颁发Token并返回
@@ -42,11 +46,13 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	return response, nil
 }
 
-func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
+func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterRequest) (
+	*user.TokenResponse, error) {
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
-		return nil, exception.WithCodeMsg(constant.ERROR_ARGS_VALIDATE)
+		return nil, status.Error(codes.InvalidArgument,
+			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 
 	// 2、根据用户名查询用户信息
@@ -56,7 +62,8 @@ func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 
 	// 若用户名或密码有误，不返回具体的用户名或者密码错误
 	if userRes == nil || !userRes.CheckHash(req.Password) {
-		return nil, exception.WithCodeMsg(userconstant.BAD_NAME_PASSWORD)
+		return nil, status.Error(codes.PermissionDenied,
+			constant.Code2Msg(constant.BAD_NAME_PASSWORD))
 	}
 
 	// 3、颁发Token 并返回
@@ -68,22 +75,29 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
-		return nil, exception.WithCodeMsg(constant.ERROR_ARGS_VALIDATE)
+		return nil, status.Error(codes.InvalidArgument,
+			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 
-	// 同一服务直接走内部服务调用，不用GRPC调用
+	// GRPC调用
 	_, err := s.tokenService.ValidateToken(ctx, token.NewValidateTokenRequest(req.Token))
 	if err != nil {
-		return nil, exception.WithMsg("校验Token失败：%s", err.Error())
+		// 因为走GRPC调用，肯定会返回 Status类型的错误
+		return nil, err
 	}
 
-	// 1、根据 Id 查询此用户
+	// 2、根据 Id 查询此用户
 	userPo := user.NewDefaultUserPo()
 	userPo.Id = req.UserId
 	userPoRes, err := s.GetUser(ctx, userPo)
 
 	if err != nil {
-		return nil, exception.WithMsg(err.Error())
+		switch e := err.(type) {
+		case *custom.Exception:
+			return nil, status.Error(codes.NotFound, e.Error())
+		default:
+			return nil, status.Error(codes.Unknown, e.Error())
+		}
 	}
 
 	response := user.NewUserInfoResponse()

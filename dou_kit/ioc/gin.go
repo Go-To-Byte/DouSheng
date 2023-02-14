@@ -80,22 +80,28 @@ func RegistryGin(opts *GinOptions) {
 		vers := v.Version()
 		name := v.Name()
 
-		// 不传就是需要 Version
-		if opts.NotVersion {
+		// 处理特殊路由
+		switch AppName(name) {
+		case USER_API:
+		case VIDEO_API:
 			vers = ""
-		}
-		// 不传就是需要 Name
-		if opts.NotName {
 			name = ""
+		default:
 		}
 
 		group := opts.Router.Group(path.Join(prefix, vers, name))
 		v.Registry(group)
 		// 使用中间件[如：大部分路由都需要开启认证]
 		v.RegistryWithMiddle(group.Use(opts.Middleware...))
-
 	}
 }
+
+type AppName string
+
+const (
+	USER_API  = "user"
+	VIDEO_API = "video"
+)
 
 // GinOptions 注册IOC中Gin服务的路由时，可传入配置
 type GinOptions struct {

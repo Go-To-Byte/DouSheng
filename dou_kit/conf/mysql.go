@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"sync"
 	"time"
 )
@@ -67,7 +68,9 @@ func (m *mySQL) GetDB() (*gorm.DB, error) {
 func (m *mySQL) getDBConn() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&multiStatements=true",
 		m.UserName, m.Password, m.Host, m.Port, m.Database)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		return nil, fmt.Errorf("连接Mysql：%s，error：%s", dsn, err.Error())
 	}

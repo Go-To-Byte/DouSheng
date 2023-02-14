@@ -13,7 +13,7 @@ import (
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	// 驱动加载所有需要放入IOC的实例
-	_ "github.com/Go-To-Byte/DouSheng/user_center/apps/all"
+	_ "github.com/Go-To-Byte/DouSheng/user_center/common/all"
 )
 
 var (
@@ -51,8 +51,8 @@ func TestLogin(t *testing.T) {
 func TestUserInfo(t *testing.T) {
 	should := assert.New(t)
 	req := user.NewUserInfoRequest()
-	req.Token = "TgFCArASZIB5uXpJEgtvC2nB"
-	req.UserId = 5
+	req.Token = "YkCotWjNZO7f6Axz4h06aQpx"
+	req.UserId = 4
 	info, err := service.UserInfo(context.Background(), req)
 
 	if should.NoError(err) {

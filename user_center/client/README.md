@@ -56,18 +56,6 @@ func TestUserCenter(t *testing.T) {
 	}
 
 }
-
-func TestUserCenter_GinAuthHandlerFunc(t *testing.T) {
-	r := gin.New()
-	// 使用 auth 中间件
-	group := r.Group("/v1", userCenter.GinAuthHandlerFunc())
-
-	group.GET("/", func(c *gin.Context) {
-		c.String(200, "Get")
-	})
-	r.Run()
-}
-
 ```
 
 详细使用方式请看 client_test.go 文件
@@ -79,14 +67,12 @@ func TestUserCenter_GinAuthHandlerFunc(t *testing.T) {
 那作为编写用户中心的coder，该如何对外提供SDK呢？
 
 这是用户中心中，能对外暴露的所有接口（利用protobuf文件生成）：
-1. `token.ServiceClient`
-2. `user.ServiceClient`
+1. `user.ServiceClient`
 
 那咱们可以用面向对象的方式来编写用户中心的客户端，新建结构体`UserCenterClient`
 
 ```go
 type UserCenterClient struct {
-	tokenService token.ServiceClient
 	userService  user.ServiceClient
 
 	l logger.Logger
@@ -112,13 +98,6 @@ func newDefault(clientSet *client.ClientSet) *UserCenterClient {
 对外暴露Get方法，即可直接调用接口的具体实现：
 
 ```go
-func (c *UserCenterClient) TokenService() token.ServiceClient {
-	if c.tokenService == nil {
-		c.l.Errorf("获取用户中心[Token Client]失败")
-		return nil
-	}
-	return c.tokenService
-}
 
 func (c *UserCenterClient) UserService() user.ServiceClient {
 	if c.userService == nil {
@@ -130,34 +109,3 @@ func (c *UserCenterClient) UserService() user.ServiceClient {
 ```
 
 当然，若直接对外暴露所有接口的实现，可能不是很好，可以仅暴露部分方法
-这里以编写一个用户中心提供的SDK [Gin 的认证中间件] 为例：
-
-```go
-
-// GinAuthHandlerFunc HTTP auth中间件
-func (a *UserCenterClient) GinAuthHandlerFunc() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-
-		// 从请求中解析出Token
-		ak := utils.GetToken(ctx)
-
-		// 验证Token
-		req := token.NewValidateTokenRequest(ak)
-		tk, err := a.tokenService.ValidateToken(ctx.Request.Context(), req)
-
-		if err != nil {
-			a.l.Errorf("Token认证失败：%s", err.Error())
-			ctx.JSON(http.StatusBadRequest, constant.ERROR_TOKEN_VALIDATE)
-			// 有错误、直接终止传递
-			ctx.Abort()
-		} else {
-			a.l.Infof("Token认证成功")
-		}
-
-		// 把Token传递给下一个链路
-		ctx.Set(constant.REQUEST_TOKEN, tk)
-		// 把请求传递下去
-		ctx.Next()
-	}
-}
-```
