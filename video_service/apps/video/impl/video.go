@@ -72,7 +72,7 @@ func (s *videoServiceImpl) composeFeedSetResp(ctx context.Context, pos []*video.
 	}
 
 	// 获取最新一条的视频 创建时间， 作为下次调用的请求开始时间
-	set.NextTime = utils.V2P(pos[0].CreatedAt)
+	set.NextTime = utils.V2P(pos[len(pos)-1].CreatedAt)
 
 	vos, err := s.pos2vos(ctx, pos, nil)
 	if err != nil {
