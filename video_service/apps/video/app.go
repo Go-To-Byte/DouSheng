@@ -20,6 +20,10 @@ func (r *PublishVideoRequest) Validate() error {
 	return validate.Struct(r)
 }
 
+func (r *PublishListRequest) Validate() error {
+	return validate.Struct(r)
+}
+
 func NewPublishVideoRequest() *PublishVideoRequest {
 	return &PublishVideoRequest{}
 }
@@ -56,10 +60,14 @@ func NewPageRequest() *PageRequest {
 	}
 }
 
-func (r *FeedSetResponse) Length() int64 {
-	return int64(len(r.VideoList))
-}
-
 func NewFeedSet() *FeedSetResponse {
 	return &FeedSetResponse{}
+}
+
+func NewPublishListRequest() *PublishListRequest {
+	return &PublishListRequest{}
+}
+
+func NewPublishListResponse() *PublishListResponse {
+	return &PublishListResponse{}
 }

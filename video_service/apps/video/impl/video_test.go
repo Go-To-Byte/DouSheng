@@ -32,22 +32,30 @@ func TestPublishVideo(t *testing.T) {
 	}
 }
 
-func TestQuery(t *testing.T) {
+func TestFeedVideos(t *testing.T) {
 	should := assert.New(t)
 
 	request := video.NewFeedVideosRequest()
-	pageRequest := video.NewPageRequest()
 
-	pageRequest.PageSize = 2
-	pageRequest.Offset = 3
-	request.Page = pageRequest
-
-	set, err := service.FeedVideos(context.Background(), nil)
+	set, err := service.FeedVideos(context.Background(), request)
 
 	// TODO：完善测试用例
 	if should.NoError(err) {
 		t.Log(set.VideoList)
 		t.Log(set.NextTime)
+	}
+}
+
+func TestPublishList(t *testing.T) {
+	should := assert.New(t)
+
+	request := video.NewPublishListRequest()
+	request.UserId = 4
+
+	set, err := service.PublishList(context.Background(), request)
+
+	if should.NoError(err) {
+		t.Log(set.VideoList)
 	}
 }
 

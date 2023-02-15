@@ -463,8 +463,8 @@ type PublishListRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户ID
-	// @gotags: json:"user_id" form:"token" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"token" validate:"required" binding:"required"`
+	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
 	// 用户鉴权Token
 	// @gotags: json:"token" form:"token" binding:"required"
 	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" binding:"required"`

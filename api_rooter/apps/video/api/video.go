@@ -17,6 +17,11 @@ type feedResp struct {
 	*video.FeedSetResponse
 }
 
+type listResp struct {
+	*custom.CodeMsg
+	*video.PublishListResponse
+}
+
 func (h *Handler) publishAction(ctx *gin.Context) error {
 
 	// 1、读取文件数据并且上传
@@ -48,6 +53,23 @@ func (h *Handler) publishAction(ctx *gin.Context) error {
 }
 
 func (h *Handler) publishList(ctx *gin.Context) error {
+	req := video.NewPublishListRequest()
+	// 1、接收参数
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
+	}
+
+	// 业务请求
+	videos, err := h.service.PublishList(ctx, req)
+	if err != nil {
+		return exception.GrpcErrWrapper(err)
+	}
+
+	// 获取成功
+	ctx.JSON(http.StatusOK, listResp{
+		CodeMsg:             custom.NewWithMsg(constant.ACQUIRE_OK),
+		PublishListResponse: videos,
+	})
 	return nil
 }
 
