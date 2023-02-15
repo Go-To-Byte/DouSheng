@@ -18,10 +18,10 @@ service Service {
 // 用户注册 & 登录 的接口请求 model
 message LoginAndRegisterRequest {
   // 用户名【注册的话，最长32个字符】
-  // @gotags: json:"username" binding:"required,max=32" validate:"required,max=32"
+  // @gotags: json:"username" form:"username" binding:"required,max=32" validate:"required,max=32"
   string username = 1;
   // 密码
-  // @gotags: json:"password" binding:"required,max=32" validate:"required,max=32"
+  // @gotags: json:"password" form:"password" binding:"required,max=32" validate:"required,max=32"
   string password = 2;
 }
 

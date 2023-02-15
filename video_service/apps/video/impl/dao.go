@@ -6,6 +6,8 @@ import (
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
+	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
+	"time"
 
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 )
@@ -55,20 +57,22 @@ func (s *videoServiceImpl) query(ctx context.Context, req *video.FeedVideosReque
 	if req == nil {
 		req = video.NewFeedVideosRequest()
 	} else {
+		// 接收到参数，那么设置分页对象
 		req.Page = video.NewPageRequest()
 	}
 
 	db := s.db.WithContext(ctx)
 
-	// 如果有传 LatestTime
-	if req.LatestTime != nil {
-		db = db.Where("created_at <= ?", *req.LatestTime)
+	// 如果没有传 LatestTime
+	if req.LatestTime == nil || *req.LatestTime == 0 {
+		req.LatestTime = utils.V2P(time.Now().UnixMilli())
 	}
 
 	set := make([]*video.VideoPo, 10)
 
 	// 构建分页 、排序、 查询
-	db = db.Limit(int(req.Page.PageSize)).Offset(int(req.Page.Offset)).
+	db = db.Where("created_at < ?", req.LatestTime).
+		Limit(int(req.Page.PageSize)).Offset(int(req.Page.Offset)).
 		Order("created_at desc").Find(&set)
 
 	if db.Error != nil {

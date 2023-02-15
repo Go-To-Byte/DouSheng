@@ -27,11 +27,11 @@ type LoginAndRegisterRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户名【注册的话，最长32个字符】
-	// @gotags: json:"username" binding:"required,max=32" validate:"required,max=32"
-	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username" binding:"required,max=32" validate:"required,max=32"`
+	// @gotags: json:"username" form:"username" binding:"required,max=32" validate:"required,max=32"
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username" form:"username" binding:"required,max=32" validate:"required,max=32"`
 	// 密码
-	// @gotags: json:"password" binding:"required,max=32" validate:"required,max=32"
-	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password" binding:"required,max=32" validate:"required,max=32"`
+	// @gotags: json:"password" form:"password" binding:"required,max=32" validate:"required,max=32"
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password" form:"password" binding:"required,max=32" validate:"required,max=32"`
 }
 
 func (x *LoginAndRegisterRequest) Reset() {

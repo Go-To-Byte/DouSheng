@@ -67,7 +67,7 @@ func (h *Handler) publishList(ctx *gin.Context) error {
 
 	// 获取成功
 	ctx.JSON(http.StatusOK, listResp{
-		CodeMsg:             custom.NewWithMsg(constant.ACQUIRE_OK),
+		CodeMsg:             custom.Ok(constant.ACQUIRE_OK),
 		PublishListResponse: videos,
 	})
 	return nil
@@ -88,7 +88,7 @@ func (h *Handler) feed(ctx *gin.Context) error {
 
 	// 获取成功
 	ctx.JSON(http.StatusOK, feedResp{
-		CodeMsg:         custom.NewWithMsg(constant.ACQUIRE_OK),
+		CodeMsg:         custom.Ok(constant.ACQUIRE_OK),
 		FeedSetResponse: videos,
 	})
 	return nil
