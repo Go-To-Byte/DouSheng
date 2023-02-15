@@ -6,7 +6,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception/custom"
 
@@ -77,13 +76,6 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 	if err := req.Validate(); err != nil {
 		return nil, status.Error(codes.InvalidArgument,
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
-	}
-
-	// GRPC调用
-	_, err := s.tokenService.ValidateToken(ctx, token.NewValidateTokenRequest(req.Token))
-	if err != nil {
-		// 因为走GRPC调用，肯定会返回 Status类型的错误
-		return nil, err
 	}
 
 	// 2、根据 Id 查询此用户

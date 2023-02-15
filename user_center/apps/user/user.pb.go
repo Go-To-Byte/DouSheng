@@ -27,11 +27,11 @@ type LoginAndRegisterRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户名【注册的话，最长32个字符】
-	// @gotags: json:"username" validate:"required,max=32"
-	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username" validate:"required,max=32"`
+	// @gotags: json:"username" binding:"required,max=32" validate:"required,max=32"
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username" binding:"required,max=32" validate:"required,max=32"`
 	// 密码
-	// @gotags: json:"password" validate:"required,max=32"
-	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password" validate:"required,max=32"`
+	// @gotags: json:"password" binding:"required,max=32" validate:"required,max=32"
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password" binding:"required,max=32" validate:"required,max=32"`
 }
 
 func (x *LoginAndRegisterRequest) Reset() {
@@ -147,11 +147,11 @@ type UserInfoRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户ID
-	// @gotags: json:"user_id" form:"user_id" validate:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required"`
+	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" validate:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" validate:"required"`
+	// @gotags: json:"token" form:"token" binding:"required"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
 }
 
 func (x *UserInfoRequest) Reset() {

@@ -2,15 +2,17 @@
 package impl
 
 import (
-	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
-	"github.com/Go-To-Byte/DouSheng/api_rooter/client/rpc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
+	apiRpc "github.com/Go-To-Byte/DouSheng/api_rooter/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	userRpc "github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 )
@@ -27,6 +29,9 @@ type videoServiceImpl struct {
 
 	// 依赖Token的客户端
 	tokenService token.ServiceClient
+
+	// 依赖User 的客户端
+	userServer user.ServiceClient
 }
 
 func (s *videoServiceImpl) Init() error {
@@ -38,13 +43,20 @@ func (s *videoServiceImpl) Init() error {
 	s.db = db
 	s.l = zap.L().Named(video.AppName)
 
-	// 获取用户中心的客户端[GRPC调用]
-	apiRooter, err := rpc.NewApiRooterClientFromCfg()
+	// 获取ApiRooter的客户端[GRPC调用]
+	apiRooter, err := apiRpc.NewApiRooterClientFromCfg()
 	if err != nil {
-		s.l.Errorf("video: getVideoPo 出现错误：%s", err.Error())
 		return err
 	}
 	s.tokenService = apiRooter.TokenService()
+
+	// 获取用户中心的客户端[GRPC调用]
+	userCenter, err := userRpc.NewUserCenterClientFromCfg()
+	if err != nil {
+		return err
+	}
+	s.userServer = userCenter.UserService()
+
 	return nil
 }
 

@@ -16,6 +16,11 @@ dep: ## Get the dependencies
 lint: ## Lint Golang files
 	@golint -set_exit_status ${PKG_LIST}
 
+install: ## Install depence go package
+	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	@go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	@go install github.com/favadi/protoc-go-inject-tag@latest
+
 gen: ## generate protobuf file
 	# @protoc -I=. -I=common/pb --go_out=. --go_opt=module=${PKG} --go-grpc_out=. --go-grpc_opt=module=${PKG} apps/*/pb/*.proto common/pb/*.proto
 	@protoc -I=. --go_out=. --go_opt=module=${PKG} --go-grpc_out=. --go-grpc_opt=module=${PKG} apps/*/pb/*.proto

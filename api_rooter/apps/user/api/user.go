@@ -15,13 +15,13 @@ import (
 // loginAndRegisterResp 登录和注册的响应对象
 type loginAndRegisterResp struct {
 	*custom.CodeMsg
-	user.TokenResponse
+	*user.TokenResponse
 }
 
 // userInfoResp 用户信息的响应对象
 type userInfoResp struct {
 	*custom.CodeMsg
-	user.UserInfoResponse
+	*user.UserInfoResponse
 }
 
 func (h *Handler) Register(c *gin.Context) error {
@@ -42,7 +42,7 @@ func (h *Handler) Register(c *gin.Context) error {
 	c.JSON(http.StatusOK,
 		loginAndRegisterResp{
 			CodeMsg:       custom.Ok(constant.OK_REGISTER),
-			TokenResponse: *resp.Clone(),
+			TokenResponse: resp,
 		})
 	return nil
 }
@@ -65,7 +65,7 @@ func (h *Handler) Login(c *gin.Context) error {
 	c.JSON(http.StatusOK,
 		loginAndRegisterResp{
 			CodeMsg:       custom.NewWithCode(constant.OPERATE_OK),
-			TokenResponse: *resp.Clone(),
+			TokenResponse: resp,
 		})
 	return nil
 }
@@ -86,7 +86,7 @@ func (h *Handler) GetUserInfo(c *gin.Context) error {
 	c.JSON(http.StatusOK,
 		userInfoResp{
 			CodeMsg:          custom.Ok(constant.ACQUIRE_OK),
-			UserInfoResponse: *info.Clone(),
+			UserInfoResponse: info,
 		})
 	return nil
 }
