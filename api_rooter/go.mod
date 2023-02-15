@@ -3,9 +3,9 @@ module github.com/Go-To-Byte/DouSheng/api_rooter
 go 1.19
 
 require (
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230215075535-4ea891ef1776
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230215075535-4ea891ef1776
-	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230215075535-4ea891ef1776
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230215143844-99e9bcfa1f8e
+	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230215143844-99e9bcfa1f8e
+	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230215143844-99e9bcfa1f8e
 	github.com/gin-gonic/gin v1.8.2
 	github.com/infraboard/mcube v1.9.7
 	github.com/stretchr/testify v1.8.1
