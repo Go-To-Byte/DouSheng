@@ -18,12 +18,12 @@ require (
 )
 
 require (
-	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230213230606-6048a9337383
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230213230606-6048a9337383
+	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230215075535-4ea891ef1776
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230215075535-4ea891ef1776
+	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230215075535-4ea891ef1776
 )
 
 require (
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230213230606-6048a9337383 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/caarlos0/env v3.5.0+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
