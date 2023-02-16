@@ -1,7 +1,7 @@
 module.exports = {
     title: 'Go-To-Byte 抖声项目文档',
     description: '极简版抖音相关文档',
-    base: '/test_docs/',
+    base: '/Docs-DouSheng/',
     theme: 'reco',
     locales: {
         '/': {
