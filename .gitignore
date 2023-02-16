@@ -26,3 +26,6 @@
 # 本地工作区：查看帮助 go help work
 go.work
 go.work.sum
+
+guidance/node_modules
+guidance/docs/.vuepress/dist
