@@ -1,4 +1,4 @@
-name: Deploy Docs
+name: Deploy Docs-Dousheng
 
 on:
   pull_request:
@@ -62,7 +62,3 @@ jobs:
           folder: guidance/docs/.vuepress/dist
           git-config-name: github-actions[bot]
           git-config-email: github-actions[bot]@users.noreply.github.com
-
-
-
-
