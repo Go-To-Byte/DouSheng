@@ -75,6 +75,14 @@ module.exports = {
                     { title: "关系服务", path: "/service/relation" },
                 ],
             },
+            {
+                title: "其他",
+                path: '/other/gowork',
+                collapsable: true, // 折叠
+                children: [
+                    { title: "使用go.work的好处", path: "/other/gowork" },
+                ],
+            },
         ]
     }
 }
