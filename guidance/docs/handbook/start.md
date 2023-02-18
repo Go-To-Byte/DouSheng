@@ -24,6 +24,14 @@ git clone git@github.com:Go-To-Byte/DouSheng.git
 cd DouSheng
 ```
 
+* 下载服务所需依赖
+```shell
+# 以下载ApiRooter的依赖为例
+cd api_rooter/
+
+go mod tidy
+```
+
 * 初始化`go.work`文件
 ```shell
 # 初始化 工作区
@@ -153,6 +161,7 @@ cd api_rooter/
 make run
 ```
 
+当然了，Makefile文件下，有很多指令，比如：`dep、init、gen...`可以先自行研究，在后面的章节再介绍。
 
 
 至此，相信你已经启动好项目了。若还想继续了解咱们`Go-To-Byte的Dousheng项目`，咱们接着往下看~
