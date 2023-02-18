@@ -21,4 +21,4 @@ date: '2023-2-18'
 
 ## 地址
 * [项目地址](https://github.com/Go-To-Byte/DouSheng)
-* [文档地址](go-to-byte.github.io/Docs-DouSheng/)
+* [文档地址](https://go-to-byte.github.io/Docs-DouSheng/)
