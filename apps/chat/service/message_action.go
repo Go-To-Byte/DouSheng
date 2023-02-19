@@ -13,7 +13,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (m *Message) MessageAction(ctx context.Context, req *proto.MessageRequest) (*proto.MessageResponse, error) {
+func (m *Chat) MessageAction(ctx context.Context, req *proto.MessageRequest) (*proto.MessageResponse, error) {
 	message := model.Message{
 		ID:       models.Node.Generate().Int64(),
 		UserID:   req.UserId,

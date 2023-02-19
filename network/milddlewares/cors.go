@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-// Cors Middle: 配置跨域
+// Cors Middle: 可能会由于端口不同，所以需要进行跨域
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		method := c.Request.Method

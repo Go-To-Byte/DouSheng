@@ -13,7 +13,7 @@ import (
 	"strconv"
 )
 
-func (m *Message) MessageHistory(ctx context.Context, req *proto.MessageListRequest) (*proto.MessageListResponse, error) {
+func (m *Chat) MessageHistory(ctx context.Context, req *proto.MessageListRequest) (*proto.MessageListResponse, error) {
 	// 聊天记录 == 我发送的消息 + 对方发送的消息
 	r1 := dao.MessageFindByUserIDWithToUserID(model.Message{
 		ID:       0,

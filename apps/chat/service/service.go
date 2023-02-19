@@ -9,8 +9,8 @@ import (
 	"net"
 )
 
-type Message struct {
-	proto.UnimplementedMessageServer
+type Chat struct {
+	proto.UnimplementedChatServer
 }
 
 func GetFreePort() (int, error) {

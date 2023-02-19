@@ -16,7 +16,7 @@ import (
 func Message(ctx *gin.Context) {
 	userID, _ := ctx.Get("userID")
 	zap.S().Debugf("Comment: %v", userID)
-	c := proto.NewMessageClient(models.Dials["message"])
+	c := proto.NewChatClient(models.Dials["chat"])
 
 	// Parse to_user_id to int64
 	var err error
@@ -70,7 +70,7 @@ func Message(ctx *gin.Context) {
 func MessageList(ctx *gin.Context) {
 	userID, _ := ctx.Get("userID")
 	zap.S().Debugf("Comment: %v", userID)
-	c := proto.NewMessageClient(models.Dials["message"])
+	c := proto.NewChatClient(models.Dials["message"])
 
 	// Parse to_user_id to int64
 	var err error
