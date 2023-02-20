@@ -5,6 +5,7 @@
 package inits
 
 func init() {
+	initNode()
 	initZap()
 	initConfig()
 	initRouter()

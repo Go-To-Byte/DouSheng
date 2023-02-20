@@ -2,7 +2,7 @@
 // Date: 2023/2/2 15:51
 // Software: GoLand
 
-package milddlewares
+package milddles
 
 import (
 	"errors"

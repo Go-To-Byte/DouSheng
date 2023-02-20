@@ -6,7 +6,7 @@ package services
 
 import (
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/network/milddlewares"
+	"github.com/Go-To-Byte/DouSheng/network/milddles"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	proto "github.com/Go-To-Byte/DouSheng/network/protos"
 	"github.com/gin-gonic/gin"
@@ -41,7 +41,7 @@ func Register(ctx *gin.Context) {
 	}
 
 	zap.S().Debugf("Registered: %+v", response)
-	jwt := milddlewares.NewJWT()
+	jwt := milddles.NewJWT()
 	token, err := jwt.CreateToken(response.UserId)
 	if err != nil {
 		zap.S().Panicf("Failed to register: %v", &request)
@@ -85,7 +85,7 @@ func Login(ctx *gin.Context) {
 	}
 
 	zap.S().Debugf("login: %+v", response)
-	jwt := milddlewares.NewJWT()
+	jwt := milddles.NewJWT()
 	token, err := jwt.CreateToken(response.UserId)
 	if err != nil {
 		zap.S().Panicf("Failed to login: %v", &request)

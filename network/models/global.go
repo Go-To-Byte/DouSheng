@@ -5,6 +5,7 @@
 package models
 
 import (
+	"github.com/bwmarrin/snowflake"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
@@ -13,6 +14,7 @@ import (
 var (
 	V      *viper.Viper
 	Router *gin.Engine
+	Node   *snowflake.Node
 	Config = ConfigYAML{}
 	Dials  = map[string]*grpc.ClientConn{}
 	// UserClient     proto.UserClient

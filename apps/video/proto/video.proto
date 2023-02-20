@@ -13,9 +13,10 @@ service video{
 
 message PublishRequest {
   int64 user_id = 1; // 用户鉴权token
-  string video_url = 2; // 视频数据
-  string cover_url = 3; // 封面数据
-  string title = 4; // 视频标题
+  int64 video_id = 2 ; // 视频id
+  string video_url = 3; // 视频数据
+  string cover_url = 4; // 封面数据
+  string title = 5; // 视频标题
 }
 
 message PublishResponse {

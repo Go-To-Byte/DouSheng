@@ -5,7 +5,6 @@
 package inits
 
 import (
-	"github.com/Go-To-Byte/DouSheng/network/milddlewares"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	"github.com/Go-To-Byte/DouSheng/network/routers"
 	"github.com/gin-gonic/gin"

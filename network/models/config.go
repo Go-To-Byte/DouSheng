@@ -5,11 +5,12 @@
 package models
 
 type ConfigYAML struct {
-	ID       int64        `mapstructure:"ID"`
-	DB       dbConfig     `mapstructure:"sql"`
-	Jwt      jwtConfig    `mapstructure:"jwt"`
-	GrpcName grpcConfig   `mapstructure:"grpc"`
-	Consul   consulConfig `mapstructure:"consul"`
+	ID        int64        `mapstructure:"ID"`
+	DB        dbConfig     `mapstructure:"sql"`
+	Jwt       jwtConfig    `mapstructure:"jwt"`
+	Consul    consulConfig `mapstructure:"consul"`
+	GrpcName  grpcConfig   `mapstructure:"grpc"`
+	CosConfig cosConfig    `mapstructure:"cos"`
 }
 
 type jwtConfig struct {
@@ -38,4 +39,10 @@ type grpcConfig struct {
 	Message  string `mapstructure:"message"`
 	Relation string `mapstructure:"relation"`
 	Favorite string `mapstructure:"favorite"`
+}
+
+type cosConfig struct {
+	Url       string `mapstructure:"url"`
+	SecretID  string `mapstructure:"secretID"`
+	SecretKey string `mapstructure:"secretKey"`
 }

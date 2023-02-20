@@ -9,9 +9,7 @@ import (
 	proto "github.com/Go-To-Byte/DouSheng/network/protos"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"io"
 	"net/http"
-	"os"
 	"strconv"
 )
 
@@ -20,57 +18,29 @@ func Publish(ctx *gin.Context) {
 	zap.S().Debugf("userID: %v", userID)
 	c := proto.NewVideoClient(models.Dials["video"])
 
-	// 读取文件
-	file, header, err := ctx.Request.FormFile("data")
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, models.PublishResponse{
-			StatusCode: 1,
-			StatusMsg:  "failed",
-		})
-		ctx.Abort()
-		return
+	VideoId, exists := ctx.Get("video_id")
+	if exists == false {
+		zap.S().Errorf("failed get video_id")
 	}
-
-	// 保存文件
-	save, err := os.OpenFile("../file/"+header.Filename, os.O_CREATE|os.O_WRONLY, 0666)
-	for {
-		// 读取文件切片
-		buf := make([]byte, 1024*2)
-		n, err := file.Read(buf)
-		if err != nil && err != io.EOF {
-			ctx.JSON(http.StatusBadRequest, models.PublishResponse{
-				StatusCode: 1,
-				StatusMsg:  "failed",
-			})
-			ctx.Abort()
-			zap.S().Panicf("failed to read file: %v", err)
-		}
-
-		if n == 0 {
-			break
-		}
-
-		// 保存文件切片
-		_, err = save.Write(buf)
-		if err != nil {
-			ctx.JSON(http.StatusBadRequest, models.PublishResponse{
-				StatusCode: 1,
-				StatusMsg:  "failed",
-			})
-			ctx.Abort()
-			zap.S().Panicf("failed to write file: %v", err)
-			return
-		}
+	VideoUrl, exists := ctx.Get("video_url")
+	if exists == false {
+		zap.S().Errorf("failed get video_url")
+	}
+	CoverUrl, exists := ctx.Get("cover_url")
+	if exists == false {
+		zap.S().Errorf("failed get cover_url")
 	}
 
 	// 发起 grpc 请求
 	request := proto.PublishRequest{
 		UserId:   userID.(int64),
-		VideoUrl: header.Filename,
-		CoverUrl: header.Filename,
+		VideoId:  VideoId.(int64),
+		VideoUrl: VideoUrl.(string),
+		CoverUrl: CoverUrl.(string),
 		Title:    ctx.Query("title"),
 	}
-	if _, err = c.Publish(ctx, &request); err != nil {
+
+	if _, err := c.Publish(ctx, &request); err != nil {
 		zap.S().Errorf("failed to publish: %v", err)
 		ctx.JSON(http.StatusBadRequest, models.PublishResponse{
 			StatusCode: 1,

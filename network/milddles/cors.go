@@ -2,7 +2,7 @@
 // Date: 2023/1/29 19:29
 // Software: GoLand
 
-package milddlewares
+package milddles
 
 import (
 	"github.com/gin-gonic/gin"

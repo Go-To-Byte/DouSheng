@@ -8,7 +8,6 @@ import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/apps/video/dao"
 	"github.com/Go-To-Byte/DouSheng/apps/video/dao/dal/model"
-	"github.com/Go-To-Byte/DouSheng/apps/video/models"
 	"github.com/Go-To-Byte/DouSheng/apps/video/proto"
 	"go.uber.org/zap"
 	"time"
@@ -17,7 +16,7 @@ import (
 func (v *Video) Publish(ctx context.Context, req *proto.PublishRequest) (*proto.PublishResponse, error) {
 	// 从 request 获取评论信息
 	video := model.Video{
-		ID:       models.Node.Generate().Int64(),
+		ID:       req.VideoId,
 		AuthID:   req.UserId,
 		Titel:    req.Title,
 		CoverURL: req.CoverUrl,
