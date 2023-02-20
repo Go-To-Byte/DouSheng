@@ -11,13 +11,7 @@ module.exports = {
     themeConfig: {
         nav: [
             { text: '首页', link: '/' },
-            {
-                text: 'dousheng',
-                items: [
-                    { text: 'Github', link: 'https://github.com/Go-To-Byte/DouSheng' },
-                    { text: '掘金', link: 'https://juejin.cn/user/4332537967820215' }
-                ]
-            }
+            {text: 'Github', link: 'https://github.com/Go-To-Byte/DouSheng' ,}
         ],
         subSidebar: 'auto',
         sidebar: [
@@ -33,7 +27,7 @@ module.exports = {
             {
                 title: "初识Dousheng",
                 path: '/handbook/why',
-                collapsable: true, // 折叠
+                collapsable: false, // 折叠
                 children: [
                     { title: "为什么选择 Go", path: "/handbook/why" },
                     { title: "开始", path: "/handbook/start" },
@@ -43,7 +37,7 @@ module.exports = {
             {
                 title: "Dousheng的相关架构",
                 path: '/framework/evolve',
-                collapsable: true, // 折叠
+                collapsable: false, // 折叠
                 children: [
                     { title: "Dousheng的架构演变之路", path: "/framework/evolve" },
                     { title: "如何管理DouSheng应用的生命周期", path: "/framework/lifecycle" },
