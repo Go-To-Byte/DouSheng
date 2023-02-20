@@ -10,6 +10,5 @@ func init() {
 	initPort()
 	initNode()
 	initConsul()
-	initRouter()
 	initDB()
 }

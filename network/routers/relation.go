@@ -5,6 +5,7 @@
 package routers
 
 import (
+	"github.com/Go-To-Byte/DouSheng/network/milddles"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	"github.com/Go-To-Byte/DouSheng/network/services"
 )
@@ -12,7 +13,7 @@ import (
 func Relation() {
 	r := models.Router.Group("/douyin/relation")
 	{
-		r.Use(milddlewares.JWTAuth())
+		r.Use(milddles.JWTAuth())
 		r.POST("/action", services.Follow)
 		r.GET("/follow/list", services.FollowList)
 		r.GET("/follower/list", services.FollowerList)

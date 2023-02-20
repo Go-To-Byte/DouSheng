@@ -6,16 +6,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/apps/message/models"
-	"github.com/Go-To-Byte/DouSheng/apps/message/proto"
-	"github.com/Go-To-Byte/DouSheng/apps/message/service"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/models"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/proto"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/service"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"net"
 	"time"
 
-	_ "github.com/Go-To-Byte/DouSheng/apps/message/init"
+	_ "github.com/Go-To-Byte/DouSheng/apps/chat/init"
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )

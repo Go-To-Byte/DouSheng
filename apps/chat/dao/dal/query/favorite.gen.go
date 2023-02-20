@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"github.com/Go-To-Byte/DouSheng/apps/message/dao/dal/model"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/dao/dal/model"
 )
 
 func newFavorite(db *gorm.DB, opts ...gen.DOOption) favorite {
@@ -27,6 +27,7 @@ func newFavorite(db *gorm.DB, opts ...gen.DOOption) favorite {
 
 	tableName := _favorite.favoriteDo.TableName()
 	_favorite.ALL = field.NewAsterisk(tableName)
+	_favorite.ID = field.NewInt64(tableName, "id")
 	_favorite.UserID = field.NewInt64(tableName, "user_id")
 	_favorite.VideoID = field.NewInt64(tableName, "video_id")
 	_favorite.Flag = field.NewInt64(tableName, "flag")
@@ -40,6 +41,7 @@ type favorite struct {
 	favoriteDo
 
 	ALL     field.Asterisk
+	ID      field.Int64
 	UserID  field.Int64
 	VideoID field.Int64
 	Flag    field.Int64
@@ -59,6 +61,7 @@ func (f favorite) As(alias string) *favorite {
 
 func (f *favorite) updateTableName(table string) *favorite {
 	f.ALL = field.NewAsterisk(table)
+	f.ID = field.NewInt64(table, "id")
 	f.UserID = field.NewInt64(table, "user_id")
 	f.VideoID = field.NewInt64(table, "video_id")
 	f.Flag = field.NewInt64(table, "flag")
@@ -78,7 +81,8 @@ func (f *favorite) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (f *favorite) fillFieldMap() {
-	f.fieldMap = make(map[string]field.Expr, 3)
+	f.fieldMap = make(map[string]field.Expr, 4)
+	f.fieldMap["id"] = f.ID
 	f.fieldMap["user_id"] = f.UserID
 	f.fieldMap["video_id"] = f.VideoID
 	f.fieldMap["flag"] = f.Flag

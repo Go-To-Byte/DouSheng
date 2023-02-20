@@ -19,7 +19,7 @@ func initGrpc() {
 	initUserClient()
 	initVideoClient()
 	initCommentClient()
-	initMessageClient()
+	initChatClient()
 	initRelationClient()
 	initFavoriteClient()
 }
@@ -45,7 +45,6 @@ func initUserClient() {
 }
 
 func initVideoClient() {
-
 	targetVideo := fmt.Sprintf("consul://%v:%v/%v?wait=14s",
 		models.Config.Consul.Host, models.Config.Consul.Port, models.Config.GrpcName.Video)
 	if dial, err := grpc.Dial(targetVideo,
@@ -73,16 +72,15 @@ func initCommentClient() {
 
 }
 
-func initMessageClient() {
-
-	targetMessage := fmt.Sprintf("consul://%v:%v/%v?wait=14s", models.Config.Consul.Host, models.Config.Consul.Port, models.Config.GrpcName.Message)
+func initChatClient() {
+	targetMessage := fmt.Sprintf("consul://%v:%v/%v?wait=14s", models.Config.Consul.Host, models.Config.Consul.Port, models.Config.GrpcName.Chat)
 	if dial, err := grpc.Dial(targetMessage,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`)); err != nil {
 		zap.S().Errorf("grpc dial failed: %v", err)
 	} else {
 		zap.S().Infof("grpc dial connect: %v", targetMessage)
-		models.Dials["message"] = dial
+		models.Dials["chat"] = dial
 	}
 
 }

@@ -5,8 +5,8 @@
 package init
 
 import (
-	"github.com/Go-To-Byte/DouSheng/apps/message/models"
-	"github.com/Go-To-Byte/DouSheng/apps/message/service"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/models"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/service"
 )
 
 func initPort() {

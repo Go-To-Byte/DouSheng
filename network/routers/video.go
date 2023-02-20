@@ -13,8 +13,8 @@ import (
 func Video() {
 	v := models.Router.Group("/douyin")
 	{
-		v.GET("/feed", services.Feed) // 可不进行身份认证
-		v.POST("/publish/action", milddles.JWTAuth(), milddles.Cos(), services.Publish)
-		v.GET("/publish/list", milddles.JWTAuth(), services.PublishList)
+		v.GET("/feed/", services.Feed) // 可不进行身份认证
+		v.POST("/publish/action/", milddles.JWTAuth(), milddles.Cos(), services.Publish)
+		v.GET("/publish/list/", milddles.JWTAuth(), services.PublishList)
 	}
 }

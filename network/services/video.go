@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func Publish(ctx *gin.Context) {
@@ -106,12 +107,7 @@ func Feed(ctx *gin.Context) {
 	var timeStamp int64
 	if timeStamp, err = strconv.ParseInt(ctx.Query("latest_time"), 10, 64); err != nil {
 		zap.S().Errorf("Parse latest_time value failed(latest_time: %v): %v", ctx.Query("latest_time"), err)
-		ctx.JSON(http.StatusBadRequest, models.PublishListResponse{
-			StatusCode: 1,
-			StatusMsg:  "failed",
-		})
-		ctx.Abort()
-		return
+		timeStamp = time.Now().UnixMicro() / 1000
 	}
 
 	var response *proto.FeedResponse

@@ -5,6 +5,7 @@
 package routers
 
 import (
+	"github.com/Go-To-Byte/DouSheng/network/milddles"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	"github.com/Go-To-Byte/DouSheng/network/services"
 )
@@ -12,7 +13,7 @@ import (
 func Favorite() {
 	f := models.Router.Group("/douyin/favorite")
 	{
-		f.Use(milddlewares.JWTAuth())
+		f.Use(milddles.JWTAuth())
 		f.POST("/action", services.Favorite)
 		f.GET("/list", services.FavoriteList)
 	}

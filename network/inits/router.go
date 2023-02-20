@@ -5,6 +5,7 @@
 package inits
 
 import (
+	"github.com/Go-To-Byte/DouSheng/network/milddles"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	"github.com/Go-To-Byte/DouSheng/network/routers"
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,6 @@ func initRouter() {
 			"success": true,
 		})
 	})
-	models.Router.Use(milddlewares.Cors())
+	models.Router.Use(milddles.Cors())
 	routers.Init()
 }

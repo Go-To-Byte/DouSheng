@@ -5,6 +5,7 @@
 package routers
 
 import (
+	"github.com/Go-To-Byte/DouSheng/network/milddles"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	"github.com/Go-To-Byte/DouSheng/network/services"
 )
@@ -12,7 +13,7 @@ import (
 func Message() {
 	m := models.Router.Group("/douyin/message")
 	{
-		m.Use(milddlewares.JWTAuth())
+		m.Use(milddles.JWTAuth())
 		m.POST("/action", services.Message)
 		m.GET("/chat", services.MessageList)
 	}

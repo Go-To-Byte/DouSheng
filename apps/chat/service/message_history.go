@@ -6,9 +6,9 @@ package service
 
 import (
 	"context"
-	"github.com/Go-To-Byte/DouSheng/apps/message/dao"
-	"github.com/Go-To-Byte/DouSheng/apps/message/dao/dal/model"
-	"github.com/Go-To-Byte/DouSheng/apps/message/proto"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/dao"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/dao/dal/model"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/proto"
 	"go.uber.org/zap"
 	"strconv"
 )

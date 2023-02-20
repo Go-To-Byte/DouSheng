@@ -16,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"github.com/Go-To-Byte/DouSheng/apps/message/dao/dal/model"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/dao/dal/model"
 )
 
 func newComment(db *gorm.DB, opts ...gen.DOOption) comment {

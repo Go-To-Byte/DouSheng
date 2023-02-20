@@ -6,7 +6,7 @@ package init
 
 import (
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/apps/message/models"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/models"
 	"github.com/hashicorp/consul/api"
 )
 

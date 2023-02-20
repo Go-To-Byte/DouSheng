@@ -5,7 +5,7 @@
 package init
 
 import (
-	"github.com/Go-To-Byte/DouSheng/apps/message/models"
+	"github.com/Go-To-Byte/DouSheng/apps/chat/models"
 	"github.com/bwmarrin/snowflake"
 	"go.uber.org/zap"
 )

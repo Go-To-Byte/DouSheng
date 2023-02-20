@@ -1,4 +1,4 @@
-module github.com/Go-To-Byte/DouSheng/apps/message
+module github.com/Go-To-Byte/DouSheng/apps/chat
 
 go 1.19
 

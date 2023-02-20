@@ -5,6 +5,7 @@
 package routers
 
 import (
+	"github.com/Go-To-Byte/DouSheng/network/milddles"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	"github.com/Go-To-Byte/DouSheng/network/services"
 )
@@ -12,8 +13,10 @@ import (
 func User() {
 	u := models.Router.Group("/douyin/user")
 	{
-		u.GET("/", milddlewares.JWTAuth(), services.Info)
-		u.POST("/login", services.Login)
-		u.POST("/register", services.Register)
+		u.GET("/", milddles.JWTAuth(), services.Info)
+		u.POST("/login/", services.Login)
+		u.POST("/register/", services.Register)
+		u.GET("/login/", services.Login)
+		u.GET("/register/", services.Register)
 	}
 }

@@ -33,6 +33,9 @@ func JWTAuth() gin.HandlerFunc {
 		// token := c.Request.Header.Get("token")
 		token := c.Query("token")
 		if token == "" {
+			token = c.Request.PostForm.Get("token")
+		}
+		if token == "" {
 			c.JSON(http.StatusUnauthorized, map[string]string{
 				"msg": "请登录",
 			})

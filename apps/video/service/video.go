@@ -82,9 +82,10 @@ func (v *Video) Info(ctx context.Context, req *proto.VideoInfoRequest) (*proto.V
 }
 
 func (v *Video) Feed(ctx context.Context, req *proto.FeedRequest) (*proto.FeedResponse, error) {
-	var timeStamp = (time.Now().UnixNano() - 1288834974657) << 22
+	var timeStamp = (time.Now().UnixMicro()/1000 - 1288834974657) << 22
+	zap.S().Debugf("feed time stamp %+v", timeStamp)
 	if req.LatestTime != nil {
-		timeStamp = *req.LatestTime
+		timeStamp = (*req.LatestTime - 1288834974657) << 22
 	}
 	r := dao.VideoFindByTimeStamp(timeStamp)
 	list := make([]int64, 0)
@@ -93,11 +94,15 @@ func (v *Video) Feed(ctx context.Context, req *proto.FeedRequest) (*proto.FeedRe
 		list = append(list, r[i].ID)
 	}
 
-	zap.S().Debugf("success to get video list ==> len(comment_list): %v", len(list))
+	nextTime := time.Now().UnixMicro() / 1000
+	if len(list) > 0 {
+		nextTime = r[len(list)-1].ID
+	}
+	zap.S().Debugf("success to get video list ==> len(video): %v", len(list))
 	return &proto.FeedResponse{
 		StatusCode: 0,
 		StatusMsg:  "success",
 		VideoList:  list,
-		NextTime:   r[len(r)-1].ID,
+		NextTime:   nextTime,
 	}, nil
 }
