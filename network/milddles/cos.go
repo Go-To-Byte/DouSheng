@@ -41,7 +41,7 @@ func Cos() gin.HandlerFunc {
 		c.Set("video_id", VideoId)
 
 		// save file, because upload needed is a file, not an io.Reader
-		dst := "~/api/video" + strconv.FormatInt(VideoId, 10) + ".mp4"
+		dst := "~/api/video/" + strconv.FormatInt(VideoId, 10) + ".mp4"
 		// 上传文件至指定的完整文件路径
 		err = c.SaveUploadedFile(file, dst)
 		defer func() {
