@@ -17,7 +17,7 @@ import (
 
 func Cos() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		file, _, err := c.Request.FormFile("data")
+		file, err := c.FormFile("data")
 		if err != nil {
 			c.JSON(http.StatusBadRequest, models.PublishResponse{
 				StatusCode: 1,
@@ -39,9 +39,25 @@ func Cos() gin.HandlerFunc {
 		VideoId := models.Node.Generate().Int64()
 		c.Set("video_id", VideoId)
 
-		// using put upload file, because cos.upload doesn't support io.stream upload
+		// save file, because upload needed is a file, not an io.Reader
+		dst := "~/api/video" + strconv.FormatInt(VideoId, 10) + ".mp4"
+		// 上传文件至指定的完整文件路径
+		err = c.SaveUploadedFile(file, dst)
+		defer func() {
+			_ = os.Remove(dst)
+		}()
+		if err != nil {
+			c.JSON(http.StatusBadRequest, models.PublishResponse{
+				StatusCode: 1,
+				StatusMsg:  "failed",
+			})
+			c.Abort()
+			return
+		}
+
+		// using upload file, because cos.upload could return video details
 		name := "video/" + strconv.FormatInt(VideoId, 10) + ".mp4" // path = video/id.mp4
-		_, err = con.Object.Put(c, name, file, nil)
+		details, _, err := con.Object.Upload(c, name, dst, nil)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, models.PublishResponse{
 				StatusCode: 1,
@@ -54,7 +70,7 @@ func Cos() gin.HandlerFunc {
 
 		// the url should get, because using the sample put
 		ourl := con.Object.GetObjectURL(name)
-		c.Set("video_url", ourl)
+		c.Set("video_url", details.Location)
 
 		// get snapshot
 		opt := cos.GetSnapshotOptions{Time: 1}
@@ -65,7 +81,7 @@ func Cos() gin.HandlerFunc {
 			return
 		}
 
-		// upload snapshot
+		// using put snapshot, because put is support io.Reader
 		name = "images/" + strconv.FormatInt(VideoId, 10) + ".jpg"
 		_, err = con.Object.Put(c, name, snapshot.Body, nil)
 		if err != nil {
