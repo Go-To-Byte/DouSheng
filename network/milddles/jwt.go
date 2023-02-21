@@ -33,7 +33,7 @@ func JWTAuth() gin.HandlerFunc {
 		// token := c.Request.Header.Get("token")
 		token := c.Query("token")
 		if token == "" {
-			token = c.Request.PostForm.Get("token")
+			token = c.PostForm("token")
 		}
 		if token == "" {
 			c.JSON(http.StatusUnauthorized, map[string]string{
