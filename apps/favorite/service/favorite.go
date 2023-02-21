@@ -76,7 +76,7 @@ func (f *Favorite) FavoriteList(ctx context.Context, req *proto.FavoriteListRequ
 }
 
 func (f *Favorite) FavoriteJudge(ctx context.Context, req *proto.FavoriteJudgeRequest) (*proto.FavoriteJudgeResponse, error) {
-	r := dao.FavoriteFindByUserIDWithVideoID(model.Favorite{UserID: req.UserId, VideoID: req.VideoId})
+	r := dao.FavoriteFindByUserIDAndVideoID(model.Favorite{UserID: req.UserId, VideoID: req.VideoId})
 	list := make([]int64, 0)
 	for i := range r {
 		list = append(list, r[i].VideoID)

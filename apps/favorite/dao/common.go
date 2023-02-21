@@ -14,6 +14,12 @@ import (
 
 func Add(favorite model.Favorite) (err error) {
 	q := query.Use(models.DB)
+
+	r := FavoriteFindByUserIDAndVideoID(favorite)
+	if len(r) != 0 && r[0].Flag == 1 {
+		return nil
+	}
+
 	tx := q.Begin()
 	defer func() {
 		if recover() != nil || err != nil {
@@ -79,7 +85,7 @@ func FavoriteFindByVideoID(favorite model.Favorite) []*model.Favorite {
 	return r
 }
 
-func FavoriteFindByUserIDWithVideoID(favorite model.Favorite) []*model.Favorite {
+func FavoriteFindByUserIDAndVideoID(favorite model.Favorite) []*model.Favorite {
 	q := query.Use(models.DB)
 	f := q.Favorite
 

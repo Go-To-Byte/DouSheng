@@ -106,7 +106,7 @@ func getVideoInfo(userID int64, videoID int64) (response models.Video, err error
 	if r, e := favorite.FavoriteJudge(context.Background(), &favoriteJudgeRequest); err != nil {
 		zap.S().Errorf("error getting favorite judge: (%v:%v) ==> %v", userID, videoID, e)
 	} else {
-		response.IsFavorite = r.IsFavorite != 0
+		response.IsFavorite = r.IsFavorite == 1
 	}
 
 	return
