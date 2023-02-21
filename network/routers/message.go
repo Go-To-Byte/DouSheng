@@ -11,10 +11,10 @@ import (
 )
 
 func Message() {
-	m := models.Router.Group("/douyin/message")
+	m := models.Router.Group("/douyin/message/")
 	{
 		m.Use(milddles.JWTAuth())
-		m.POST("/action", services.Message)
-		m.GET("/chat", services.MessageList)
+		m.POST("/action/", services.Message)
+		m.GET("/chat/", services.MessageList)
 	}
 }

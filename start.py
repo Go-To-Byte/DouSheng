@@ -2,6 +2,7 @@ import argparse
 import multiprocessing
 import os
 import pathlib
+import time
 
 DIRS = []
 TASKS = []
@@ -25,6 +26,8 @@ def get_all_main():
 
 def run_main(path):
     os.chdir(path)
+    print(f"Now path: {os.getcwd()}")
+    print(f"go run {path}/main.go")
     os.system(f"go run {path}/main.go")
 
 
@@ -32,8 +35,9 @@ def run_all_main():
     for path in DIRS:
         task = multiprocessing.Process(target=run_main, args=(path,))
         TASKS.append(task)
-        # task.daemon = True
+        task.daemon = True
         task.start()
+        print(f"Run: {path}: {task.pid}")
 
 
 def wait_all_main():
@@ -47,6 +51,7 @@ def main():
 
     get_all_main()
     run_all_main()
+    time.sleep(3)
     wait_all_main()
 
 

@@ -11,7 +11,7 @@ import (
 )
 
 func User() {
-	u := models.Router.Group("/douyin/user")
+	u := models.Router.Group("/douyin/user/")
 	{
 		u.GET("/", milddles.JWTAuth(), services.Info)
 		u.POST("/login/", services.Login)

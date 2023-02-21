@@ -11,10 +11,10 @@ import (
 )
 
 func Comment() {
-	c := models.Router.Group("/douyin/comment")
+	c := models.Router.Group("/douyin/comment/")
 	{
 		c.Use(milddles.JWTAuth())
-		c.POST("/action", services.Comment)
-		c.GET("/list", services.CommentList)
+		c.POST("/action/", services.Comment)
+		c.GET("/list/", services.CommentList)
 	}
 }

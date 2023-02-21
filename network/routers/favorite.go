@@ -11,10 +11,10 @@ import (
 )
 
 func Favorite() {
-	f := models.Router.Group("/douyin/favorite")
+	f := models.Router.Group("/douyin/favorite/")
 	{
 		f.Use(milddles.JWTAuth())
-		f.POST("/action", services.Favorite)
-		f.GET("/list", services.FavoriteList)
+		f.POST("/action/", services.Favorite)
+		f.GET("/list/", services.FavoriteList)
 	}
 }
