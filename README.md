@@ -1,92 +1,40 @@
-# DouSheng
-第五届青训营项目——抖声
+<div align="center">
 
-```text
-├─apps                                  # grpc服务
-│  ├─comment                            # 评论模块
-│  │  ├─.idea                           
-│  │  ├─config                          # 配置文件
-│  │  ├─dao                             # 持久化
-│  │  │  ├─dal                          # gen 生成文件
-│  │  │  │  ├─model                     # 数据表模型
-│  │  │  │  └─query                     # 数据库操作
-│  │  │  └─generator                    # 使用 gen
-│  │  ├─init                            # 初始化
-│  │  ├─middle                          # 中间层
-│  │  ├─models                          # 服务所需的模型
-│  │  ├─proto                           # protobuf 文件，及其生成文件
-│  │  ├─service                         # grpc 服务逻辑代码
-│  │  └─test                            # 测试
-│  ├─favorite                           # 点赞模块
-│  │  ├─.idea
-│  │  ├─config
-│  │  ├─dao
-│  │  │  ├─dal
-│  │  │  │  ├─model
-│  │  │  │  └─query
-│  │  │  └─generator
-│  │  ├─init
-│  │  ├─middle
-│  │  ├─models
-│  │  ├─proto
-│  │  ├─service
-│  │  └─test
-│  ├─feed                               # feed 流模块
-│  ├─message                            # 用户聊天模块
-│  │  ├─.idea
-│  │  ├─config
-│  │  ├─dao
-│  │  │  ├─dal
-│  │  │  │  ├─model
-│  │  │  │  └─query
-│  │  │  └─generator
-│  │  ├─init
-│  │  ├─middle
-│  │  ├─models
-│  │  ├─proto
-│  │  ├─service
-│  │  └─test
-│  ├─relation                           # 用户关系模块
-│  │  ├─.idea
-│  │  ├─config
-│  │  ├─dao
-│  │  │  ├─dal
-│  │  │  │  ├─model
-│  │  │  │  └─query
-│  │  │  └─generator
-│  │  ├─init
-│  │  ├─middle
-│  │  ├─models
-│  │  ├─proto
-│  │  ├─service
-│  │  └─test
-│  ├─user                               # 用户注册、登录模块
-│  │  ├─.idea
-│  │  ├─config
-│  │  ├─dao
-│  │  │  ├─dal
-│  │  │  │  ├─model
-│  │  │  │  └─query
-│  │  │  └─generator
-│  │  ├─init
-│  │  ├─middle
-│  │  ├─models
-│  │  ├─proto
-│  │  ├─service
-│  │  └─test
-│  └─video                              # 视频模块
-│      ├─.idea
-│      ├─config
-│      ├─dao
-│      │  ├─dal
-│      │  │  ├─model
-│      │  │  └─query
-│      │  └─generator
-│      ├─init
-│      ├─middle
-│      ├─models
-│      ├─proto
-│      ├─service
-│      └─test
-└─network                               # 提供 http 服务
+  <h1 align="center">Dousheng</h1>
+  <span>极简版抖音Api —— mini micro server</span>
+
+  <span>![license](https://img.shields.io/github/license/Go-To-Byte/DouSheng?v=1)</span>
+  <span>![language](https://img.shields.io/github/languages/top/Go-To-Byte/DouSheng)</span>
+  <span>![last](https://img.shields.io/github/last-commit/Go-To-Byte/DouSheng)</span>
+</div>
+
+
+| 主页 🏠                                           | 文档 📝                                          |
+|---------------------------------------------------| ---------------------------------------------------- |
+| [website](https://github.com/Go-To-Byte/DouSheng) | [docs](https://go-to-byte.github.io/Docs-DouSheng/) |
+
+# ✨ 特性
+
+* 🚪适合入门微服务的一个项目
+* 📚内部服务使用`GRPC + Consul`通信，方便学习
+* 😁使用`Gin + Gorm`开发，更易上手
+* 🥽利用`Makefile`工程化管理，方便开发
+* 🐉项目中使用到了`IoC、AOP、OOP、IOP、函数式编程`等编程思想
+* 👀文档清晰、代码思路清晰
+* .....
+
+# 🍻 使用环境
+
+* go 1.19
+* mysql 8.0
+* mongodb 6.0
+* consul 1.14.4
+
+# 📸 本地调试
+
+```bash
+$ git clone https://github.com/Go-To-Byte/DouSheng.git
+$ cd DouSheng
 ```
+
+* [启动说明](https://go-to-byte.github.io/Docs-DouSheng/)

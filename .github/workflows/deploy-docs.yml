@@ -1,0 +1,63 @@
+name: Deploy Docs-Dousheng
+
+on:
+  pull_request:
+    branches: ['main']
+  push:
+    branches: ['docs/vuepress', 'main']
+    tags: ['v*']
+
+jobs:
+  build:
+    # 执行的环境
+    runs-on: ubuntu-latest
+
+    # 相当于定义变量
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    # 执行的步骤
+    steps:
+      # 名称
+      - name: Cancel Previous Workflow Runs
+        uses: n1hility/cancel-previous-runs@v2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: docs/vuepress
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.com/
+          cache: 'pnpm'
+          cache-dependency-path: guidance/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: cd guidance/ && pnpm i --frozen-lockfile
+
+      - name: Build
+        run: cd guidance/ && pnpm run docs:build
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.4.0
+        with:
+          branch: main
+          repository-name: Go-To-Byte/Docs-DouSheng
+          token: ${{ secrets.GO_TO_BYTE_DEPLOY }}
+          folder: guidance/docs/.vuepress/dist
+          git-config-name: github-actions[bot]
+          git-config-email: github-actions[bot]@users.noreply.github.com

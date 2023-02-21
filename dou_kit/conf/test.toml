@@ -1,0 +1,9 @@
+[consul.register]
+registry_name = "video_service"
+host = "127.0.0.1"
+port = 8500
+tags = ["视频服务", "video_service"]
+
+[consul.discovers.user_center]
+discover_name = "user_center"
+address = "127.0.0.1:8500"

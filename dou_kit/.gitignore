@@ -15,17 +15,10 @@
 # vendor/
 
 
-*/etc/config.toml
-*/etc/unit_test.env
-*/client/config.go
+etc/dousheng.toml
 
-*/dist
+etc/unit_test.env
+
+dist
 
 *.idea
-
-# 本地工作区：查看帮助 go help work
-go.work
-go.work.sum
-
-guidance/node_modules
-guidance/docs/.vuepress/dist
