@@ -5,6 +5,7 @@
 package milddles
 
 import (
+	"fmt"
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	"github.com/gin-gonic/gin"
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -40,26 +41,10 @@ func Cos() gin.HandlerFunc {
 		VideoId := models.Node.Generate().Int64()
 		c.Set("video_id", VideoId)
 
-		// save file, because upload needed is a file, not an io.Reader
-		dst := "~/log/api/video/" + strconv.FormatInt(VideoId, 10) + ".mp4"
-		// 上传文件至指定的完整文件路径
-		err = c.SaveUploadedFile(file, dst)
-		defer func() {
-			_ = os.Remove(dst)
-		}()
-		if err != nil {
-			zap.S().Debugf("failed to save file: %v", err)
-			c.JSON(http.StatusBadRequest, models.PublishResponse{
-				StatusCode: 1,
-				StatusMsg:  "failed",
-			})
-			c.Abort()
-			return
-		}
-
-		// using upload file, because cos.upload could return video details
+		// using put file, because cos.upload not support put file by io.Reader
+		read, err := file.Open()
 		name := "video/" + strconv.FormatInt(VideoId, 10) + ".mp4" // path = video/id.mp4
-		details, _, err := con.Object.Upload(c, name, dst, nil)
+		_, err = con.Object.Put(c, name, read, nil)
 		if err != nil {
 			zap.S().Debugf("failed to upload video: %v", err)
 			c.JSON(http.StatusBadRequest, models.PublishResponse{
@@ -73,7 +58,7 @@ func Cos() gin.HandlerFunc {
 
 		// the url should get, because using the sample put
 		ourl := con.Object.GetObjectURL(name)
-		c.Set("video_url", details.Location)
+		c.Set("video_url", fmt.Sprint(ourl))
 
 		// get snapshot
 		opt := cos.GetSnapshotOptions{Time: 1}
@@ -85,7 +70,7 @@ func Cos() gin.HandlerFunc {
 		}
 
 		// using put snapshot, because put is support io.Reader
-		name = "images/" + strconv.FormatInt(VideoId, 10) + ".jpg"
+		name = "image/" + strconv.FormatInt(VideoId, 10) + ".jpg"
 		_, err = con.Object.Put(c, name, snapshot.Body, nil)
 		if err != nil {
 			zap.S().Debugf("failed to put snapshot: %v", err)
@@ -98,6 +83,6 @@ func Cos() gin.HandlerFunc {
 			return
 		}
 		ourl = con.Object.GetObjectURL(name)
-		c.Set("cover_url", ourl)
+		c.Set("cover_url", fmt.Sprint(ourl))
 	}
 }

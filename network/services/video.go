@@ -21,15 +21,15 @@ func Publish(ctx *gin.Context) {
 
 	VideoId, exists := ctx.Get("video_id")
 	if exists == false {
-		zap.S().Errorf("failed get video_id")
+		zap.S().Debugf("failed get video_id")
 	}
 	VideoUrl, exists := ctx.Get("video_url")
 	if exists == false {
-		zap.S().Errorf("failed get video_url")
+		zap.S().Debugf("failed get video_url")
 	}
 	CoverUrl, exists := ctx.Get("cover_url")
 	if exists == false {
-		zap.S().Errorf("failed get cover_url")
+		zap.S().Debugf("failed get cover_url")
 	}
 
 	// 发起 grpc 请求
@@ -38,7 +38,7 @@ func Publish(ctx *gin.Context) {
 		VideoId:  VideoId.(int64),
 		VideoUrl: VideoUrl.(string),
 		CoverUrl: CoverUrl.(string),
-		Title:    ctx.Query("title"),
+		Title:    ctx.PostForm("title"),
 	}
 
 	if _, err := c.Publish(ctx, &request); err != nil {
@@ -47,6 +47,8 @@ func Publish(ctx *gin.Context) {
 			StatusCode: 1,
 			StatusMsg:  "failed",
 		})
+		ctx.Abort()
+		return
 	}
 
 	ctx.JSON(http.StatusOK, models.PublishResponse{
