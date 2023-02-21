@@ -19,6 +19,7 @@ func Cos() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		file, err := c.FormFile("data")
 		if err != nil {
+			zap.S().Debugf("failed to get form file: %v", err)
 			c.JSON(http.StatusBadRequest, models.PublishResponse{
 				StatusCode: 1,
 				StatusMsg:  "failed",
@@ -47,6 +48,7 @@ func Cos() gin.HandlerFunc {
 			_ = os.Remove(dst)
 		}()
 		if err != nil {
+			zap.S().Debugf("failed to save file: %v", err)
 			c.JSON(http.StatusBadRequest, models.PublishResponse{
 				StatusCode: 1,
 				StatusMsg:  "failed",
@@ -59,6 +61,7 @@ func Cos() gin.HandlerFunc {
 		name := "video/" + strconv.FormatInt(VideoId, 10) + ".mp4" // path = video/id.mp4
 		details, _, err := con.Object.Upload(c, name, dst, nil)
 		if err != nil {
+			zap.S().Debugf("failed to upload video: %v", err)
 			c.JSON(http.StatusBadRequest, models.PublishResponse{
 				StatusCode: 1,
 				StatusMsg:  "failed",
@@ -77,7 +80,7 @@ func Cos() gin.HandlerFunc {
 		snapshot, err := con.CI.GetSnapshot(c, name, &opt)
 		if err != nil {
 			c.Abort()
-			zap.S().Errorf("failed to get snapshot: %v", err)
+			zap.S().Debugf("failed to get snapshot: %v", err)
 			return
 		}
 
@@ -85,6 +88,7 @@ func Cos() gin.HandlerFunc {
 		name = "images/" + strconv.FormatInt(VideoId, 10) + ".jpg"
 		_, err = con.Object.Put(c, name, snapshot.Body, nil)
 		if err != nil {
+			zap.S().Debugf("failed to put snapshot: %v", err)
 			c.JSON(http.StatusBadRequest, models.PublishResponse{
 				StatusCode: 1,
 				StatusMsg:  "failed",
