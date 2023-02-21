@@ -28,8 +28,8 @@ def run_main(path):
     path: pathlib.Path
     os.chdir(path)
     print(f"Now path: {os.getcwd()}")
-    print(f"go run {path}/main.go >> ~/log/{path.name}.log")
-    os.system(f"go run {path}/main.go")
+    print(f"go run {path}/main.go")
+    os.system(f"go run {path}/main.go >> ~/log/{path.name}.log")
 
 
 def run_all_main():
