@@ -12,7 +12,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
-func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
+func (s *UserServiceImpl) Register(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
@@ -45,7 +45,7 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	return response, nil
 }
 
-func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterRequest) (
+func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterRequest) (
 	*user.TokenResponse, error) {
 
 	// 1、请求参数校验
@@ -70,7 +70,7 @@ func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 	return response, nil
 }
 
-func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (*user.UserInfoResponse, error) {
+func (s *UserServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (*user.UserInfoResponse, error) {
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {

@@ -1,0 +1,35 @@
+# Author: BeYoung
+# Date: 2023/1/26 3:13
+# Software: GoLand
+
+id: 7
+
+jwt:
+  key: "go_to_byte@email.com"
+
+consul:
+  host: 124.222.189.27
+  port: 8500
+
+grpc:
+  chat: "chat"
+  feed: "feed"
+  user: "user"
+  video: "video"
+  comment: "comment"
+  relation: "relation"
+  favorite: "favorite"
+
+
+sql:
+  username: root
+  password: 2194150786@qq.com
+  host: 124.222.189.27
+  port: 3306
+  database: go_to_byte
+  charset: utf8mb3
+
+cos:
+  url: https://cyan-1257348513.cos.ap-shanghai.myqcloud.com
+  secretID: 0
+  secretKey: "go_to_byte@email.com"

@@ -1,0 +1,23 @@
+# Author: BeYoung
+# Date: 2023/1/26 3:13
+# Software: GoLand
+
+id: 1
+
+consul:
+  name: "chat"
+  tags: "go_to_byte"
+  host: 124.222.189.27
+  port: 8500
+
+localhost:
+  host: 192.168.10.5
+  port: 50052
+
+sql:
+  username: root
+  password: 2194150786@qq.com
+  host: 124.222.189.27
+  port: 3306
+  database: go_to_byte
+  charset: utf8mb3

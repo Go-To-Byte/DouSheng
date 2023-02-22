@@ -12,7 +12,7 @@ import (
 )
 
 // GetUser 根据用户名称获取用户
-func (s *userServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.UserPo, error) {
+func (s *UserServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.UserPo, error) {
 	db := s.db.WithContext(ctx)
 	if po.Username != "" {
 		db = db.Where("username = ?", po.Username)
@@ -37,7 +37,7 @@ func (s *userServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.U
 }
 
 // Insert 创建用户
-func (s *userServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.UserPo, error) {
+func (s *UserServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.UserPo, error) {
 
 	res := s.db.WithContext(ctx).Create(user)
 
@@ -49,7 +49,7 @@ func (s *userServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.
 	return user, nil
 }
 
-func (s *userServiceImpl) token(ctx context.Context, po *user.UserPo) (accessToken string) {
+func (s *UserServiceImpl) token(ctx context.Context, po *user.UserPo) (accessToken string) {
 	// 颁发Token
 	tkReq := token.NewIssueTokenRequest(po)
 	tk, err := s.tokenService.IssueToken(ctx, tkReq)
