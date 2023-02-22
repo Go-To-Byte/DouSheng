@@ -12,8 +12,8 @@ import (
 )
 
 // GetUser 根据用户名称获取用户
-func (s *UserServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.UserPo, error) {
-	db := s.db.WithContext(ctx)
+func (u *UserServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.UserPo, error) {
+	db := u.db.WithContext(ctx)
 	if po.Username != "" {
 		db = db.Where("username = ?", po.Username)
 	}
@@ -37,9 +37,9 @@ func (s *UserServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.U
 }
 
 // Insert 创建用户
-func (s *UserServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.UserPo, error) {
+func (u *UserServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.UserPo, error) {
 
-	res := s.db.WithContext(ctx).Create(user)
+	res := u.db.WithContext(ctx).Create(user)
 
 	// TODO：统一异常处理
 	if res.Error != nil {
@@ -49,18 +49,18 @@ func (s *UserServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.
 	return user, nil
 }
 
-func (s *UserServiceImpl) token(ctx context.Context, po *user.UserPo) (accessToken string) {
+func (u *UserServiceImpl) token(ctx context.Context, po *user.UserPo) (accessToken string) {
 	// 颁发Token
 	tkReq := token.NewIssueTokenRequest(po)
-	tk, err := s.tokenService.IssueToken(ctx, tkReq)
+	tk, err := u.tokenService.IssueToken(ctx, tkReq)
 
 	// 若Token颁发失败，不要报错，打印日志即可
 	if err != nil {
 		accessToken = ""
-		s.l.Errorf("Token颁发失败：%s", err.Error())
+		u.l.Errorf("Token颁发失败：%s", err.Error())
 	} else {
 		accessToken = tk.AccessToken
-		s.l.Infof("Token颁发成功：%s", accessToken)
+		u.l.Infof("Token颁发成功：%s", accessToken)
 	}
 	return
 }

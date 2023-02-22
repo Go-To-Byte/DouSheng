@@ -1,5 +1,5 @@
 // Author: BeYoung
-// Date: 2023/2/22 20:37
+// Date: 2023/2/21 21:11
 // Software: GoLand
 
 package impl
@@ -7,69 +7,69 @@ package impl
 import (
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/api_rooter/client/rpc"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
+	"github.com/Go-To-Byte/DouSheng/chat/apps/chat"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
-	"github.com/Go-To-Byte/DouSheng/favorite/apps/favorite"
+	"google.golang.org/grpc"
 
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
-	"google.golang.org/grpc"
 	"gorm.io/gorm"
 )
 
 // 用于注入IOC中
-var impl = &FavoriteServiceImpl{}
+var impl = &ChatServiceImpl{}
 
-func NewFavoriteServiceImpl() *FavoriteServiceImpl {
+func NewCommentServiceImpl() *ChatServiceImpl {
 
 	db, err := conf.C().MySQL.GetDB()
 	if err != nil {
 		panic(err)
 	}
 
-	return &FavoriteServiceImpl{
+	return &ChatServiceImpl{
 		// User模块服务的子Logger
-		l:  zap.L().Named("Favorite"),
+		l:  zap.L().Named("Comment"),
 		db: db,
 	}
 }
 
-// FavoriteServiceImpl favoriteServiceImpl 基于Mysql实现的Service
-type FavoriteServiceImpl struct {
+// ChatServiceImpl  基于Mysql实现的Service
+type ChatServiceImpl struct {
 	l  logger.Logger
 	db *gorm.DB
 
-	favorite.UnimplementedFavoriteServer
+	chat.UnimplementedChatServer
 
 	// 用于管理Token
 	tokenService token.ServiceClient
 }
 
-func (f *FavoriteServiceImpl) Init() error {
-	f.l = zap.L().Named("Favorite")
+func (c *ChatServiceImpl) Init() error {
+	c.l = zap.L().Named("Comment")
 
 	db, err := conf.C().MySQL.GetDB()
 	if err != nil {
 		return err
 	}
-	f.db = db
+	c.db = db
 
 	client, err := rpc.NewApiRooterClientFromCfg()
 	if err != nil {
 		return err
 	}
 
-	f.tokenService = client.TokenService()
+	c.tokenService = client.TokenService()
 
 	return nil
 }
 
-func (f *FavoriteServiceImpl) Name() string {
-	return favorite.AppName
+func (c *ChatServiceImpl) Name() string {
+	return chat.AppName
 }
 
-func (f *FavoriteServiceImpl) Registry(s *grpc.Server) {
-	favorite.RegisterFavoriteServer(s, impl)
+func (c *ChatServiceImpl) Registry(s *grpc.Server) {
+	chat.RegisterChatServer(s, impl)
 }
 
 func init() {

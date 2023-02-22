@@ -12,7 +12,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
-func (s *UserServiceImpl) Register(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
+func (u *UserServiceImpl) Register(ctx context.Context, req *user.LoginAndRegisterRequest) (*user.TokenResponse, error) {
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
@@ -23,7 +23,7 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	// 2、根据 Username 查询此用户是否已经注册
 	userPo := user.NewDefaultUserPo()
 	userPo.Username = req.Username
-	userRes, err := s.GetUser(ctx, userPo)
+	userRes, err := u.GetUser(ctx, userPo)
 
 	if userRes != nil {
 		return nil, status.Error(codes.AlreadyExists,
@@ -32,7 +32,7 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 
 	// 3、未注册-创建用户，注册-返回提示
 	po := user.NewUserPo(req.Hash())
-	insertRes, err := s.Insert(ctx, po)
+	insertRes, err := u.Insert(ctx, po)
 
 	if err != nil {
 		return nil, status.Error(codes.Unknown,
@@ -40,12 +40,12 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	}
 
 	// 4、颁发Token并返回
-	response := user.NewTokenResponse(insertRes.Id, s.token(ctx, insertRes))
+	response := user.NewTokenResponse(insertRes.Id, u.token(ctx, insertRes))
 
 	return response, nil
 }
 
-func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterRequest) (
+func (u *UserServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterRequest) (
 	*user.TokenResponse, error) {
 
 	// 1、请求参数校验
@@ -57,7 +57,7 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 	// 2、根据用户名查询用户信息
 	userPo := user.NewDefaultUserPo()
 	userPo.Username = req.Username
-	userRes, _ := s.GetUser(ctx, userPo)
+	userRes, _ := u.GetUser(ctx, userPo)
 
 	// 若用户名或密码有误，不返回具体的用户名或者密码错误
 	if userRes == nil || !userRes.CheckHash(req.Password) {
@@ -66,11 +66,11 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 	}
 
 	// 3、颁发Token 并返回
-	response := user.NewTokenResponse(userRes.Id, s.token(ctx, userRes))
+	response := user.NewTokenResponse(userRes.Id, u.token(ctx, userRes))
 	return response, nil
 }
 
-func (s *UserServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (*user.UserInfoResponse, error) {
+func (u *UserServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (*user.UserInfoResponse, error) {
 
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
@@ -81,7 +81,7 @@ func (s *UserServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 	// 2、根据 Id 查询此用户
 	userPo := user.NewDefaultUserPo()
 	userPo.Id = req.UserId
-	userPoRes, err := s.GetUser(ctx, userPo)
+	userPoRes, err := u.GetUser(ctx, userPo)
 
 	if err != nil {
 		switch e := err.(type) {

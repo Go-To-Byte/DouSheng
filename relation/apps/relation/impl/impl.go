@@ -44,30 +44,30 @@ type RelationServiceImpl struct {
 	tokenService token.ServiceClient
 }
 
-func (c *RelationServiceImpl) Init() error {
-	c.l = zap.L().Named("Relation")
+func (r *RelationServiceImpl) Init() error {
+	r.l = zap.L().Named("Relation")
 
 	db, err := conf.C().MySQL.GetDB()
 	if err != nil {
 		return err
 	}
-	c.db = db
+	r.db = db
 
 	client, err := rpc.NewApiRooterClientFromCfg()
 	if err != nil {
 		return err
 	}
 
-	c.tokenService = client.TokenService()
+	r.tokenService = client.TokenService()
 
 	return nil
 }
 
-func (c *RelationServiceImpl) Name() string {
+func (r *RelationServiceImpl) Name() string {
 	return relation.AppName
 }
 
-func (c *RelationServiceImpl) Registry(s *grpc.Server) {
+func (r *RelationServiceImpl) Registry(s *grpc.Server) {
 	relation.RegisterRelationServer(s, impl)
 }
 
