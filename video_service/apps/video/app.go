@@ -39,6 +39,7 @@ func NewVideoPo(req *PublishVideoRequest) *VideoPo {
 		PlayUrl:   req.PlayUrl,
 		CoverUrl:  req.CoverUrl,
 		CreatedAt: time.Now().UnixMilli(),
+		AuthorId:  req.UserId,
 	}
 }
 
