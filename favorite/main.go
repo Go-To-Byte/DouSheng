@@ -1,8 +1,21 @@
 // Author: BeYoung
 // Date: 2023/1/25 23:50
 // Software: GoLand
-//
 package main
+
+import (
+	"github.com/Go-To-Byte/DouSheng/dou_kit/cmd"
+	_ "github.com/Go-To-Byte/DouSheng/favorite/apps/favorite/impl/init"
+
+	// 驱动加载所有变量，主要是[IOC的实例]
+	_ "github.com/Go-To-Byte/DouSheng/favorite/common/all"
+)
+
+func main() {
+	// 交由CLI启动
+	cmd.Main()
+}
+
 //
 // import (
 // 	"fmt"

@@ -3,5 +3,5 @@ package all
 
 // 在这里统一自动注册IOC
 import (
-	_ "github.com/Go-To-Byte/DouSheng/favorite/apps/favorite/impl"
+	_ "github.com/Go-To-Byte/DouSheng/relation/apps/relation/impl"
 )
