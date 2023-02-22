@@ -6,7 +6,7 @@
 package rpc
 
 import (
-	"github.com/Go-To-Byte/DouSheng/comment/apps/comment"
+	"github.com/Go-To-Byte/DouSheng/favorite/apps/favorite"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"os"
@@ -19,17 +19,17 @@ import (
 // 用户中心 rpc 服务的 SDK
 
 const (
-	discoverName = "comment"
+	discoverName = "favorite"
 )
 
-type CommentClient struct {
-	Client comment.CommentClient
+type FavoriteClient struct {
+	Client favorite.FavoriteClient
 
 	l logger.Logger
 }
 
-// NewCommentClientFromCfg 从配置文件读取注册中心配置
-func NewCommentClientFromCfg() (*CommentClient, error) {
+// NewFavoriteClientFromCfg 从配置文件读取注册中心配置
+func NewFavoriteClientFromCfg() (*FavoriteClient, error) {
 	// 注册中心配置 [从配置文件中读取]
 	cfg := conf.C().Consul.Discovers[discoverName]
 
@@ -43,15 +43,15 @@ func NewCommentClientFromCfg() (*CommentClient, error) {
 	return newDefault(clientSet), nil
 }
 
-// NewCommentClientFromEnv 从环境变量读取注册中心配置
-func NewCommentClientFromEnv() (*CommentClient, error) {
+// NewFavoriteClientFromEnv 从环境变量读取注册中心配置
+func NewFavoriteClientFromEnv() (*FavoriteClient, error) {
 	// 注册中心配置 [从环境变量文件中读取]
 
 	cfg := conf.NewDefaultDiscover()
 	cfg.SetAddr(os.Getenv("CONSUL_ADDR"))
 	cfg.SetDiscoverName(os.Getenv("CONSUL_DISCOVER_NAME"))
 
-	// 去发现 服务
+	// 去发现 user_center 服务
 	// 根据注册中心的配置，获取用户中心的客户端
 	clientSet, err := client.NewClientSet(cfg)
 
@@ -62,17 +62,17 @@ func NewCommentClientFromEnv() (*CommentClient, error) {
 	return newDefault(clientSet), nil
 }
 
-func newDefault(clientSet *client.ClientSet) *CommentClient {
+func newDefault(clientSet *client.ClientSet) *FavoriteClient {
 	conn := clientSet.Conn()
-	return &CommentClient{
+	return &FavoriteClient{
 		l: zap.L().Named("USER_CENTER_RPC"),
 
 		// User 服务
-		Client: comment.NewCommentClient(conn),
+		Client: favorite.NewFavoriteClient(conn),
 	}
 }
 
-func (c *CommentClient) CommentService() comment.CommentClient {
+func (c *FavoriteClient) UserService() favorite.FavoriteClient {
 	if c.Client == nil {
 		c.l.Errorf("获取用户中心[Token Client]失败")
 		return nil

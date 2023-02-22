@@ -8,12 +8,11 @@ import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/comment/apps/comment/impl/dal/model"
 	"github.com/Go-To-Byte/DouSheng/comment/apps/comment/impl/dal/query"
-	"github.com/Go-To-Byte/DouSheng/comment/apps/comment/impl/models"
 	"go.uber.org/zap"
 )
 
 func (c *CommentServiceImpl) Add(comment model.Comment) (err error) {
-	q := query.Use(models.DB)
+	q := query.Use(c.db)
 	tx := q.Begin()
 	defer func() {
 		if recover() != nil || err != nil {
@@ -32,7 +31,7 @@ func (c *CommentServiceImpl) Add(comment model.Comment) (err error) {
 }
 
 func (c *CommentServiceImpl) Delete(comment model.Comment) (err error) {
-	q := query.Use(models.DB)
+	q := query.Use(c.db)
 	tx := q.Begin()
 	defer func() {
 		if recover() != nil || err != nil {
@@ -51,7 +50,7 @@ func (c *CommentServiceImpl) Delete(comment model.Comment) (err error) {
 }
 
 func (c *CommentServiceImpl) CommentFindByVideoID(videoID int64) []*model.Comment {
-	q := query.Use(models.DB)
+	q := query.Use(c.db)
 	cmt := q.Comment
 
 	r, err := cmt.WithContext(context.Background()).Where(cmt.VideoID.Eq(videoID)).Find()
