@@ -6,12 +6,43 @@ import time
 
 DIRS = []
 TASKS = []
+PID = []
+
+
+def parser_arg():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--kill",
+                        nargs="?",
+                        type=int,
+                        default=0,
+                        help="kill all service")
+    args = parser.parse_args()
+    if args.kill != 0:
+        kill_all_main()
+        os._exit(0)
 
 
 def on_exit(signum, frame):
     for task in TASKS:
         task: multiprocessing.Process
         task.close()
+
+
+def kill_all_main():
+    with open(f"{pathlib.Path().home()}/log/pid.txt") as file:
+        for pid in file.readlines():
+            print(f"closing: {pid}")
+            os.system(f"kill -9 {pid}")
+    os.system(f"echo ' ' > {pathlib.Path().home()}/log/pid.txt")
+
+
+def save_all_pid():
+    try:
+        with open(f"{pathlib.Path().home()}/log/pid.txt", mode="a") as file:
+            for p in PID:
+                file.write(f"{p} /n")
+    except Exception as e:
+        print(e)
 
 
 def get_all_main():
@@ -36,6 +67,7 @@ def run_all_main():
     for path in DIRS:
         task = multiprocessing.Process(target=run_main, args=(path,))
         TASKS.append(task)
+        PID.append(task.pid)
         task.daemon = True
         task.start()
         print(f"Run: {path}: {task.pid}")
@@ -48,10 +80,10 @@ def wait_all_main():
 
 
 def main():
-    parser = argparse.ArgumentParser()
-
+    parser_arg()
     get_all_main()
     run_all_main()
+    save_all_pid()
     time.sleep(3)
     wait_all_main()
 
