@@ -62,6 +62,28 @@ func (s *videoServiceImpl) PublishList(ctx context.Context, req *video.PublishLi
 	return s.composeUserListResp(ctx, pos)
 }
 
+func (s *videoServiceImpl) GetVideo(ctx context.Context, req *video.GetVideoRequest) (*video.Video, error) {
+
+	// 1、参数校验
+	if req.VideoId == 0 {
+		s.l.Errorf("video: GetVideo 参数校验失败：video_id 不能为空")
+		return nil, status.Error(codes.InvalidArgument,
+			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
+	}
+
+	// 2、查询
+	po := video.NewVideoPo()
+	s.db.WithContext(ctx).Where("id = ?", req.VideoId).Find(&po)
+	// 走GRPC调用，获取视频对应的用户信息
+	userMap, err := s.GetUser(ctx, po)
+	if err != nil {
+		return nil, err
+	}
+
+	// 3、po -> vo
+	return po.Po2vo(userMap), nil
+}
+
 // 获取视频流的列表
 func (s *videoServiceImpl) composeFeedSetResp(ctx context.Context, pos []*video.VideoPo) (
 	*video.FeedSetResponse, error) {
@@ -106,16 +128,11 @@ func (s *videoServiceImpl) composeUserListResp(ctx context.Context, pos []*video
 		return set, nil
 	}
 
-	// 走GRPC调用，获取用户信息
-	// 因为这里查询的都是同一个用户的视频，所以可以先查出视频的用户信息
-	req := user.NewUserInfoRequest()
-	req.UserId = pos[0].AuthorId
-	info, err := s.userServer.UserInfo(ctx, req)
+	// 走GRPC调用，获取视频对应的用户信息
+	userMap, err := s.GetUser(ctx, pos[0])
 	if err != nil {
 		return nil, err
 	}
-
-	userMap := map[int64]*user.User{info.User.Id: info.User}
 
 	// 转换 pos -> vos
 	set.VideoList = s.pos2vos(pos, userMap)
@@ -143,4 +160,15 @@ func (s *videoServiceImpl) pos2vos(pos []*video.VideoPo, userMap map[int64]*user
 	}
 
 	return set
+}
+
+// GetUser GRPC调用，去获取用户信息
+func (s *videoServiceImpl) GetUser(ctx context.Context, po *video.VideoPo) (map[int64]*user.User, error) {
+	req := user.NewUserInfoRequest()
+	req.UserId = po.AuthorId
+	info, err := s.userServer.UserInfo(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return map[int64]*user.User{info.User.Id: info.User}, nil
 }

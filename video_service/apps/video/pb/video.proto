@@ -13,6 +13,8 @@ service Service {
   rpc PublishVideo(PublishVideoRequest) returns (PublishVideoResponse);
   // 用户发布视频的列表
   rpc PublishList(PublishListRequest) returns (PublishListResponse);
+  // 根据视频ID获取视频信息
+  rpc GetVideo(GetVideoRequest) returns(Video);
 }
 
 message Video {
@@ -134,4 +136,11 @@ message PublishListResponse {
   // 用户发布的视频列表
   // @gotags: json:"video_list"
   repeated Video video_list = 1;
+}
+
+// 视频ID
+message GetVideoRequest {
+  // 视频ID
+  // @gotags: json:"video_id"
+  int64 video_id = 1;
 }

@@ -15,7 +15,7 @@ func (s *videoServiceImpl) Insert(ctx context.Context, req *video.PublishVideoRe
 	*video.VideoPo, error) {
 
 	// 获取 video po 对象
-	po := video.NewVideoPo(req)
+	po := video.NewVideoPoWithSave(req)
 
 	// 2、保存到数据库
 	tx := s.db.WithContext(ctx).Create(po)

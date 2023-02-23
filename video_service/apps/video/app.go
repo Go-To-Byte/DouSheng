@@ -34,7 +34,11 @@ func (*VideoPo) TableName() string {
 	return AppName
 }
 
-func NewVideoPo(req *PublishVideoRequest) *VideoPo {
+func NewVideoPo() *VideoPo {
+	return &VideoPo{}
+}
+
+func NewVideoPoWithSave(req *PublishVideoRequest) *VideoPo {
 	return &VideoPo{
 		Title:     req.Title,
 		PlayUrl:   req.PlayUrl,
@@ -85,4 +89,8 @@ func (po *VideoPo) Po2vo(userMap map[int64]*user.User) *Video {
 		CoverUrl: utils.URLPrefix(po.CoverUrl),
 		Title:    po.Title,
 	}
+}
+
+func NewGetVideoRequest() *GetVideoRequest {
+	return &GetVideoRequest{}
 }
