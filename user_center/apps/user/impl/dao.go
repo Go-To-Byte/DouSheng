@@ -11,19 +11,33 @@ import (
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
+func NewGetUserReq() *GetUserReq {
+	return &GetUserReq{}
+}
+
+// GetUserReq 查询用户信息
+type GetUserReq struct {
+	// 用户名
+	Username string `json:"username"`
+	// IDS
+	UserIds []int64 `json:"user_ids"`
+}
+
 // GetUser 根据用户名称获取用户
-func (s *userServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.UserPo, error) {
+func (s *userServiceImpl) GetUser(ctx context.Context, req *GetUserReq) ([]*user.UserPo, error) {
 	db := s.db.WithContext(ctx)
-	if po.Username != "" {
-		db = db.Where("username = ?", po.Username)
+	if req.Username != "" {
+		db = db.Where("username LIKE  ?", req.Username)
 	}
 
-	if po.Id != 0 {
-		db = db.Where("id = ?", po.Id)
+	if req.UserIds != nil && len(req.UserIds) > 0 {
+		db = db.Where("id IN ?", req.UserIds)
 	}
+
+	pos := make([]*user.UserPo, 1)
 
 	// 查询
-	db = db.Find(po)
+	db = db.Find(&pos)
 
 	if db.RowsAffected == 0 {
 		return nil, exception.WithStatusCode(constant.WRONG_USER_NOT_EXIST)
@@ -33,7 +47,7 @@ func (s *userServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.U
 		return nil, db.Error
 	}
 
-	return po, nil
+	return pos, nil
 }
 
 // Insert 创建用户

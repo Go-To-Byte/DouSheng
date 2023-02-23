@@ -2,6 +2,7 @@
 package video
 
 import (
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
 	"github.com/go-playground/validator/v10"
 	"time"
@@ -71,4 +72,17 @@ func NewPublishListRequest() *PublishListRequest {
 
 func NewPublishListResponse() *PublishListResponse {
 	return &PublishListResponse{}
+}
+
+// Po2vo 将 videoPo -> video，并且会组合用户信息
+// userMap：用户信息 [userId] = User
+func (po *VideoPo) Po2vo(userMap map[int64]*user.User) *Video {
+	// po -> vo
+	return &Video{
+		Id:       po.Id,
+		Author:   userMap[po.AuthorId],
+		PlayUrl:  utils.URLPrefix(po.PlayUrl),
+		CoverUrl: utils.URLPrefix(po.CoverUrl),
+		Title:    po.Title,
+	}
 }
