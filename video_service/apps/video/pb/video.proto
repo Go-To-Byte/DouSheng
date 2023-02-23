@@ -13,6 +13,8 @@ service Service {
   rpc PublishVideo(PublishVideoRequest) returns (PublishVideoResponse);
   // 用户发布视频的列表
   rpc PublishList(PublishListRequest) returns (PublishListResponse);
+  // 根据视频ID获取视频信息
+  rpc GetVideo(GetVideoRequest) returns(Video);
 }
 
 message Video {
@@ -46,7 +48,6 @@ message VideoPo {
   // 视频唯一标识
   // @gotags: json:"id"
   int64 id = 1;
-  // 视频作者ID TODO：若从视频列表中获取数据过多，这里可以直接用User[二次遍历]
   // 视频播放地址
   // @gotags: json:"play_url"
   string play_url = 2;
@@ -56,6 +57,7 @@ message VideoPo {
   // 视频标题
   // @gotags: json:"title"
   string title = 4;
+  // 视频作者ID
   // @gotags: json:"author_id"
   int64 author_id = 5;
   // @gotags: json:"created_at"
@@ -94,12 +96,15 @@ message PublishVideoRequest {
   // 视频标题
   // @gotags: json:"title" form:"title" binding:"required" validate:"required"
   string title = 2;
-  // 视频播放地址
-  // @gotags: json:"play_url"
+  // 视频播放地址 [经过文件上传后设置]
+  // @gotags: json:"play_url" binding:"-" validate:"required"
   string play_url = 3;
-  // 视频封面地址
-  // @gotags: json:"cover_url"
+  // 视频封面地址 [经过文件上传后设置]
+  // @gotags: json:"cover_url" binding:"-" validate:"required"
   string cover_url = 4;
+  // 用户ID [经过Token认证过后，在设置]
+  // @gotags: json:"user_id" binding:"-" validate:"required"
+  int64 user_id = 5;
 }
 
 // 发布列表的 请求 model
@@ -131,4 +136,11 @@ message PublishListResponse {
   // 用户发布的视频列表
   // @gotags: json:"video_list"
   repeated Video video_list = 1;
+}
+
+// 视频ID
+message GetVideoRequest {
+  // 视频ID
+  // @gotags: json:"video_id"
+  int64 video_id = 1;
 }

@@ -28,6 +28,8 @@ type ServiceClient interface {
 	PublishVideo(ctx context.Context, in *PublishVideoRequest, opts ...grpc.CallOption) (*PublishVideoResponse, error)
 	// 用户发布视频的列表
 	PublishList(ctx context.Context, in *PublishListRequest, opts ...grpc.CallOption) (*PublishListResponse, error)
+	// 根据视频ID获取视频信息
+	GetVideo(ctx context.Context, in *GetVideoRequest, opts ...grpc.CallOption) (*Video, error)
 }
 
 type serviceClient struct {
@@ -65,6 +67,15 @@ func (c *serviceClient) PublishList(ctx context.Context, in *PublishListRequest,
 	return out, nil
 }
 
+func (c *serviceClient) GetVideo(ctx context.Context, in *GetVideoRequest, opts ...grpc.CallOption) (*Video, error) {
+	out := new(Video)
+	err := c.cc.Invoke(ctx, "/dousheng.video.Service/GetVideo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
@@ -75,6 +86,8 @@ type ServiceServer interface {
 	PublishVideo(context.Context, *PublishVideoRequest) (*PublishVideoResponse, error)
 	// 用户发布视频的列表
 	PublishList(context.Context, *PublishListRequest) (*PublishListResponse, error)
+	// 根据视频ID获取视频信息
+	GetVideo(context.Context, *GetVideoRequest) (*Video, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -90,6 +103,9 @@ func (UnimplementedServiceServer) PublishVideo(context.Context, *PublishVideoReq
 }
 func (UnimplementedServiceServer) PublishList(context.Context, *PublishListRequest) (*PublishListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublishList not implemented")
+}
+func (UnimplementedServiceServer) GetVideo(context.Context, *GetVideoRequest) (*Video, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVideo not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -158,6 +174,24 @@ func _Service_PublishList_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_GetVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVideoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetVideo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/dousheng.video.Service/GetVideo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetVideo(ctx, req.(*GetVideoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +210,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PublishList",
 			Handler:    _Service_PublishList_Handler,
+		},
+		{
+			MethodName: "GetVideo",
+			Handler:    _Service_GetVideo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -3,6 +3,7 @@ package impl
 
 import (
 	"context"
+	kitUtils "github.com/Go-To-Byte/DouSheng/dou_kit/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -61,6 +62,28 @@ func (s *videoServiceImpl) PublishList(ctx context.Context, req *video.PublishLi
 	return s.composeUserListResp(ctx, pos)
 }
 
+func (s *videoServiceImpl) GetVideo(ctx context.Context, req *video.GetVideoRequest) (*video.Video, error) {
+
+	// 1、参数校验
+	if req.VideoId == 0 {
+		s.l.Errorf("video: GetVideo 参数校验失败：video_id 不能为空")
+		return nil, status.Error(codes.InvalidArgument,
+			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
+	}
+
+	// 2、查询
+	po := video.NewVideoPo()
+	s.db.WithContext(ctx).Where("id = ?", req.VideoId).Find(&po)
+	// 走GRPC调用，获取视频对应的用户信息
+	userMap, err := s.GetUser(ctx, po)
+	if err != nil {
+		return nil, err
+	}
+
+	// 3、po -> vo
+	return po.Po2vo(userMap), nil
+}
+
 // 获取视频流的列表
 func (s *videoServiceImpl) composeFeedSetResp(ctx context.Context, pos []*video.VideoPo) (
 	*video.FeedSetResponse, error) {
@@ -71,14 +94,27 @@ func (s *videoServiceImpl) composeFeedSetResp(ctx context.Context, pos []*video.
 		return set, nil
 	}
 
-	// 获取最新一条的视频 创建时间， 作为下次调用的请求开始时间
+	// 1、取出视频列表的 userIds
+	userIds := kitUtils.NewSet()
+	for _, po := range pos {
+		userIds.Add(po.AuthorId)
+	}
+
+	// 2、获取UserMap列表
+	userMapReq := user.NewUserMapRequest()
+	userMapReq.UserIds = userIds.Items()
+
+	// GRPC调用
+	userMap, err := s.userServer.UserMap(ctx, userMapReq)
+	if err != nil {
+		return nil, err
+	}
+
+	// 3、转换并且组合用户信息
+	set.VideoList = s.pos2vos(pos, userMap.GetUserMap())
+	// 获取此处的最后一条的视频 创建时间， 作为下次调用的请求开始时间
 	set.NextTime = utils.V2P(pos[len(pos)-1].CreatedAt)
 
-	vos, err := s.pos2vos(ctx, pos, nil)
-	if err != nil {
-		return set, err
-	}
-	set.VideoList = vos
 	return set, nil
 }
 
@@ -92,85 +128,47 @@ func (s *videoServiceImpl) composeUserListResp(ctx context.Context, pos []*video
 		return set, nil
 	}
 
-	// 走GRPC调用，获取用户信息
-	// 因为这里查询的都是同一个用户的视频，所以可以先查出视频的用户信息
-	req := user.NewUserInfoRequest()
-	req.UserId = pos[0].AuthorId
-	info, err := s.userServer.UserInfo(ctx, req)
+	// 走GRPC调用，获取视频对应的用户信息
+	userMap, err := s.GetUser(ctx, pos[0])
 	if err != nil {
 		return nil, err
 	}
 
 	// 转换 pos -> vos
-	vos, err := s.pos2vos(ctx, pos, info)
-	if err != nil {
-		return set, err
-	}
-	set.VideoList = vos
+	set.VideoList = s.pos2vos(pos, userMap)
 
 	return set, nil
 }
 
 // 将 []videoPo -> []video，并且会组合用户信息
 // pos：数据库查询到的视频列表
-// userInfo：用户信息
-func (s *videoServiceImpl) pos2vos(ctx context.Context, pos []*video.VideoPo,
-	userInfo *user.UserInfoResponse) ([]*video.Video, error) {
+// userMap：用户信息 map[userId] = User
+func (s *videoServiceImpl) pos2vos(pos []*video.VideoPo, userMap map[int64]*user.User) []*video.Video {
 
+	// 判空
 	set := make([]*video.Video, len(pos))
 	if pos == nil || len(pos) <= 0 {
 		// 只是没有查到，不应该抛异常出去
-		return set, nil
+		return set
 	}
 
-	errCount := 0
+	// 再次遍历，po -> vo并且组合用户信息
 	for i, po := range pos {
 		// 将 po -> vo
-		vo, err := s.po2vo(ctx, po, userInfo)
-		if err != nil {
-
-			// 有异常，先别着急返回，给两个冗余错误，
-			// 因为可能是自己业务有问题，毕竟是测试数据
-			// TODO：上线删除
-			errCount++
-			if errCount > 1 {
-				return nil, err
-			}
-
-			s.l.Errorf("video: composeFeedSetResp 组合用户信息异常：%s", err.Error())
-			continue
-		}
+		vo := po.Po2vo(userMap)
 		set[i] = vo
 	}
 
-	return set, nil
+	return set
 }
 
-// TODO：可优化为批量查询。
-// 将 videoPo -> video，并且会组合用户信息
-// po：单个videoPo对象
-// userInfo：用户信息
-func (s *videoServiceImpl) po2vo(ctx context.Context, po *video.VideoPo,
-	userInfo *user.UserInfoResponse) (*video.Video, error) {
-
-	// 也可以是单个查询
-	if userInfo == nil {
-		// 走GRPC调用，获取用户信息
-		req := user.NewUserInfoRequest()
-		req.UserId = po.AuthorId
-		info, err := s.userServer.UserInfo(ctx, req)
-		if err != nil {
-			return nil, err
-		}
-		userInfo = info
+// GetUser GRPC调用，去获取用户信息
+func (s *videoServiceImpl) GetUser(ctx context.Context, po *video.VideoPo) (map[int64]*user.User, error) {
+	req := user.NewUserInfoRequest()
+	req.UserId = po.AuthorId
+	info, err := s.userServer.UserInfo(ctx, req)
+	if err != nil {
+		return nil, err
 	}
-
-	// po -> vo
-	return &video.Video{
-		Id:       po.Id,
-		Author:   userInfo.User,
-		PlayUrl:  utils.URLPrefix(po.PlayUrl),
-		CoverUrl: utils.URLPrefix(po.CoverUrl),
-		Title:    po.Title,
-	}, nil
+	return map[int64]*user.User{info.User.Id: info.User}, nil
 }

@@ -3,8 +3,8 @@ module github.com/Go-To-Byte/DouSheng/user_center
 go 1.19
 
 require (
-	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230215143844-99e9bcfa1f8e
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230215143844-99e9bcfa1f8e
+	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230223025253-4720d5f5c417
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230223025253-4720d5f5c417
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/infraboard/mcube v1.9.7
