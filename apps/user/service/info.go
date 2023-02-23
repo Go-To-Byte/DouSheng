@@ -25,11 +25,11 @@ func (u *User) Info(ctx context.Context, req *proto.InfoRequest) (*proto.InfoRes
 	r := dao.UserFindById(user)
 	if len(r) > 0 {
 		userInfo := proto.User{
-			Id:            r[0].ID,
-			Name:          r[0].Username,
-			FollowCount:   0,
-			FollowerCount: 0,
-			IsFollow:      false,
+			Id:              r[0].ID,
+			Name:            r[0].Username,
+			Avatar:          "https://cyan-1257348513.cos.ap-shanghai.myqcloud.com/avatar/7.jpg",
+			BackgroundImage: "https://cyan-1257348513.cos.ap-shanghai.myqcloud.com/background/62.jpg",
+			Signature:       "hello world",
 		}
 		return &proto.InfoResponse{
 			StatusCode: 0,

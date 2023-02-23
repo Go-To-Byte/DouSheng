@@ -135,7 +135,7 @@ func Info(ctx *gin.Context) {
 
 	zap.S().Debugf("Get user info(%v): %v", toUserID, response)
 
-	// 调用 relation 模块填充数据
+	// 填充数据
 	user, err := getUserInfo(userID.(int64), toUserID)
 	if err != nil {
 		zap.S().Errorf("Failed to get user info")

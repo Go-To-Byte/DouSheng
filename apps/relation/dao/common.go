@@ -84,12 +84,13 @@ func FindByToUserID(relation model.Relation) []*model.Relation {
 	return r
 }
 
-func FindByUserIDWithToUserID(relation model.Relation) []*model.Relation {
+func FindFriendByUserID(relation model.Relation) []*model.Relation {
 	q := query.Use(models.DB)
 	f := q.Relation
 
 	r, err := f.WithContext(context.Background()).
-		Where(f.UserID.Eq(relation.UserID), f.ToUserID.Eq(relation.ToUserID), f.Flag.Eq(1)).
+		Where(f.UserID.Eq(relation.UserID), f.Flag.Eq(1)).
+		Or(f.ToUserID.Eq(relation.ToUserID), f.Flag.Eq(1)).
 		Find()
 	if err != nil {
 		zap.S().Errorf("Failed find followers: %+v", relation)
