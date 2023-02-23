@@ -9,6 +9,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	proto "github.com/Go-To-Byte/DouSheng/network/protos"
 	"go.uber.org/zap"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -16,6 +17,8 @@ import (
 // 建立 user grpc 连接, 处理用户信息
 func getUserInfo(userID int64, toUserId int64) (response models.User, err error) {
 	zap.S().Debugf("get UserInfo: %d", userID)
+	video := proto.NewVideoClient(models.Dials["video"])
+	favorite := proto.NewFavoriteClient(models.Dials["favorite"])
 	relation := proto.NewRelationClient(models.Dials["relation"])
 	userRequest := proto.InfoRequest{UserId: toUserId}
 	followListRequest := proto.FollowListRequest{UserId: toUserId}
@@ -24,9 +27,10 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 		UserId:   userID,
 		ToUserId: toUserId,
 	}
+	favoriteListRequest := proto.FavoriteListRequest{UserId: userID}
 
 	wait := sync.WaitGroup{}
-	wait.Add(4)
+	wait.Add(6)
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	// 获取用户信息
@@ -49,6 +53,7 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 					response.BackgroundImage = r.User.BackgroundImage
 					response.Signature = r.User.Signature
 				}
+				return
 			}
 		}
 	}(ctx)
@@ -68,6 +73,7 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 				} else {
 					response.FollowCount = int64(len(r.UserList))
 				}
+				return
 			}
 		}
 	}(ctx)
@@ -87,6 +93,7 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 				} else {
 					response.FollowerCount = int64(len(r.UserList))
 				}
+				return
 			}
 		}
 	}(ctx)
@@ -106,6 +113,58 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 				} else {
 					response.IsFollow = r.IsFollow == 1
 				}
+				return
+			}
+		}
+	}(ctx)
+
+	// 获取 FavoriteCount
+	go func(c context.Context) {
+		defer wait.Done()
+		for {
+			select {
+			case <-ctx.Done():
+				zap.S().Errorf("get FavoriteCount && IsFavorite timeout: %v", ctx.Err())
+				return
+
+			default:
+				if r, e := favorite.FavoriteList(context.Background(), &favoriteListRequest); err != nil {
+					zap.S().Errorf("error getting favored list: (%v) ==> %v", userID, e)
+				} else {
+					response.FavoriteCount = int64(len(r.VideoList))
+				}
+				return
+			}
+		}
+	}(ctx)
+
+	go func(c context.Context) {
+		defer wait.Done()
+		for {
+			select {
+			case <-ctx.Done():
+				zap.S().Errorf("get FavoriteCount && IsFavorite timeout: %v", ctx.Err())
+				return
+
+			default:
+				var resp *proto.PublishListResponse
+				request := proto.PublishListRequest{UserId: userID}
+				if resp, err = video.PublishList(ctx, &request); err != nil {
+					zap.S().Errorf("failed to publish list: %v", err)
+				}
+				response.WorkCount = int64(len(resp.VideoList))
+
+				for _, v := range resp.VideoList {
+					go func(videoId int64) {
+						favoredListRequest := proto.FavoredListRequest{VideoId: videoId}
+						if r, e := favorite.FavoredList(context.Background(), &favoredListRequest); err != nil {
+							zap.S().Errorf("error getting favored list: (%v) ==> %v", videoId, e)
+						} else {
+							response.TotalFavorited += strconv.Itoa(len(r.UserList))
+						}
+					}(v)
+				}
+
 			}
 		}
 	}(ctx)
@@ -153,6 +212,7 @@ func getVideoInfo(userID int64, videoID int64) (response models.Video, err error
 					response.PlayURL = r.Video.PlayUrl
 					response.CoverURL = r.Video.CoverUrl
 				}
+				return
 			}
 		}
 	}(ctx)
@@ -172,6 +232,7 @@ func getVideoInfo(userID int64, videoID int64) (response models.Video, err error
 				} else {
 					response.Author = r
 				}
+				return
 			}
 		}
 	}(ctx)
@@ -191,6 +252,7 @@ func getVideoInfo(userID int64, videoID int64) (response models.Video, err error
 				} else {
 					response.CommentCount = int64(len(r.CommentList))
 				}
+				return
 			}
 		}
 	}(ctx)
@@ -210,15 +272,29 @@ func getVideoInfo(userID int64, videoID int64) (response models.Video, err error
 				} else {
 					response.FavoriteCount = int64(len(r.UserList))
 				}
+				return
+			}
+		}
+	}(ctx)
+
+	go func(c context.Context) {
+		defer wait.Done()
+		for {
+			select {
+			case <-ctx.Done():
+				zap.S().Errorf("get FavoriteCount && IsFavorite timeout: %v", ctx.Err())
+				return
+
+			default:
 				if r, e := favorite.FavoriteJudge(context.Background(), &favoriteJudgeRequest); err != nil {
 					zap.S().Errorf("error getting favorite judge: (%v:%v) ==> %v", userID, videoID, e)
 				} else {
 					response.IsFavorite = r.IsFavorite >= 1
 				}
+				return
 			}
 		}
 	}(ctx)
-
 	wait.Wait()
 	return
 }
