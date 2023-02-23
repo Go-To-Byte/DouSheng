@@ -29,7 +29,7 @@ def on_exit(signum, frame):
 
 
 def kill_all_main():
-    with open(f"{pathlib.Path().home()}/log/pid.txt", encoding="utf-8") as file:
+    with open(f"{pathlib.Path().home()}/log/pid.txt", encoding="utf8") as file:
         for pid in file.readlines():
             print(f"closing: {pid}")
             os.system(f"kill -9 {pid}")
@@ -38,8 +38,9 @@ def kill_all_main():
 
 def save_all_pid():
     try:
-        with open(f"{pathlib.Path().home()}/log/pid.txt", mode="a", encoding="utf-8") as file:
+        with open(f"{pathlib.Path().home()}/log/pid.txt", mode="a", encoding="utf8") as file:
             for p in PID:
+                print(f"saving: {p}")
                 file.write(f"{p} /n")
     except Exception as e:
         print(e)
