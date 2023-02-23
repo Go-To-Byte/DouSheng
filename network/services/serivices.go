@@ -46,7 +46,7 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 				user := proto.NewUserClient(models.Dials["user"])
 				if r, e := user.Info(context.Background(), &userRequest); err != nil {
 					zap.S().Errorf("error getting user info: (%v) ==> %v", userID, e)
-				} else {
+				} else if r != nil {
 					response.Name = (*r).User.Name
 					response.ID = (*r).User.Id
 					response.Avatar = (*r).User.Avatar
@@ -205,7 +205,7 @@ func getVideoInfo(userID int64, videoID int64) (response models.Video, err error
 			default:
 				if r, e := video.Info(context.Background(), &videoRequest); err != nil {
 					zap.S().Errorf("error getting video info: (%v) ==> %v", videoID, e)
-				} else {
+				} else if r != nil {
 					response.ID = (*r).Video.Id
 					authorID = (*r).Video.Author
 					response.Title = (*r).Video.Title
