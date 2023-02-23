@@ -5,12 +5,11 @@ package api
 
 import (
 	"github.com/Go-To-Byte/DouSheng/comment/apps/comment"
+	"github.com/Go-To-Byte/DouSheng/comment/client/rpc"
 	"github.com/gin-gonic/gin"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	"github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 )
 
 // 用于注入IOC中
@@ -26,28 +25,27 @@ type Handler struct {
 
 // Registry 用于注册Handler所需要暴露的路由
 func (h *Handler) Registry(r gin.IRoutes) {
-	r.POST("/register/", exception.GinErrWrapper(h.Register))
-	r.POST("/login/", exception.GinErrWrapper(h.Login))
 }
 
 func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
-	r.GET("/", exception.GinErrWrapper(h.GetUserInfo))
+	r.POST("/action/", exception.GinErrWrapper(h.Comment))
+	r.GET("/list/", exception.GinErrWrapper(h.Login))
 }
 
 // Init 初始化Handler对象
 func (h *Handler) Init() error {
-	// 从user_center拿到它对外提供的client，用这个Client去GRPC的调用用户中心的SDK
-	client, err := rpc.NewUserCenterClientFromCfg()
+	// 拿到它对外提供的client，用这个Client去GRPC的调用用户中心的SDK
+	client, err := rpc.NewCommentClientFromCfg()
 
 	if err != nil {
 		return err
 	}
-	h.service = client.UserService()
+	h.service = client.CommentService()
 	return nil
 }
 
 func (h *Handler) Name() string {
-	return user.AppName
+	return comment.AppName
 }
 
 func init() {
