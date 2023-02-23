@@ -57,9 +57,10 @@ def get_all_main():
 
 def run_main(path):
     path: pathlib.Path
+    PID.append(os.getpid())
     os.chdir(path)
-    print(f"Now path: {os.getcwd()}")
-    print(f"go run {path}/main.go")
+    print(f"Now path: {os.getcwd()}"
+          f"RUN {path.name}, PID: {os.getpid()}")
     os.system(f"go run {path}/main.go >> ~/log/{path.name}.log")
 
 
@@ -67,10 +68,8 @@ def run_all_main():
     for path in DIRS:
         task = multiprocessing.Process(target=run_main, args=(path,))
         TASKS.append(task)
-        PID.append(task.pid)
         task.daemon = True
         task.start()
-        print(f"Run: {path}: {task.pid}")
 
 
 def wait_all_main():
