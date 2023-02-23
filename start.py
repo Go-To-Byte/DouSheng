@@ -36,16 +36,6 @@ def kill_all_main():
     os.system(f"echo ' ' > {pathlib.Path().home()}/log/pid.txt")
 
 
-def save_all_pid():
-    try:
-        with open(f"{pathlib.Path().home()}/log/pid.txt", mode="a", encoding="utf8") as file:
-            for p in PID:
-                print(f"saving: {p}")
-                file.write(f"{p} /n")
-    except Exception as e:
-        print(e)
-
-
 def get_all_main():
     cwd = pathlib.Path.cwd()
     DIRS.append(cwd.joinpath("network"))
@@ -63,6 +53,7 @@ def run_main(path):
     print(f"Now path: {os.getcwd()}\n"
           f"RUN {path.name}, PID: {os.getpid()}")
     os.system(f"go run {path}/main.go >> ~/log/{path.name}.log")
+    os.system(f"echo {os.getpid()} >> {pathlib.Path().home()}/log/pid.txt")
 
 
 def run_all_main():
@@ -84,7 +75,6 @@ def main():
     get_all_main()
     run_all_main()
     time.sleep(3)
-    save_all_pid()
     wait_all_main()
 
 
