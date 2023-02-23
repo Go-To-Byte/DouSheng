@@ -53,7 +53,7 @@ def run_main(path):
     print(f"Now path: {os.getcwd()}\n"
           f"RUN {path.name}, PID: {os.getpid()}")
     os.system(f"go run {path}/main.go >> ~/log/{path.name}.log")
-    os.system(f"echo {os.getpid()} >> {pathlib.Path().home()}/log/pid.txt")
+    os.system(f"echo {os.getpid()} >> ~/log/pid.txt")
 
 
 def run_all_main():
