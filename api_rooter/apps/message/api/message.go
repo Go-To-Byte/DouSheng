@@ -26,7 +26,7 @@ type chatMessageActionResp struct {
 func (h *Handler) chatMessageList(ctx *gin.Context) error {
 	req := message.NewChatMessageListRequest()
 	// 1、接收参数
-	// TODO 这里接收参数不成功, user_id获取不到
+	// TODO 临时测试请求, 需替换为绑定参数
 	// if err := ctx.ShouldBindQuery(req); err != nil {
 	// 	return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	// }
@@ -51,7 +51,7 @@ func (h *Handler) chatMessageList(ctx *gin.Context) error {
 func (h *Handler) chatMessageAction(ctx *gin.Context) error {
 	req := message.NewChatMessageActionRequest()
 	// 1、接收参数
-	// TODO 这里接收参数不成功, user_id获取不到
+	// TODO 临时测试请求, 需替换为绑定参数
 	// if err := ctx.ShouldBindQuery(req); err != nil {
 	// 	return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	// }

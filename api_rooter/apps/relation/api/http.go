@@ -1,4 +1,4 @@
-// @Author: Ciusyan 2023/2/7
+// @Author: Hexiaoming 2023/2/17
 package api
 
 import (
@@ -46,7 +46,7 @@ func (h *Handler) Registry(r gin.IRoutes) {
 
 func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
 	r.GET("/follower/list", exception.GinErrWrapper(h.followerList))
-	// TODO POST请求会有个奇怪的Token验证失败
+	// TODO 待处理
 	// r.POST("/action", exception.GinErrWrapper(h.followAction))
 	r.GET("/action", exception.GinErrWrapper(h.followAction))
 	r.GET("/friend/list", exception.GinErrWrapper(h.friendList))
