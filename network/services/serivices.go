@@ -49,8 +49,8 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 				} else if r != nil {
 					response.Name = (*r).User.Name
 					response.ID = (*r).User.Id
-					response.Avatar = (*r).User.Avatar
-					response.BackgroundImage = (*r).User.BackgroundImage
+					// response.Avatar = (*r).User.Avatar
+					// response.BackgroundImage = (*r).User.BackgroundImage
 					response.Signature = (*r).User.Signature
 				}
 				return
