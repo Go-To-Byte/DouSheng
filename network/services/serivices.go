@@ -9,7 +9,6 @@ import (
 	"github.com/Go-To-Byte/DouSheng/network/models"
 	proto "github.com/Go-To-Byte/DouSheng/network/protos"
 	"go.uber.org/zap"
-	"strconv"
 	"sync"
 	"time"
 )
@@ -49,8 +48,8 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 				} else if r != nil {
 					response.Name = (*r).User.Name
 					response.ID = (*r).User.Id
-					// response.Avatar = (*r).User.Avatar
-					// response.BackgroundImage = (*r).User.BackgroundImage
+					response.Avatar = (*r).User.Avatar
+					response.BackgroundImage = (*r).User.BackgroundImage
 					response.Signature = (*r).User.Signature
 				}
 				return
@@ -160,7 +159,7 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 						if r, e := favorite.FavoredList(context.Background(), &favoredListRequest); err != nil {
 							zap.S().Errorf("error getting favored list: (%v) ==> %v", videoId, e)
 						} else {
-							response.TotalFavorited += strconv.Itoa(len(r.UserList))
+							response.TotalFavorited += int64(len(r.UserList))
 						}
 					}(v)
 				}
