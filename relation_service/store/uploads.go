@@ -1,4 +1,3 @@
-// @Author: Ciusyan 2023/2/8
 package store
 
 import (

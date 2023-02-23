@@ -1,4 +1,4 @@
-// @Author: Ciusyan 2023/2/8
+// @Author: Hexiaoming 2023/2/18
 package rpc
 
 import (
@@ -31,7 +31,7 @@ func NewRelationServiceClientFromCfg() (*RelationServiceClient, error) {
 	cfg := conf.C().Consul.Discovers[discoverName]
 
 	// 去发现 relation_service 服务
-	// 根据注册中心的配置，获取用户中心的客户端
+	// 根据注册中心的配置，获取关系服务的客户端
 	clientSet, err := client.NewClientSet(cfg)
 
 	if err != nil {

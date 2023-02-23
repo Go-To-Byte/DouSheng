@@ -1,4 +1,4 @@
-// @Author: Ciusyan 2023/2/8
+// @Author: Hexiaoming 2023/2/19
 package rpc
 
 import (
@@ -13,7 +13,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/message_service/apps/message"
 )
 
-// 关系服务 rpc 的 SDK
+// 消息 rpc 的 SDK
 
 var (
 	discoverName = "message_service"
@@ -31,7 +31,7 @@ func NewMessageServiceClientFromCfg() (*MessageServiceClient, error) {
 	cfg := conf.C().Consul.Discovers[discoverName]
 
 	// 去发现 message_service 服务
-	// 根据注册中心的配置，获取用户中心的客户端
+	// 根据注册中心的配置，获取消息服务的客户端
 	clientSet, err := client.NewClientSet(cfg)
 
 	if err != nil {
@@ -47,7 +47,7 @@ func NewMessageServiceClientFromEnv() (*MessageServiceClient, error) {
 	cfg.SetAddr(os.Getenv("CONSUL_ADDR"))
 	cfg.SetDiscoverName(os.Getenv("CONSUL_DISCOVER_NAME"))
 
-	// 根据注册中心的配置，获取关系服务的客户端
+	// 根据注册中心的配置，获取消息服务的客户端
 	clientSet, err := client.NewClientSet(cfg)
 
 	if err != nil {
@@ -69,7 +69,7 @@ func newDefault(clientSet *client.ClientSet) *MessageServiceClient {
 
 func (c *MessageServiceClient) MessageService() message.ServiceClient {
 	if c.messageService == nil {
-		c.l.Errorf("获取关系服务客户端[message 服务]失败")
+		c.l.Errorf("获取消息客户端[message 服务]失败")
 		return nil
 	}
 	return c.messageService

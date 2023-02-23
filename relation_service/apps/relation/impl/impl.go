@@ -63,7 +63,7 @@ func (s *relationServiceImpl) Init() error {
 	}
 	s.userServer = userCenter.UserService()
 
-	// 获取Message RPC的客户端[GRPC调用]
+	// 获取消息服务的客户端[GRPC调用]
 	msgService, err := messageRpc.NewMessageServiceClientFromCfg()
 	if err != nil {
 		s.l.Errorf("relations: getRelationPo 出现错误：%s", err.Error())
