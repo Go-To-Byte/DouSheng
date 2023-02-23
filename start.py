@@ -59,7 +59,7 @@ def run_main(path):
     path: pathlib.Path
     PID.append(os.getpid())
     os.chdir(path)
-    print(f"Now path: {os.getcwd()}"
+    print(f"Now path: {os.getcwd()}\n"
           f"RUN {path.name}, PID: {os.getpid()}")
     os.system(f"go run {path}/main.go >> ~/log/{path.name}.log")
 
@@ -82,8 +82,8 @@ def main():
     parser_arg()
     get_all_main()
     run_all_main()
-    save_all_pid()
     time.sleep(3)
+    save_all_pid()
     wait_all_main()
 
 
