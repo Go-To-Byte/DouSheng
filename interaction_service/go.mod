@@ -1,18 +1,18 @@
-module github.com/Go-To-Byte/DouSheng/api_rooter
+module github.com/Go-To-Byte/DouSheng/interaction_service
 
 go 1.19
 
 require (
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230223025253-4720d5f5c417
-	github.com/Go-To-Byte/DouSheng/interaction_service v0.0.0-00010101000000-000000000000
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230223025253-4720d5f5c417
-	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230223025253-4720d5f5c417
-	github.com/gin-gonic/gin v1.8.2
+	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230215143844-99e9bcfa1f8e
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230215160406-6edd0b6865f0
+	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230215075535-4ea891ef1776
+	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230215075535-4ea891ef1776
+	github.com/go-playground/validator/v10 v10.11.2
 	github.com/infraboard/mcube v1.9.7
 	github.com/stretchr/testify v1.8.1
-	go.mongodb.org/mongo-driver v1.11.1
 	google.golang.org/grpc v1.52.3
 	google.golang.org/protobuf v1.28.1
+	gorm.io/gorm v1.24.5
 )
 
 require (
@@ -23,10 +23,10 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
+	github.com/gin-gonic/gin v1.8.2 // indirect
 	github.com/go-playground/form v3.1.4+incompatible // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.11.2 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/goccy/go-json v0.9.11 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -64,6 +64,7 @@ require (
 	github.com/xdg-go/scram v1.1.1 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
+	go.mongodb.org/mongo-driver v1.11.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.20.0 // indirect
@@ -77,7 +78,4 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.4.6 // indirect
-	gorm.io/gorm v1.24.5 // indirect
 )
-
-replace github.com/Go-To-Byte/DouSheng/interaction_service => ../interaction_service/
