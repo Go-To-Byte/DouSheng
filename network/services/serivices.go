@@ -164,7 +164,7 @@ func getUserInfo(userID int64, toUserId int64) (response models.User, err error)
 						}
 					}(v)
 				}
-
+				return
 			}
 		}
 	}(ctx)
