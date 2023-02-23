@@ -7,6 +7,8 @@ import (
 
 	_ "github.com/Go-To-Byte/DouSheng/api_rooter/apps/user/api"
 	_ "github.com/Go-To-Byte/DouSheng/api_rooter/apps/video/api"
+	_ "github.com/Go-To-Byte/DouSheng/api_rooter/apps/relation/api"
+	_ "github.com/Go-To-Byte/DouSheng/api_rooter/apps/message/api"
 
 	// 加载切面对象
 	_ "github.com/Go-To-Byte/DouSheng/api_rooter/protocol"

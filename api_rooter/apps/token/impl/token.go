@@ -30,6 +30,9 @@ func (s *tokenServiceImpl) ValidateToken(ctx context.Context, req *token.Validat
 	// 获取 Token
 	tk, err := s.get(ctx, req.AccessToken)
 	if err != nil {
+		// TODO 调试信息
+		s.log.Errorf("token: AccessToken：%s", req.AccessToken)
+
 		s.log.Errorf("token: ValidateToken出现错误：%s", err.Error())
 		return nil, status.Error(codes.Unknown,
 			constant.Code2Msg(constant.ERROR_TOKEN_VALIDATE))
