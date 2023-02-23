@@ -12,6 +12,8 @@ service Service {
   rpc Login(LoginAndRegisterRequest) returns(TokenResponse);
   // 获取用户信息
   rpc UserInfo(UserInfoRequest) returns(UserInfoResponse);
+  // 获取用户信息 map[userId] = User
+  rpc UserMap(UserMapRequest) returns(UserMapResponse);
 }
 
 
@@ -71,7 +73,8 @@ message User {
 }
 
 // 与数据库对应的 PO 对象
-message UserPo {// 用户ID
+message UserPo {
+  // 用户ID
   // @gotags: json:"id" gorm:"id"
   int64 id = 1;
   // 用户名称
@@ -80,4 +83,18 @@ message UserPo {// 用户ID
   // 用户名称
   // @gotags: json:"password" gorm:"password"
   string password = 3;
+}
+
+// 用户IDs
+message UserMapRequest {
+  // 用户ID 列表
+  // @gotags: json:"user_ids"
+  repeated int64 user_ids = 1;
+}
+
+// 用户列表：map[userId] = User
+message UserMapResponse {
+  // 用户列表：map[userId] = User
+  // @gotags: json:"user_map"
+  map<int64, User> user_map = 1;
 }

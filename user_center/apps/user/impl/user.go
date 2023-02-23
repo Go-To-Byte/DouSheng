@@ -21,11 +21,11 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 	}
 
 	// 2、根据 Username 查询此用户是否已经注册
-	userPo := user.NewDefaultUserPo()
-	userPo.Username = req.Username
-	userRes, err := s.GetUser(ctx, userPo)
+	userReq := NewGetUserReq()
+	userReq.Username = req.Username
+	userRes, err := s.GetUser(ctx, userReq)
 
-	if userRes != nil {
+	if userRes != nil && len(userRes) == 1 {
 		return nil, status.Error(codes.AlreadyExists,
 			constant.Code2Msg(constant.WRONG_EXIST_USERS))
 	}
@@ -55,18 +55,18 @@ func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 	}
 
 	// 2、根据用户名查询用户信息
-	userPo := user.NewDefaultUserPo()
-	userPo.Username = req.Username
-	userRes, _ := s.GetUser(ctx, userPo)
+	userReq := NewGetUserReq()
+	userReq.Username = req.Username
+	userRes, _ := s.GetUser(ctx, userReq)
 
 	// 若用户名或密码有误，不返回具体的用户名或者密码错误
-	if userRes == nil || !userRes.CheckHash(req.Password) {
+	if userRes == nil || len(userRes) != 1 || !userRes[0].CheckHash(req.Password) {
 		return nil, status.Error(codes.PermissionDenied,
 			constant.Code2Msg(constant.BAD_NAME_PASSWORD))
 	}
 
 	// 3、颁发Token 并返回
-	response := user.NewTokenResponse(userRes.Id, s.token(ctx, userRes))
+	response := user.NewTokenResponse(userRes[0].Id, s.token(ctx, userRes[0]))
 	return response, nil
 }
 
@@ -79,9 +79,9 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 	}
 
 	// 2、根据 Id 查询此用户
-	userPo := user.NewDefaultUserPo()
-	userPo.Id = req.UserId
-	userPoRes, err := s.GetUser(ctx, userPo)
+	userReq := NewGetUserReq()
+	userReq.UserIds = append(userReq.UserIds, req.UserId)
+	userPoRes, err := s.GetUser(ctx, userReq)
 
 	if err != nil {
 		switch e := err.(type) {
@@ -93,9 +93,34 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 	}
 
 	response := user.NewUserInfoResponse()
-	response.User = user.NewUserWithPo(userPoRes)
+	// userPoRes[0]：因为前面只查询了一个，所以来到这里，直接取出就行
+	response.User = userPoRes[0].Po2vo()
 
 	// TODO：组合其他参数[如：关注数、粉丝数]
 
 	return response, nil
+}
+
+func (s *userServiceImpl) UserMap(ctx context.Context, req *user.UserMapRequest) (*user.UserMapResponse, error) {
+
+	// 1、获取用户列表 []User
+	userReq := NewGetUserReq()
+	userReq.UserIds = req.UserIds
+	userPoRes, err := s.GetUser(ctx, userReq)
+	if err != nil {
+		switch e := err.(type) {
+		case *custom.Exception:
+			return nil, status.Error(codes.NotFound, e.Error())
+		default:
+			return nil, status.Error(codes.Unknown, e.Error())
+		}
+	}
+
+	// 2、转换为 Map[UserId] = User
+	UserMap := make(map[int64]*user.User)
+	for _, po := range userPoRes {
+		UserMap[po.Id] = po.Po2vo()
+	}
+
+	return &user.UserMapResponse{UserMap: UserMap}, nil
 }

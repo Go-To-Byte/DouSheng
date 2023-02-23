@@ -39,7 +39,6 @@ func TestFeedVideos(t *testing.T) {
 
 	set, err := service.FeedVideos(context.Background(), request)
 
-	// TODO：完善测试用例
 	if should.NoError(err) {
 		t.Log(set.VideoList)
 		t.Log(set.NextTime)
@@ -56,6 +55,19 @@ func TestPublishList(t *testing.T) {
 
 	if should.NoError(err) {
 		t.Log(set.VideoList)
+	}
+}
+
+func TestGetVideo(t *testing.T) {
+	should := assert.New(t)
+
+	request := video.NewGetVideoRequest()
+	request.VideoId = 18
+
+	videoRes, err := service.GetVideo(context.Background(), request)
+
+	if should.NoError(err) {
+		t.Log(videoRes)
 	}
 }
 
