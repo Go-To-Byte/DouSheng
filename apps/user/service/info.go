@@ -14,11 +14,7 @@ import (
 )
 
 func (u *User) Info(ctx context.Context, req *proto.InfoRequest) (*proto.InfoResponse, error) {
-	user := model.User{
-		ID:       req.UserId,
-		Username: "",
-		Passwd:   "",
-	}
+	user := model.User{ID: req.UserId}
 
 	// 查询用户
 	zap.S().Debugf("user: %v", user.ID)

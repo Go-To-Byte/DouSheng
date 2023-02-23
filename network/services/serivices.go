@@ -212,21 +212,7 @@ func getVideoInfo(userID int64, videoID int64) (response models.Video, err error
 					response.PlayURL = (*r).Video.PlayUrl
 					response.CoverURL = (*r).Video.CoverUrl
 				}
-				return
-			}
-		}
-	}(ctx)
 
-	// 获取author info
-	go func(c context.Context) {
-		defer wait.Done()
-		for {
-			select {
-			case <-ctx.Done():
-				zap.S().Errorf("get author info timeout: %v", ctx.Err())
-				return
-
-			default:
 				if r, e := getUserInfo(userID, authorID); err != nil {
 					zap.S().Errorf("error getting author info: (%v) ==> %v", userID, e)
 				} else {
