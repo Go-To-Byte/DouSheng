@@ -72,10 +72,10 @@ message UserFriend{
 // 获取关系列表 的接口请求 model
 message FollowListRequest {
   // 用户ID
-  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+  // @gotags: form:"user_id" validate:"required" binding:"required"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: form:"token" binding:"required"
   string token = 2;
 }
 
@@ -130,7 +130,7 @@ message FollowActionRequest {
   string token = 2;
   // 操作类型
   // @gotags: json:"action_type" form:"action_type" binding:"required"
-  string action_type = 3;
+  int32 action_type = 3;
 }
 
 // 关注操作 的接口相应 model

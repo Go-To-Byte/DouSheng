@@ -4,12 +4,12 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception/custom"
 	"github.com/Go-To-Byte/DouSheng/relation_service/apps/relation"
-	// "github.com/Go-To-Byte/DouSheng/relation_service/common/utils"
 )
 
 type followListResp struct {
@@ -35,14 +35,16 @@ type followActionResp struct {
 
 func (h *Handler) followList(ctx *gin.Context) error {
 	req := relation.NewFollowListRequest()
+
 	// 1、接收参数
-	// TODO 临时测试请求, 需替换为绑定参数
 	// if err := ctx.ShouldBindQuery(req); err != nil {
 	// 	return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	// }
-
-	req.UserId = 10
-	req.Token = "VzVifO2phBxKJsvCNygmbGQO"
+	
+	// TODO 需替换为绑定参数
+	userId, _ := strconv.ParseInt(ctx.Query("user_id"), 10, 64)
+	req.UserId = userId
+	req.Token = ctx.Query("token")
 
 	// 业务请求
 	resp, err := h.service.FollowList(ctx, req)
@@ -61,13 +63,14 @@ func (h *Handler) followList(ctx *gin.Context) error {
 func (h *Handler) followerList(ctx *gin.Context) error {
 	req := relation.NewFollowerListRequest()
 	// 1、接收参数
-	// TODO 临时测试请求, 需替换为绑定参数
 	// if err := ctx.ShouldBindQuery(req); err != nil {
 	// 	return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	// }
-
-	req.UserId = 10
-	req.Token = "VzVifO2phBxKJsvCNygmbGQO"
+	
+	// TODO 需替换为绑定参数
+	userId, _ := strconv.ParseInt(ctx.Query("user_id"), 10, 64)
+	req.UserId = userId
+	req.Token = ctx.Query("token")
 
 	// 业务请求
 	resp, err := h.service.FollowerList(ctx, req)
@@ -86,14 +89,16 @@ func (h *Handler) followerList(ctx *gin.Context) error {
 func (h *Handler) followAction(ctx *gin.Context) error {
 	req := relation.NewFollowActionRequest()
 	// 1、接收参数
-	// TODO 临时测试请求, 需替换为绑定参数
 	// if err := ctx.Bind(req); err != nil {
 	// 	return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	// }
 
-	req.ToUserId = 12
-	req.Token = "VzVifO2phBxKJsvCNygmbGQO"
-	req.ActionType = "1"
+	// TODO 需替换为绑定参数
+	toUserId, _ := strconv.ParseInt(ctx.Query("to_user_id"), 10, 64)
+	actionType, _ := strconv.ParseInt(ctx.Query("action_type"), 10, 32)
+	req.ToUserId = toUserId
+	req.Token = ctx.Query("token")
+	req.ActionType = int32(actionType)
 
 	// 业务请求
 	resp, err := h.service.FollowAction(ctx, req)
@@ -114,13 +119,14 @@ func (h *Handler) followAction(ctx *gin.Context) error {
 func (h *Handler) friendList(ctx *gin.Context) error {
 	req := relation.NewFriendListRequest()
 	// 1、接收参数
-	// TODO 临时测试请求, 需替换为绑定参数
 	// if err := ctx.ShouldBindQuery(req); err != nil {
 	// 	return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	// }
 
-	req.UserId = 10
-	req.Token = "0N7Ser1RrITQO92mz0eka7El"
+	// TODO 需替换为绑定参数
+	userId, _ := strconv.ParseInt(ctx.Query("user_id"), 10, 64)
+	req.UserId = userId
+	req.Token = ctx.Query("token")
 
 	// 业务请求
 	resp, err := h.service.FriendList(ctx, req)
