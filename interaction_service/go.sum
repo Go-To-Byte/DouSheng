@@ -3,6 +3,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak=
 github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
+github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230223035652-1cb1be3bdee4 h1:qLi+WyW695iywAEoYxXJjR9OVBmWTMjf8y40zLmDOa4=
+github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230223035652-1cb1be3bdee4/go.mod h1:PhUfyRVCIVSLibUfwajVz9OGcwJfLnI87mTzV2Nc/t0=
 github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230223025253-4720d5f5c417 h1:5N5qmLBo0OGrwSRp1Pncj9gcJLsllJtJeszZEXMa5fo=
 github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230223025253-4720d5f5c417/go.mod h1:jMyDb7y47KjXHy79JRxS+HErOk1i3+h/jPmScDKaj6Y=
 github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230223035652-1cb1be3bdee4 h1:Xirb6fGtKZWzEUTzM2uSejxfwR4GBnyaSMfZX7H/v18=

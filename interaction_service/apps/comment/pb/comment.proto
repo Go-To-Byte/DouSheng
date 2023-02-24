@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package dousheng.interaction.comment;
+
+//生成Go文件的包目录路径
+option go_package="github.com/Go-To-Byte/DouSheng/interaction_service/apps/comment";
+
+import "github.com/Go-To-Byte/DouSheng/user_center/apps/user/pb/user.proto";
+
+service Service {
+  //发表评论
+  rpc CommentAction(CommentActionRequest) returns (CommentActionResponse);
+  //获取评论
+  rpc GetCommentList(GetCommentListRequest) returns (GetCommentListResponse);
+  //通过视频Id获取评论总数
+  rpc GetCommentCountById(GetCommentCountByIdRequest) returns(GetCommentCountByIdResponse);
+}
+
+//评论实体
+message Comment{
+  //  评论id
+  int64 id = 1;
+  user.User user = 2;
+  string content = 3;
+  //评论日期 格式 mm-dd
+  string create_date = 4;
+}
+
+message CommentPo{
+  //  评论id
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 video_id = 3;
+  string content = 4;
+  //评论日期 格式 mm-dd
+  string create_date = 5;
+}
+
+//发表评论请求体
+message CommentActionRequest{
+  //用户鉴权token
+  // @gotags: json:"token" form:"token" binding:"required" validate:"required"
+  string token = 1;
+  //视频id
+  // @gotags: json:"video_id" form:"video_id" binding:"required" validate:"required"
+  int64 video_id = 2;
+  //1-发布评论 2-删除评论
+  // @gotags: json:"action_type" form:"action_type" binding:"required" validate:"required"
+  int64 action_type = 3;
+  //用户填写的评论内容，在action_type=1时候使用，可选选项不需要binding，也不需要参与校验
+  // @gotags: json:"comment_text" form:"comment_text"
+  string comment_text = 4;
+  //action_type = 2时候使用
+  // @gotags: json:"comment_id" form:"comment_id"
+  int64 comment_id = 5;
+}
+
+//获取评论列表请求体
+message GetCommentListRequest{
+  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
+  string token = 1;
+  // @gotags: json:"video_id" form:"video_id" validate:"required" binding:"required"
+  int64 video_id = 2;
+}
+
+//评论操作响应体
+message CommentActionResponse{
+  Comment comment = 3;
+}
+
+//获取评论（列表）响应体
+message GetCommentListResponse{
+  repeated Comment comment_list = 3;
+}
+message GetCommentCountByIdRequest{
+  ing64 video_id = 1;
+}
+message GetCommentCountByIdResponse{
+  int64 comment_count = 1;
+}
