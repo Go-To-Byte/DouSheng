@@ -20,12 +20,8 @@ type Handler struct {
 	ioc.GinDefault
 }
 
-// Registry 用于注册Handler所需要暴露的路由
-func (h *Handler) Registry(r gin.IRoutes) {
-	r.POST("/action/", exception.GinErrWrapper(h.FavoriteAction))
-}
-
 func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
+	r.POST("/action/", exception.GinErrWrapper(h.FavoriteAction))
 	r.GET("/list/", exception.GinErrWrapper(h.GetFavoriteList))
 }
 
