@@ -32,7 +32,6 @@ type followActionResp struct {
 	*relation.FollowActionResponse
 }
 
-
 func (h *Handler) followList(ctx *gin.Context) error {
 	req := relation.NewFollowListRequest()
 
@@ -40,7 +39,7 @@ func (h *Handler) followList(ctx *gin.Context) error {
 	// if err := ctx.ShouldBindQuery(req); err != nil {
 	// 	return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	// }
-	
+
 	// TODO 需替换为绑定参数
 	userId, _ := strconv.ParseInt(ctx.Query("user_id"), 10, 64)
 	req.UserId = userId
@@ -54,7 +53,7 @@ func (h *Handler) followList(ctx *gin.Context) error {
 
 	// 获取成功
 	ctx.JSON(http.StatusOK, followListResp{
-		CodeMsg:             custom.Ok(constant.ACQUIRE_OK),
+		CodeMsg:            custom.Ok(constant.ACQUIRE_OK),
 		FollowListResponse: resp,
 	})
 	return nil
@@ -66,7 +65,7 @@ func (h *Handler) followerList(ctx *gin.Context) error {
 	// if err := ctx.ShouldBindQuery(req); err != nil {
 	// 	return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	// }
-	
+
 	// TODO 需替换为绑定参数
 	userId, _ := strconv.ParseInt(ctx.Query("user_id"), 10, 64)
 	req.UserId = userId
@@ -80,7 +79,7 @@ func (h *Handler) followerList(ctx *gin.Context) error {
 
 	// 获取成功
 	ctx.JSON(http.StatusOK, followerListResp{
-		CodeMsg:             custom.Ok(constant.ACQUIRE_OK),
+		CodeMsg:              custom.Ok(constant.ACQUIRE_OK),
 		FollowerListResponse: resp,
 	})
 	return nil
@@ -109,7 +108,7 @@ func (h *Handler) followAction(ctx *gin.Context) error {
 
 	// 获取成功
 	ctx.JSON(http.StatusOK, followActionResp{
-		CodeMsg:             custom.Ok(constant.ACQUIRE_OK),
+		CodeMsg:              custom.Ok(constant.ACQUIRE_OK),
 		FollowActionResponse: resp,
 	})
 	return nil
@@ -136,7 +135,7 @@ func (h *Handler) friendList(ctx *gin.Context) error {
 
 	// 获取成功
 	ctx.JSON(http.StatusOK, friendListResp{
-		CodeMsg:             custom.Ok(constant.ACQUIRE_OK),
+		CodeMsg:            custom.Ok(constant.ACQUIRE_OK),
 		FriendListResponse: resp,
 	})
 	return nil
