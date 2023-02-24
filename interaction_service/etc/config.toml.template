@@ -24,3 +24,11 @@ tags = ["互动服务", "interaction_service"]
 [consul.discovers.api_rooter]
 discover_name = "api_rooter"
 address = "127.0.0.1:8500"
+
+[consul.discovers.user_center]
+discover_name = "user_center"
+address = "127.0.0.1:8500"
+
+[consul.discovers.video_service]
+discover_name = "video_service"
+address = "127.0.0.1:8500"
