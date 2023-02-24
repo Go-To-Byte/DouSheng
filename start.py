@@ -2,11 +2,12 @@ import argparse
 import multiprocessing
 import os
 import pathlib
+import signal
+import subprocess
 import time
 
 DIRS = []
 TASKS = []
-PID = []
 
 
 def parser_arg():
@@ -29,12 +30,9 @@ def on_exit(signum, frame):
 
 
 def kill_all_main():
-    with open(f"~/log/pid.txt", encoding="utf8") as file:
-        for pid in file.readlines():
-            print(f"closing: {pid}")
-            os.system(f"kill {pid}")
-    os.system("cp ~/log/pid.txt ~/log/kill.txt")
-    os.system(f"echo ' ' > ~/log/pid.txt")
+    pids = subprocess.getoutput("pidof main").strip(" ")
+    for pid in pids:
+        os.kill(int(pid), signal.SIGKILL)
 
 
 def get_all_main():
@@ -49,11 +47,9 @@ def get_all_main():
 
 def run_main(path):
     path: pathlib.Path
-    PID.append(os.getpid())
     os.chdir(path)
     print(f"Now path: {os.getcwd()}\n"
           f"RUN {path.name}, PID: {os.getpid()}")
-    os.system(f"echo {os.getpid()} >> ~/log/pid.txt")
     os.system(f"go run {path}/main.go >> ~/log/{path.name}.log")
 
 
@@ -72,6 +68,10 @@ def wait_all_main():
 
 
 def main():
+    path = pathlib.Path.cwd()
+    print(f"Now path: {os.getcwd()}\n"
+          f"RUN {path.name}, PID: {os.getpid()}")
+
     parser_arg()
     get_all_main()
     run_all_main()
