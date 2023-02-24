@@ -1,102 +1,71 @@
-// @Author: Ciusyan 2023/1/24
+// Created by yczbest at 2023/02/23 10:33
+
 package api
 
 import (
-	"github.com/Go-To-Byte/DouSheng/comment/apps/comment"
-	"github.com/gin-gonic/gin"
-	"net/http"
-
+	"fmt"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception/custom"
-
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/comment"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-type CommentResponse struct {
+type commentActionResponse struct {
 	*custom.CodeMsg
-	Comment Comment `json:"comment"`
+	*comment.CommentActionResponse
 }
 
-type Comment struct {
-	*user.UserInfoResponse
-	Content    string `json:"content"`
-	CreateDate string `json:"create_date"`
-	ID         int64  `json:"id"`
-}
-
-type CommentListResponse struct {
+// userInfoResp 用户信息的响应对象
+type getCommentListResponse struct {
 	*custom.CodeMsg
-	Comments []Comment `json:"comment_list"`
+	*comment.GetCommentListResponse
 }
 
-func (h *Handler) Comment(c *gin.Context) error {
-	req := comment.CommentRequest{}
+func (h *Handler) CommentAction(c *gin.Context) error {
 
+	req := comment.NewCommentActionRequest()
 	// 1、接收参数
 	if err := c.Bind(req); err != nil {
+		fmt.Println(err.Error())
 		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
 
 	// 2、进行接口调用
-	resp, err := h.service.Comment(c.Request.Context(), req)
+	//ctx := context.WithValue(c.Request.Context(),"token",)
+
+	resp, err := h.commentService.CommentAction(c.Request.Context(), req)
 	if err != nil {
 		return exception.GrpcErrWrapper(err)
 	}
 
-	cmt := Comment{}
-	cmt.ID = resp.Comment.User
-	cmt.Content = resp.Comment.Content
-	cmt.UserInfoResponse
-
 	c.JSON(http.StatusOK,
-		CommentResponse{
-			CodeMsg: custom.Ok(constant.OK_REGISTER),
-			Comment: Comment{},
+		commentActionResponse{
+			CodeMsg:               custom.NewWithCode(constant.OPERATE_OK),
+			CommentActionResponse: resp,
 		})
 	return nil
 }
 
-func (h *Handler) Login(c *gin.Context) error {
+func (h *Handler) GetCommentList(c *gin.Context) error {
 
-	req := user.NewLoginAndRegisterRequest()
-
+	req := comment.NewDefaultGetCommentListRequest()
 	// 1、接收参数
 	if err := c.Bind(req); err != nil {
 		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
-
+	fmt.Println(req.Token)
 	// 2、进行接口调用
-	resp, err := h.service.Login(c.Request.Context(), req)
+	resp, err := h.commentService.GetCommentList(c.Request.Context(), req)
 	if err != nil {
 		return exception.GrpcErrWrapper(err)
 	}
 
 	c.JSON(http.StatusOK,
-		loginAndRegisterResp{
-			CodeMsg:       custom.NewWithCode(constant.OPERATE_OK),
-			TokenResponse: resp,
-		})
-	return nil
-}
-
-func (h *Handler) GetUserInfo(c *gin.Context) error {
-	req := user.NewUserInfoRequest()
-
-	// 1、接收参数
-	if err := c.ShouldBindQuery(req); err != nil {
-		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
-	}
-
-	info, err := h.service.UserInfo(c.Request.Context(), req)
-	if err != nil {
-		return exception.GrpcErrWrapper(err)
-	}
-
-	c.JSON(http.StatusOK,
-		userInfoResp{
-			CodeMsg:          custom.Ok(constant.ACQUIRE_OK),
-			UserInfoResponse: info,
+		getCommentListResponse{
+			CodeMsg:                custom.NewWithCode(constant.OPERATE_OK),
+			GetCommentListResponse: resp,
 		})
 	return nil
 }

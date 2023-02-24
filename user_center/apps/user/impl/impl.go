@@ -16,24 +16,10 @@ import (
 )
 
 // 用于注入IOC中
-var impl = &UserServiceImpl{}
+var impl = &userServiceImpl{}
 
-func NewUserServiceImpl() *UserServiceImpl {
-
-	db, err := conf.C().MySQL.GetDB()
-	if err != nil {
-		panic(err)
-	}
-
-	return &UserServiceImpl{
-		// User模块服务的子Logger
-		l:  zap.L().Named("User"),
-		db: db,
-	}
-}
-
-// UserServiceImpl 基于Mysql实现的Service
-type UserServiceImpl struct {
+// userServiceImpl 基于Mysql实现的Service
+type userServiceImpl struct {
 	l  logger.Logger
 	db *gorm.DB
 
@@ -43,7 +29,7 @@ type UserServiceImpl struct {
 	tokenService token.ServiceClient
 }
 
-func (u *UserServiceImpl) Init() error {
+func (u *userServiceImpl) Init() error {
 	u.l = zap.L().Named("User")
 
 	db, err := conf.C().MySQL.GetDB()
@@ -62,11 +48,11 @@ func (u *UserServiceImpl) Init() error {
 	return nil
 }
 
-func (u *UserServiceImpl) Name() string {
+func (u *userServiceImpl) Name() string {
 	return user.AppName
 }
 
-func (u *UserServiceImpl) Registry(s *grpc.Server) {
+func (u *userServiceImpl) Registry(s *grpc.Server) {
 	user.RegisterServiceServer(s, impl)
 }
 

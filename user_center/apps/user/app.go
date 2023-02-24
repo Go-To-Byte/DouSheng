@@ -65,7 +65,7 @@ func (*UserPo) TableName() string {
 	return AppName
 }
 
-func NewUserWithPo(po *UserPo) *User {
+func (po *UserPo) Po2vo() *User {
 	return &User{
 		Id:   po.Id,
 		Name: po.Username,
@@ -78,4 +78,8 @@ func NewUserInfoResponse() *UserInfoResponse {
 
 func NewUserInfoRequest() *UserInfoRequest {
 	return &UserInfoRequest{}
+}
+
+func NewUserMapRequest() *UserMapRequest {
+	return &UserMapRequest{}
 }

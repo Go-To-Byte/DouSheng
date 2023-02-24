@@ -11,19 +11,33 @@ import (
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
+func NewGetUserReq() *GetUserReq {
+	return &GetUserReq{}
+}
+
+// GetUserReq 查询用户信息
+type GetUserReq struct {
+	// 用户名
+	Username string `json:"username"`
+	// IDS
+	UserIds []int64 `json:"user_ids"`
+}
+
 // GetUser 根据用户名称获取用户
-func (u *UserServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.UserPo, error) {
-	db := u.db.WithContext(ctx)
-	if po.Username != "" {
-		db = db.Where("username = ?", po.Username)
+func (s *userServiceImpl) GetUser(ctx context.Context, req *GetUserReq) ([]*user.UserPo, error) {
+	db := s.db.WithContext(ctx)
+	if req.Username != "" {
+		db = db.Where("username LIKE  ?", req.Username)
 	}
 
-	if po.Id != 0 {
-		db = db.Where("id = ?", po.Id)
+	if req.UserIds != nil && len(req.UserIds) > 0 {
+		db = db.Where("id IN ?", req.UserIds)
 	}
+
+	pos := make([]*user.UserPo, 1)
 
 	// 查询
-	db = db.Find(po)
+	db = db.Find(&pos)
 
 	if db.RowsAffected == 0 {
 		return nil, exception.WithStatusCode(constant.WRONG_USER_NOT_EXIST)
@@ -33,13 +47,13 @@ func (u *UserServiceImpl) GetUser(ctx context.Context, po *user.UserPo) (*user.U
 		return nil, db.Error
 	}
 
-	return po, nil
+	return pos, nil
 }
 
 // Insert 创建用户
-func (u *UserServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.UserPo, error) {
+func (s *userServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.UserPo, error) {
 
-	res := u.db.WithContext(ctx).Create(user)
+	res := s.db.WithContext(ctx).Create(user)
 
 	// TODO：统一异常处理
 	if res.Error != nil {
@@ -49,18 +63,18 @@ func (u *UserServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.
 	return user, nil
 }
 
-func (u *UserServiceImpl) token(ctx context.Context, po *user.UserPo) (accessToken string) {
+func (s *userServiceImpl) token(ctx context.Context, po *user.UserPo) (accessToken string) {
 	// 颁发Token
 	tkReq := token.NewIssueTokenRequest(po)
-	tk, err := u.tokenService.IssueToken(ctx, tkReq)
+	tk, err := s.tokenService.IssueToken(ctx, tkReq)
 
 	// 若Token颁发失败，不要报错，打印日志即可
 	if err != nil {
 		accessToken = ""
-		u.l.Errorf("Token颁发失败：%s", err.Error())
+		s.l.Errorf("Token颁发失败：%s", err.Error())
 	} else {
 		accessToken = tk.AccessToken
-		u.l.Infof("Token颁发成功：%s", accessToken)
+		s.l.Infof("Token颁发成功：%s", accessToken)
 	}
 	return
 }
