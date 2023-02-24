@@ -23,8 +23,8 @@ var (
 func TestRegister(t *testing.T) {
 	should := assert.New(t)
 	newUser := user.NewLoginAndRegisterRequest()
-	newUser.Username = "ciusyan"
-	newUser.Password = "222"
+	newUser.Username = "test"
+	newUser.Password = "222222"
 	token, err := service.Register(context.Background(), newUser)
 
 	if should.NoError(err) {
@@ -38,7 +38,7 @@ func TestLogin(t *testing.T) {
 	should := assert.New(t)
 	newUser := user.NewLoginAndRegisterRequest()
 	newUser.Username = "ciusyan"
-	// newUser.Password = "222"
+	newUser.Password = "222222"
 	token, err := service.Login(context.Background(), newUser)
 
 	if should.NoError(err) {
@@ -52,12 +52,23 @@ func TestUserInfo(t *testing.T) {
 	should := assert.New(t)
 	req := user.NewUserInfoRequest()
 	req.Token = "YkCotWjNZO7f6Axz4h06aQpx"
-	req.UserId = 4
+	req.UserId = 17
 	info, err := service.UserInfo(context.Background(), req)
 
 	if should.NoError(err) {
 		fmt.Println(info)
 		fmt.Println(info.User)
+	}
+}
+
+func TestUserMap(t *testing.T) {
+	should := assert.New(t)
+	req := user.NewUserMapRequest()
+	req.UserIds = []int64{1, 2, 4, 16, 17, 18}
+	info, err := service.UserMap(context.Background(), req)
+
+	if should.NoError(err) {
+		fmt.Println(info)
 	}
 }
 

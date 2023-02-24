@@ -2,6 +2,7 @@
 package api
 
 import (
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/gin-gonic/gin"
 	"net/http"
 
@@ -41,8 +42,17 @@ func (h *Handler) publishAction(ctx *gin.Context) error {
 	if err = ctx.Bind(req); err != nil {
 		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
+
+	// 文件上传成功后，给文件参数赋值
 	req.CoverUrl = uploaded.CoverRelativeURI
 	req.PlayUrl = uploaded.RelativeURI
+
+	// 从认证成功后的Token中，取出传递下来的Token对象，
+	if value, exists := ctx.Get(constant.REQUEST_TOKEN); exists {
+		// 从Token中 -> 给UserId赋值
+		req.UserId = value.(*token.Token).GetUserId()
+	}
+
 	_, err = h.service.PublishVideo(ctx.Request.Context(), req)
 	if err != nil {
 		return exception.GrpcErrWrapper(err)

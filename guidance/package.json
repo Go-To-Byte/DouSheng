@@ -1,0 +1,17 @@
+{
+  "name": "dousheng项目指南",
+  "version": "1.0.0",
+  "description": "vuepress快速搭建的文档",
+  "main": "index.js",
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vuepress": "^1.9.8",
+    "vuepress-theme-reco": "^1.6.16"
+  }
+}
