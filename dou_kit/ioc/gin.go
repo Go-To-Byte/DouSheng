@@ -86,6 +86,7 @@ func RegistryGin(opts *GinOptions) {
 		case VIDEO_API:
 			vers = ""
 			name = ""
+		case RELATION_API:
 		default:
 		}
 
@@ -101,6 +102,7 @@ type AppName string
 const (
 	USER_API  = "user"
 	VIDEO_API = "video"
+	RELATION_API = "relation"
 )
 
 // GinOptions 注册IOC中Gin服务的路由时，可传入配置
