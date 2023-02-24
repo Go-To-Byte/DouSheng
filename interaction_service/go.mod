@@ -3,10 +3,10 @@ module github.com/Go-To-Byte/DouSheng/interaction_service
 go 1.19
 
 require (
-	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230215143844-99e9bcfa1f8e
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230215160406-6edd0b6865f0
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230215075535-4ea891ef1776
-	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230215075535-4ea891ef1776
+	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230223035652-1cb1be3bdee4
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230223025253-4720d5f5c417
+	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230223035652-1cb1be3bdee4
+	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230223035652-1cb1be3bdee4
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/infraboard/mcube v1.9.7
 	github.com/stretchr/testify v1.8.1

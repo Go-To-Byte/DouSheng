@@ -25,14 +25,12 @@ func (c *commentServiceImpl) CommentAction(ctx context.Context, req *comment.Com
 		//发布评论
 		po, err := c.InsertCommentRecord(ctx, req)
 		if err != nil {
-			c.l.Errorf("视频评论失败：%s", err.Error())
+			//c.l.Errorf("视频评论失败：%s", err.Error())
 			return nil, status.Error(codes.PermissionDenied,
-				constant.Code2Msg(constant.WRONG_EXIST_USERS))
+				constant.Code2Msg(constant.ERROR_SAVE))
 		}
 		userReq := user.NewUserInfoRequest()
 		userReq.UserId = po.UserId
-		fmt.Println(ctx)
-		fmt.Println(po.UserId)
 		userRsp, err := c.userService.UserInfo(ctx, userReq)
 		fmt.Println(userRsp)
 		if err != nil {
@@ -78,12 +76,19 @@ func (c *commentServiceImpl) GetCommentList(ctx context.Context, req *comment.Ge
 		return nil, status.Error(codes.InvalidArgument, constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 	pos, err := c.GetCommentPoList(ctx, req)
+	fmt.Println()
 	if err != nil {
 		c.l.Errorf("获取视频评论列表失败：%s", err.Error())
 		return nil, status.Error(codes.PermissionDenied,
 			constant.Code2Msg(constant.BAD_REQUEST))
 	}
+
 	commentList := make([]*comment.Comment, len(pos))
+	if len(commentList) == 0 {
+		res := comment.NewDefaultGetCommentListResponse()
+		res.CommentList = commentList
+		return res, nil
+	}
 	for index, po := range pos {
 		userReq := user.UserInfoRequest{
 			UserId: po.UserId,

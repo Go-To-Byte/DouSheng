@@ -18,7 +18,7 @@ var service favorite.ServiceServer
 func TestFavoriteServiceImpl_FavoriteAction(t *testing.T) {
 	should := assert.New(t)
 	newFavorite := favorite.NewFavoriteActionRequest()
-	newFavorite.Token = "fbOXeOiARldBL5J50nr1BNuw"
+	newFavorite.Token = "sPDgHB87RaWwMCP1vJlDrIdG"
 	newFavorite.ActionType = 1
 	newFavorite.VideoId = 2
 	_, err := service.FavoriteAction(context.Background(), newFavorite)
@@ -31,7 +31,7 @@ func TestFavoriteServiceImpl_FavoriteAction(t *testing.T) {
 func TestFavoriteServiceImpl_Delete(t *testing.T) {
 	should := assert.New(t)
 	newFavorite := favorite.NewFavoriteActionRequest()
-	newFavorite.Token = "fbOXeOiARldBL5J50nr1BNuw"
+	newFavorite.Token = "sPDgHB87RaWwMCP1vJlDrIdG"
 	newFavorite.ActionType = 2
 	newFavorite.VideoId = 2
 	_, err := service.FavoriteAction(context.Background(), newFavorite)
@@ -44,7 +44,7 @@ func TestFavoriteServiceImpl_GetFavoriteList(t *testing.T) {
 	should := assert.New(t)
 	newReq := favorite.NewDefaultGetFavoriteListRequest()
 	newReq.UserId = 15
-	newReq.Token = "WPxBiXEEw5vXymxZjW1efndd"
+	newReq.Token = "sPDgHB87RaWwMCP1vJlDrIdG"
 	res, err := service.GetFavoriteList(context.Background(), newReq)
 	if should.NoError(err) {
 		fmt.Println("获取喜欢视频列表成功！")

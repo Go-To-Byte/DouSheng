@@ -21,18 +21,21 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 定义 点赞/取消点赞 请求体
+// 定义 点赞/取消点赞 请求体 POST
 type FavoriteActionRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
 	// 用户鉴权Token
-	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	// @gotags: json:"token" form:"token" binding:"required" validate:"required"
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" form:"token" binding:"required" validate:"required"`
 	// 视频id
-	VideoId int64 `protobuf:"varint,2,opt,name=video_id,json=videoId,proto3" json:"video_id,omitempty"`
+	// @gotags: json:"video_id" form:"video_id" binding:"required" validate:"required"
+	VideoId int64 `protobuf:"varint,2,opt,name=video_id,json=videoId,proto3" json:"video_id" form:"video_id" binding:"required" validate:"required"`
 	// 1-点赞 2-取消点赞
-	ActionType int64 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type,omitempty"`
+	// @gotags: json:"action_type" form:"action_type" binding:"required" validate:"required"
+	ActionType int64 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type" form:"action_type" binding:"required" validate:"required"`
 }
 
 func (x *FavoriteActionRequest) Reset() {
@@ -160,7 +163,7 @@ type FavoriteActionResponse struct {
 
 	// 可以携带一些额外属性
 	// @gotags: json:"mate"
-	Mate map[string]string `protobuf:"bytes,1,rep,name=mate,proto3" json:"mate,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Mate map[string]string `protobuf:"bytes,1,rep,name=mate,proto3" json:"mate" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (x *FavoriteActionResponse) Reset() {
@@ -209,9 +212,11 @@ type GetFavoriteListRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户id
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
 	// 用户鉴权token
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	// @gotags: json:"token" form:"token" validate:"required" binding:"required"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" validate:"required" binding:"required"`
 }
 
 func (x *GetFavoriteListRequest) Reset() {

@@ -4,7 +4,6 @@ package impl
 
 import (
 	"context"
-	"fmt"
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
@@ -14,38 +13,25 @@ import (
 
 func (c *commentServiceImpl) NewCommentPo(ctx context.Context, req *comment.CommentActionRequest) (*comment.CommentPo, error) {
 	//根据Token获取User
-	tokenReq := token.NewValidateTokenRequest(req.Token)
-	validatedToken, err := c.tokenService.ValidateToken(ctx, tokenReq)
+	userReq := token.NewValidateTokenRequest(req.Token)
+	tkRsp, err := c.tokenService.ValidateToken(ctx, userReq)
 	if err != nil {
 		c.l.Errorf(err.Error())
 		return nil, err
 	}
+	userId := tkRsp.GetUserId()
 	po := comment.NewDefaultCommentPo()
 	//  TODO ID算法
 	po.Id = time.Now().UnixNano()
 	po.Content = req.CommentText
 	po.CreateDate = time.Now().Format("01-02")
-	po.UserId = validatedToken.GetUserId()
+	po.UserId = userId
 	po.VideoId = req.VideoId
 	return po, nil
 }
 
 // 评论功能实现 成功返回Po 失败返回nil
 func (c *commentServiceImpl) InsertCommentRecord(ctx context.Context, req *comment.CommentActionRequest) (*comment.CommentPo, error) {
-	db := c.db.WithContext(ctx)
-	//根据Token获取User
-	tokenReq := token.NewValidateTokenRequest(req.Token)
-	validatedToken, err := c.tokenService.ValidateToken(ctx, tokenReq)
-	if err != nil {
-		c.l.Errorf(err.Error())
-		return nil, err
-	}
-	//检查是否已经存在此纪录
-	db = db.Where("user_id = ? AND video_id = ?", validatedToken.GetUserId(), req.VideoId).Find(&comment.CommentPo{})
-	//记录已存在
-	if db.RowsAffected != 0 {
-		return nil, exception.WithStatusCode(constant.WRONG_EXIST_USERS)
-	}
 	//	保存新记录
 	po, err := c.NewCommentPo(ctx, req)
 	if err != nil {
@@ -71,36 +57,36 @@ func (c *commentServiceImpl) DeleteCommentById(ctx context.Context, req *comment
 	db := c.db.WithContext(ctx)
 	commentPo := comment.NewDefaultCommentPo()
 	//通过comment_id获取评论
-	db = c.db.WithContext(ctx).Where("id = ?", req.CommentId).First(&commentPo)
+	db = c.db.WithContext(ctx)
+	db = db.Where(" id = ? ", req.CommentId).Find(&commentPo)
 	if db.Error != nil {
+		c.l.Errorf("评论失败: %s", err.Error())
 		return nil, err
 	}
-	fmt.Println(db.RowsAffected)
 	//评论必然存在，找到之后判断是否是本人的评论
 	if commentPo.UserId != validatedToken.GetUserId() {
 		//返回错误，没有权限删除
 		return nil, exception.WithStatusCode(constant.WRONG_NO_PERMISSION)
 	}
-	//po := comment.NewDefaultCommentPo()
-	db.Delete(&commentPo)
-	fmt.Println(db.RowsAffected)
 	//删除失败
-	if db.RowsAffected == 0 {
-		return nil, exception.WithStatusCode(constant.WRONG_USER_NOT_EXIST)
+	db.Delete(&commentPo)
+	if db.Error != nil || db.RowsAffected == 0 {
+		c.l.Errorf("删除数据失败:%s", err.Error())
+		return nil, exception.WithStatusCode(constant.ERROR_REMOVE)
 	}
 	//删除成功
 	return commentPo, nil
 }
 
 func (c *commentServiceImpl) GetCommentPoList(ctx context.Context, req *comment.GetCommentListRequest) ([]*comment.CommentPo, error) {
-	db := c.db.Where(ctx)
+	db := c.db.WithContext(ctx)
 	var count int64 = 0
 	//查找评论数量
-	db.Where("video_id = ?", req.VideoId).Count(&count)
-	list := make([]*comment.CommentPo, count)
+	db.Table("comment").Where("video_id = ?", req.VideoId).Count(&count)
+	pos := make([]*comment.CommentPo, count)
 	if count == 0 {
-		return list, nil
+		return pos, nil
 	}
-	db.Where("video_id = ?", req.VideoId).Find(&list)
-	return list, nil
+	db.Table("comment").Where("video_id = ?", req.VideoId).Find(&pos)
+	return pos, nil
 }

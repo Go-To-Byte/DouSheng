@@ -4,11 +4,12 @@ package impl
 
 import (
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
-	"github.com/Go-To-Byte/DouSheng/api_rooter/client/rpc"
+	tkRpc "github.com/Go-To-Byte/DouSheng/api_rooter/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/comment"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	userRpc "github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
@@ -47,11 +48,17 @@ func (c *commentServiceImpl) Init() error {
 	}
 	c.db = db
 
-	client, err := rpc.NewApiRooterClientFromCfg()
+	tkClient, err := tkRpc.NewApiRooterClientFromCfg()
 	if err != nil {
 		return err
 	}
-	c.tokenService = client.TokenService()
+	c.tokenService = tkClient.TokenService()
+
+	userCilent, err := userRpc.NewUserCenterClientFromCfg()
+	if err != nil {
+		return err
+	}
+	c.userService = userCilent.UserService()
 
 	return nil
 }

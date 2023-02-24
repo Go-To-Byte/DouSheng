@@ -183,14 +183,20 @@ type CommentActionRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户鉴权token
-	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	// @gotags: json:"token" form:"token" binding:"required" validate:"required"
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" form:"token" binding:"required" validate:"required"`
 	// 视频id
-	VideoId int64 `protobuf:"varint,2,opt,name=video_id,json=videoId,proto3" json:"video_id,omitempty"`
+	// @gotags: json:"video_id" form:"video_id" binding:"required" validate:"required"
+	VideoId int64 `protobuf:"varint,2,opt,name=video_id,json=videoId,proto3" json:"video_id" form:"video_id" binding:"required" validate:"required"`
 	// 1-发布评论 2-删除评论
-	ActionType int64 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type,omitempty"`
-	// 用户填写的评论内容，在action_type=1时候使用
-	CommentText string `protobuf:"bytes,4,opt,name=comment_text,json=commentText,proto3" json:"comment_text,omitempty"`
-	CommentId   int64  `protobuf:"varint,5,opt,name=comment_id,json=commentId,proto3" json:"comment_id,omitempty"`
+	// @gotags: json:"action_type" form:"action_type" binding:"required" validate:"required"
+	ActionType int64 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type" form:"action_type" binding:"required" validate:"required"`
+	// 用户填写的评论内容，在action_type=1时候使用，可选选项不需要binding，也不需要参与校验
+	// @gotags: json:"comment_text" form:"comment_text"
+	CommentText string `protobuf:"bytes,4,opt,name=comment_text,json=commentText,proto3" json:"comment_text" form:"comment_text"`
+	// action_type = 2时候使用
+	// @gotags: json:"comment_id" form:"comment_id"
+	CommentId int64 `protobuf:"varint,5,opt,name=comment_id,json=commentId,proto3" json:"comment_id" form:"comment_id"`
 }
 
 func (x *CommentActionRequest) Reset() {
@@ -266,8 +272,10 @@ type GetCommentListRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Token   string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	VideoId int64  `protobuf:"varint,2,opt,name=video_id,json=videoId,proto3" json:"video_id,omitempty"`
+	// @gotags: json:"token" form:"token" validate:"required" binding:"required"
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" form:"token" validate:"required" binding:"required"`
+	// @gotags: json:"video_id" form:"video_id" validate:"required" binding:"required"
+	VideoId int64 `protobuf:"varint,2,opt,name=video_id,json=videoId,proto3" json:"video_id" form:"video_id" validate:"required" binding:"required"`
 }
 
 func (x *GetCommentListRequest) Reset() {

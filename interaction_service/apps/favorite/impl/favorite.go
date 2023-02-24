@@ -4,7 +4,6 @@ package impl
 
 import (
 	"context"
-	"fmt"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
@@ -22,9 +21,6 @@ func (f *favoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.
 		return nil, status.Error(codes.InvalidArgument,
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
-	fmt.Println(req.ActionType)
-	fmt.Println(req.Token)
-	fmt.Println(req.VideoId)
 	switch req.ActionType {
 	//点赞操作
 	case 1:
