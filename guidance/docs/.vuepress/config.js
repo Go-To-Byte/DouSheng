@@ -74,6 +74,7 @@ module.exports = {
                 path: '/other/gowork',
                 collapsable: true, // 折叠
                 children: [
+                    { title: "一份简单的测试报告", path: "/other/test" },
                     { title: "使用go.work的好处", path: "/other/gowork" },
                 ],
             },

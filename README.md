@@ -37,4 +37,4 @@ $ git clone https://github.com/Go-To-Byte/DouSheng.git
 $ cd DouSheng
 ```
 
-* [启动说明](https://go-to-byte.github.io/Docs-DouSheng/)
+* [启动说明](https://go-to-byte.github.io/Docs-DouSheng/handbook/start.html)

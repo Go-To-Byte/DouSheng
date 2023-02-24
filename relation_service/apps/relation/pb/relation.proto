@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package dousheng.relation;
+option go_package="github.com/Go-To-Byte/DouSheng/relation_service/apps/relation";
+
+import "github.com/Go-To-Byte/DouSheng/user_center/apps/user/pb/user.proto";
+
+// 定义 relation 模块的接口
+service Service {
+  // 获取关注列表
+  rpc FollowList(FollowListRequest) returns(FollowListResponse);
+  // 获取粉丝列表
+  rpc FollowerList(FollowerListRequest) returns(FollowerListResponse);
+  // 获取好友列表
+  rpc FriendList(FriendListRequest) returns(FriendListResponse);
+  // 关注操作-关注与取关
+  rpc FollowAction(FollowActionRequest) returns(FollowActionResponse);
+}
+
+// 用户关注表:与数据库对应的PO对象
+message UserFollowPo {
+  // 用户ID
+  // @gotags: json:"user_id" gorm:"user_id"
+  int64 user_id = 1;
+  // 关注用户ID
+  // @gotags: json:"follow_id" gorm:"follow_id"
+  int64 follow_id = 2;
+  // 关注用户状态, 0:取关, 1:关注
+  // TODO 2: 互相关注
+  // @gotags: json:"follow_flag" gorm:"follow_flag"
+  bool follow_flag = 3;
+}
+
+// 用户粉丝表:与数据库对应的PO对象
+message UserFollowerPo {
+  // 用户ID
+  // @gotags: json:"user_id" gorm:"user_id"
+  int64 user_id = 1;
+  // 粉丝用户ID
+  // @gotags: json:"follower_id" gorm:"follower_id"
+  int64 follower_id = 2;
+  // 粉丝用户状态, 0:取关, 1:关注
+  // TODO 2: 互相关注
+  // @gotags: json:"follower_flag" gorm:"follower_flag"
+  bool follower_flag = 3;
+}
+
+// 用户好友
+message UserFriend{
+  // 用户ID
+  // @gotags: json:"id"
+  int64 id = 1;
+  // 用户名称
+  // @gotags: json:"name"
+  string name = 2;
+  // 关注总数
+  // @gotags: json:"follow_count"
+  optional int64 follow_count = 3;
+  // 粉丝总数
+  // @gotags: json:"follower_count"
+  optional int64 follower_count = 4;
+  // 已关注-true，false-未关注
+  bool is_follow = 5;
+  // 和该好友聊天的最新消息
+  // @gotags: json:"message"
+  string message = 6;
+  // message消息的类型, 0 => 当前请求用户接收的消息, 1 => 当前请求用户发送的消息
+  // @gotags: json:"msg_type"
+  int64 msgType = 7;
+}
+
+// 获取关系列表 的接口请求 model
+message FollowListRequest {
+  // 用户ID
+  // @gotags: form:"user_id" validate:"required" binding:"required"
+  int64 user_id = 1;
+  // 用户鉴权Token
+  // @gotags: form:"token" binding:"required"
+  string token = 2;
+}
+
+// 获取关注列表 的接口响应 model
+message FollowListResponse {
+  // 关注列表用户信息
+  // @gotags: json:"user"
+  repeated user.User user_list = 1;
+}
+
+// 获取粉丝列表 的接口请求 model
+message FollowerListRequest {
+  // 用户ID
+  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+  int64 user_id = 1;
+  // 用户鉴权Token
+  // @gotags: json:"token" form:"token" binding:"required"
+  string token = 2;
+}
+
+// 获取粉丝列表 的接口响应 model
+message FollowerListResponse {
+  // 关注列表用户信息
+  // @gotags: json:"user"
+  repeated user.User user_list = 1;
+}
+
+// 获取用户好友列表 的接口请求 model
+message FriendListRequest {
+  // 用户ID
+  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+  int64 user_id = 1;
+  // 用户鉴权Token
+  // @gotags: json:"token" form:"token" binding:"required"
+  string token = 2;
+}
+
+// 获取用户好友列表 的接口响应 model
+message FriendListResponse {
+  // 用户好友列表
+  // @gotags: json:"user"
+  repeated UserFriend friend_list = 1;
+}
+
+// 关注操作 的接口请求 model
+message FollowActionRequest {
+  // 被关注或被取关的用户ID
+  // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
+  int64 to_user_id = 1;
+  // 用户鉴权Token
+  // @gotags: json:"token" form:"token" binding:"required"
+  string token = 2;
+  // 操作类型
+  // @gotags: json:"action_type" form:"action_type" binding:"required"
+  int32 action_type = 3;
+}
+
+// 关注操作 的接口相应 model
+message FollowActionResponse {
+  // 可以携带一些额外属性
+  // @gotags: json:"mate"
+  map<string, string> mate = 1;
+}

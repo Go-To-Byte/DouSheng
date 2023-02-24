@@ -90,8 +90,11 @@ func (m *manager) start() error {
 	if m.http != nil {
 		// 将HTTP放在后台跑
 		go func() {
-			// 注：这属于正常关闭："api: Server closed"
-			if err := m.http.Start(); err != nil && err.Error() != "api: Server closed" {
+			// 注：这属于正常关闭："http: Server closed"
+			// ErrServerClosed is returned by the Server's Serve, ServeTLS, ListenAndServe,
+			// and ListenAndServeTLS methods after a call to Shutdown or Close.
+			// var ErrServerClosed = errors.New("http: Server closed")
+			if err := m.http.Start(); err != nil && err.Error() != "http: Server closed" {
 				return
 			}
 		}()
