@@ -7,9 +7,6 @@ SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 SET NAMES utf8mb4;
 
-USE `dousheng`;
-
-DROP TABLE IF EXISTS `message`;
 CREATE TABLE IF NOT EXISTS `message` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `to_user_id` bigint(20) unsigned NOT NULL DEFAULT '0',

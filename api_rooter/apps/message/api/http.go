@@ -40,12 +40,9 @@ func (h *Handler) Version() string {
 	return ""
 }
 
-func (h *Handler) Registry(r gin.IRoutes) {
-	r.GET("/chat", exception.GinErrWrapper(h.chatMessageList))
-}
-
 func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
-	r.GET("/action", exception.GinErrWrapper(h.chatMessageAction))
+	r.GET("/chat/", exception.GinErrWrapper(h.chatMessageList))
+	r.POST("/action/", exception.GinErrWrapper(h.chatMessageAction))
 }
 
 func init() {

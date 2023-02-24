@@ -18,9 +18,9 @@ require (
 )
 
 require (
-	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230223025253-4720d5f5c417
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230223025253-4720d5f5c417
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230223025253-4720d5f5c417
+	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230224144015-6f6616610285
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230224144015-6f6616610285
+	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230224144015-6f6616610285
 )
 
 require (

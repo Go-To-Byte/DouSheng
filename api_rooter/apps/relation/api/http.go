@@ -41,15 +41,16 @@ func (h *Handler) Version() string {
 }
 
 func (h *Handler) Registry(r gin.IRoutes) {
-	r.GET("/follow/list", exception.GinErrWrapper(h.followList))
+
 }
 
 func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
-	r.GET("/follower/list", exception.GinErrWrapper(h.followerList))
+	r.GET("/follow/list/", exception.GinErrWrapper(h.followList))
+	r.GET("/follower/list/", exception.GinErrWrapper(h.followerList))
 	// TODO 待处理
-	// r.POST("/action", exception.GinErrWrapper(h.followAction))
-	r.GET("/action", exception.GinErrWrapper(h.followAction))
-	r.GET("/friend/list", exception.GinErrWrapper(h.friendList))
+	// r.POST("/action/", exception.GinErrWrapper(h.followAction))
+	r.POST("/action/", exception.GinErrWrapper(h.followAction))
+	r.GET("/friend/list/", exception.GinErrWrapper(h.friendList))
 }
 
 func init() {
