@@ -29,11 +29,12 @@ def on_exit(signum, frame):
 
 
 def kill_all_main():
-    with open(f"{pathlib.Path().home()}/log/pid.txt", encoding="utf8") as file:
+    with open(f"~/log/pid.txt", encoding="utf8") as file:
         for pid in file.readlines():
             print(f"closing: {pid}")
-            os.system(f"kill -9 {pid}")
-    os.system(f"echo ' ' > {pathlib.Path().home()}/log/pid.txt")
+            os.system(f"kill {pid}")
+    os.system("cp ~/log/pid.txt ~/log/kill.txt")
+    os.system(f"echo ' ' > ~/log/pid.txt")
 
 
 def get_all_main():
