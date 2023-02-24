@@ -5,6 +5,8 @@ go 1.19
 require (
 	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230223025253-4720d5f5c417
 	github.com/Go-To-Byte/DouSheng/interaction_service v0.0.0-00010101000000-000000000000
+	github.com/Go-To-Byte/DouSheng/message_service v0.0.0-20230224044022-59cb4fc91fc9
+	github.com/Go-To-Byte/DouSheng/relation_service v0.0.0-20230224044022-59cb4fc91fc9
 	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230223035652-1cb1be3bdee4
 	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230223035652-1cb1be3bdee4
 	github.com/gin-gonic/gin v1.8.2

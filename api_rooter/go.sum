@@ -5,6 +5,10 @@ github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbi
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
 github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230223025253-4720d5f5c417 h1:5N5qmLBo0OGrwSRp1Pncj9gcJLsllJtJeszZEXMa5fo=
 github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230223025253-4720d5f5c417/go.mod h1:jMyDb7y47KjXHy79JRxS+HErOk1i3+h/jPmScDKaj6Y=
+github.com/Go-To-Byte/DouSheng/message_service v0.0.0-20230224044022-59cb4fc91fc9 h1:F7T3toKM8xxk6rTveqrgh1WKEA6WNwVcPSlLxvy2Ttk=
+github.com/Go-To-Byte/DouSheng/message_service v0.0.0-20230224044022-59cb4fc91fc9/go.mod h1:WIyKfrn353Xs4GMp/mm5Okrb8wgJo2yvfdZmW3Ysgvk=
+github.com/Go-To-Byte/DouSheng/relation_service v0.0.0-20230224044022-59cb4fc91fc9 h1:JNW6TggyHc6s9HXuNPSdQEOtq5gjFQEDQWFz9gFHUvM=
+github.com/Go-To-Byte/DouSheng/relation_service v0.0.0-20230224044022-59cb4fc91fc9/go.mod h1:3dcYZ1quIl+l/kdF6XPIcvQ9uZtKWfyND7GEhE8FHhI=
 github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230223035652-1cb1be3bdee4 h1:Xirb6fGtKZWzEUTzM2uSejxfwR4GBnyaSMfZX7H/v18=
 github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230223035652-1cb1be3bdee4/go.mod h1:7HzvPoITxYxs/bF/dQ9VkT/iEScKWolkTwt+h1SngW4=
 github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230223035652-1cb1be3bdee4 h1:OFmicJlYLlqLpt5+6UNkg1Up7FyS4Wy/ZEp+NMkP0ho=

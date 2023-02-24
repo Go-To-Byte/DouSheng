@@ -20,22 +20,22 @@ func NewFavoriteActionRequest() *FavoriteActionRequest {
 	return &FavoriteActionRequest{}
 }
 
-// 点赞/取消赞 参数校验
+// Validate 点赞/取消赞 参数校验
 func (r *FavoriteActionRequest) Validate() error {
 	return validate.Struct(r)
 }
 
-// 获取喜欢视频列表 参数校验
+// Validate 获取喜欢视频列表 参数校验
 func (r *GetFavoriteListRequest) Validate() error {
 	return validate.Struct(r)
 }
 
-// 创建视频点赞响应体
+// NewFavoriteActionResponse 创建视频点赞响应体
 func NewFavoriteActionResponse() *FavoriteActionResponse {
 	return &FavoriteActionResponse{}
 }
 
-// 构建Po
+// NewDefaultFavoritePo 构建Po
 func NewDefaultFavoritePo() *FavoritePo {
 	return &FavoritePo{}
 }
@@ -46,16 +46,16 @@ func (*FavoritePo) TableName() string {
 }
 
 func po2vo(ctx context.Context, po *video.VideoPo) (*video.Video, error) {
-	//获取User对象
+	// 获取User对象
 
 	return &video.Video{
 		Id: po.Id,
-		//Author:
+		// Author:
 		PlayUrl:  po.PlayUrl,
 		CoverUrl: po.CoverUrl,
-		//FavoriteCount:
-		//CommentCount:
-		//IsFavorite:
+		// FavoriteCount:
+		// CommentCount:
+		// IsFavorite:
 		Title: po.Title,
 	}, nil
 }
@@ -64,7 +64,7 @@ func NewDefaultGetFavoriteListRequest() *GetFavoriteListRequest {
 	return &GetFavoriteListRequest{}
 }
 
-// 获取视频列表响应体
+// NewDefaultGetFavoriteListResponse 获取视频列表响应体
 func NewDefaultGetFavoriteListResponse() *GetFavoriteListResponse {
 	return &GetFavoriteListResponse{}
 }
