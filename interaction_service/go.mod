@@ -3,16 +3,19 @@ module github.com/Go-To-Byte/DouSheng/interaction_service
 go 1.19
 
 require (
-	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230223035652-1cb1be3bdee4
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230223025253-4720d5f5c417
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230223035652-1cb1be3bdee4
-	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230223035652-1cb1be3bdee4
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/infraboard/mcube v1.9.7
 	github.com/stretchr/testify v1.8.1
 	google.golang.org/grpc v1.52.3
 	google.golang.org/protobuf v1.28.1
 	gorm.io/gorm v1.24.5
+)
+
+require (
+	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230224141637-260bbaafacaf
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230224141637-260bbaafacaf
+	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230224141637-260bbaafacaf
+	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230224141637-260bbaafacaf
 )
 
 require (
