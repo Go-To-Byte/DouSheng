@@ -12,10 +12,10 @@ require (
 )
 
 require (
-	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230224141637-260bbaafacaf
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230224141637-260bbaafacaf
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230224141637-260bbaafacaf
-	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230224141637-260bbaafacaf
+	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230224144015-6f6616610285
+	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230224144015-6f6616610285
+	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230224144015-6f6616610285
+	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230224144015-6f6616610285
 )
 
 require (
