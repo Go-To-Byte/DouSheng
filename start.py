@@ -30,9 +30,9 @@ def on_exit(signum, frame):
 
 
 def kill_all_main():
-    pids = subprocess.getoutput("pidof main").strip(" ")
+    pids = subprocess.getoutput("pidof main").split(" ")
     for pid in pids:
-        os.kill(int(pid), signal.SIGKILL)
+        os.system(f"kill {pid}")
 
 
 def get_all_main():
@@ -68,10 +68,6 @@ def wait_all_main():
 
 
 def main():
-    path = pathlib.Path.cwd()
-    print(f"Now path: {os.getcwd()}\n"
-          f"RUN {path.name}, PID: {os.getpid()}")
-
     parser_arg()
     get_all_main()
     run_all_main()
