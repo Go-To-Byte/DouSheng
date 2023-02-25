@@ -47,6 +47,7 @@ func (g GoRunGrpc) Run() {
 			return
 		default:
 			g.Response, g.Err = g.Rpc(*g.Ctx, g.Request)
+			return
 		}
 	}
 }
@@ -81,6 +82,7 @@ func GORUN(
 			r, e := rpc(*ctx, req)
 			resp = &r
 			err = e
+			return
 		}
 	}
 }
