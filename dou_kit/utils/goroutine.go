@@ -6,6 +6,7 @@ package utils
 
 import (
 	"context"
+	"errors"
 	"sync"
 	"time"
 )
@@ -25,36 +26,44 @@ import (
 //		wait.Wait()
 //	}
 type GoRunGrpc struct {
+	ctx      *context.Context
+	wait     *sync.WaitGroup
+	rpc      func(ctx context.Context, request any) (response any, err error) // grpc function
+	req      any
 	Err      error
-	Ctx      *context.Context
-	Wait     *sync.WaitGroup
-	Request  any
 	Response any
-	Rpc      func(ctx context.Context, request any) (response any, err error) // grpc function
 }
 
 func NewGoRunGrpc(
-	ctx *context.Context,
-	wait *sync.WaitGroup,
+	waitGroup *[]*sync.WaitGroup,
 	rpc func(ctx context.Context, request any) (response any, err error),
 	req any,
-) GoRunGrpc {
-	return GoRunGrpc{
-		Ctx:     ctx,
-		Wait:    wait,
-		Rpc:     rpc,
-		Request: req,
+) (goRun GoRunGrpc, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	wait := sync.WaitGroup{}
+	wait.Add(1)
+	if waitGroup == nil {
+		err = errors.New("waitGroup is nil")
+		return GoRunGrpc{Err: err}, err
 	}
+	*waitGroup = append(*waitGroup, &wait)
+	return GoRunGrpc{
+		ctx:  &ctx,
+		wait: &wait,
+		rpc:  rpc,
+		req:  req,
+	}, nil
 }
 
 func (g GoRunGrpc) Run() {
-	defer g.Wait.Done()
+	defer g.wait.Done()
 	for {
 		select {
-		case <-(*g.Ctx).Done():
+		case <-(*g.ctx).Done():
 			return
 		default:
-			g.Response, g.Err = g.Rpc(*g.Ctx, g.Request)
+			g.Response, g.Err = g.rpc(*(g.ctx), g.req)
 			return
 		}
 	}
@@ -96,11 +105,10 @@ func GORUN(
 }
 
 func example() {
-	wait := sync.WaitGroup{}
-	wait.Add(1)
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-	run := NewGoRunGrpc(&ctx, &wait, nil, nil)
+	var waitGroup []*sync.WaitGroup
+	run, _ := NewGoRunGrpc(&waitGroup, nil, nil)
 	go run.Run()
-	wait.Wait()
+	for _, wait := range waitGroup {
+		(*wait).Wait()
+	}
 }
