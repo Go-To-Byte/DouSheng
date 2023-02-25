@@ -5,6 +5,8 @@
 package utils
 
 import (
+	"context"
+	"errors"
 	"github.com/bwmarrin/snowflake"
 	"go.uber.org/zap"
 )
@@ -22,4 +24,14 @@ func NewIDGen(localID int) (gen IDGen, err error) {
 		zap.S().Errorf("New snowflake node error: %v", err)
 	}
 	return
+}
+
+// GetID NewID returns
+func GetID(ctx *context.Context) (id snowflake.ID, err error) {
+	if ctx == nil {
+		return 0, errors.New("context is nil")
+	}
+	idGen := (*ctx).Value("idGen")
+	id = idGen.(IDGen).Generate()
+	return id, nil
 }
