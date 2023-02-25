@@ -45,6 +45,13 @@ func TestFeedVideos(t *testing.T) {
 	}
 }
 
+func BenchmarkVideoServiceImpl_FeedVideos(b *testing.B) {
+	request := video.NewFeedVideosRequest()
+	for i := 0; i < b.N; i++ {
+		_, _ = service.FeedVideos(context.Background(), request)
+	}
+}
+
 func TestPublishList(t *testing.T) {
 	should := assert.New(t)
 
@@ -55,6 +62,15 @@ func TestPublishList(t *testing.T) {
 
 	if should.NoError(err) {
 		t.Log(set.VideoList)
+	}
+}
+
+func BenchmarkVideoServiceImpl_PublishList(b *testing.B) {
+	request := video.NewPublishListRequest()
+	request.UserId = 17
+
+	for i := 0; i < b.N; i++ {
+		_, _ = service.PublishList(context.Background(), request)
 	}
 }
 

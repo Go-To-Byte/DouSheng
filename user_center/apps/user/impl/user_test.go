@@ -61,6 +61,16 @@ func TestUserInfo(t *testing.T) {
 	}
 }
 
+func BenchmarkUserServiceImpl_UserInfo(b *testing.B) {
+	req := user.NewUserInfoRequest()
+	req.Token = "LpXECPemy41Ws1HwyeBsCQst"
+	req.UserId = 17
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = service.UserInfo(context.Background(), req)
+	}
+}
+
 func TestUserMap(t *testing.T) {
 	should := assert.New(t)
 	req := user.NewUserMapRequest()
@@ -69,6 +79,16 @@ func TestUserMap(t *testing.T) {
 
 	if should.NoError(err) {
 		fmt.Println(info)
+	}
+}
+
+func BenchmarkUserServiceImpl_UserMap(b *testing.B) {
+	req := user.NewUserMapRequest()
+	req.UserIds = []int64{1, 2, 4, 16, 17, 18}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = service.UserMap(context.Background(), req)
 	}
 }
 
