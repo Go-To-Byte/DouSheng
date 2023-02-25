@@ -1,6 +1,6 @@
 ---
 title: 一份简单的测试报告
-author: 
+author:
 date: '2023-2-24'
 ---
 
@@ -9,7 +9,25 @@ date: '2023-2-24'
 
 测试：测试是避免事故的最后一道屏障
 
-只要做好完备的测试，就可以避免事故的发生
+只要做好完备的测试，就可以避免大部分事故的发生
+
+## 基准测试
+
+* 测试电脑配置：
+    * goos: windows
+    * goarch: amd64
+    * cpu: AMD Ryzen 7 5800H with Radeon Graphics
+
+
+* 测试数据
+
+| 基准测试名称                          | 重复次数 | 单次时间     | 堆内存     | 单词平均内存分配次数 |
+| :------------------------------------ | :------: | :----------: | :--------: | :------------------: |
+| BenchmarkVideoServiceImpl_FeedVideos  | 1287     | 954124 ns/op | 17791 B/op | 345 allocs/op        |
+| BenchmarkVideoServiceImpl_PublishList | 1339     | 917430 ns/op | 15043 B/op | 272 allocs/op        |
+| BenchmarkUserServiceImpl_UserInfo     | 4657     | 244547 ns/op | 4923 B/op  | 69 allocs/op         |
+| BenchmarkUserServiceImpl_UserMap      | 4663     | 253973 ns/op | 6749 B/op  | 104 allocs/op        |
+
 
 ## 单元测试
 
