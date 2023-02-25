@@ -90,3 +90,14 @@ func (c *commentServiceImpl) GetCommentPoList(ctx context.Context, req *comment.
 	db.Table("comment").Where("video_id = ?", req.VideoId).Find(&pos)
 	return pos, nil
 }
+
+func (c *commentServiceImpl) GetCommentCount(ctx context.Context, req *comment.GetCommentCountByIdRequest) (*int64, error) {
+	db := c.db.WithContext(ctx)
+	var count int64
+	db.Table("comment").Where(" video_id = ?", req.VideoId).Count(&count)
+	if db.Error != nil {
+		c.l.Errorf("喜欢视频总数查询失败:%s", db.Error.Error())
+		return nil, db.Error
+	}
+	return &count, nil
+}

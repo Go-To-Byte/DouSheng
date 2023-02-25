@@ -28,6 +28,11 @@ func (r *GetCommentListRequest) Validate() error {
 	return validate.Struct(r)
 }
 
+// 获取评论列表 参数校验
+func (r *GetCommentCountByIdRequest) Validate() error {
+	return validate.Struct(r)
+}
+
 // 创建评论操作响应体
 func NewDefaultCommentActionResponse() *CommentActionResponse {
 	return &CommentActionResponse{}
@@ -49,4 +54,12 @@ func NewDefaultGetCommentListResponse() *GetCommentListResponse {
 
 func NewDefaultGetCommentListRequest() *GetCommentListRequest {
 	return &GetCommentListRequest{}
+}
+
+func NewDefaultGetCommentCountByIdRequest() *GetCommentCountByIdRequest {
+	return &GetCommentCountByIdRequest{}
+}
+
+func NewDefaultGetCommentCountByIdResponse() *GetCommentCountByIdResponse {
+	return &GetCommentCountByIdResponse{}
 }
