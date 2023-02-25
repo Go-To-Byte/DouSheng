@@ -64,7 +64,7 @@ def kill_all_main():
 
 def run_main(path):
     path: pathlib.Path
-    os.chdir(path)
+    os.chdir(path.parent)
     print(f"Now path: {os.getcwd()}")
     print(f"make run: {path.cwd()}")
     os.system(f"make run >> ~/log/{path.name}.log")
@@ -88,13 +88,14 @@ def get_all_makefile():
     global PATH
     cwd = pathlib.Path.cwd()
     for path in cwd.iterdir():
-        PATH += [makefile for makefile in path.iterdir() if makefile.name == "Makefile" and makefile.is_file()]
+        if path.is_dir() and not path.is_file():
+            PATH += [makefile for makefile in path.iterdir() if makefile.name == "Makefile" and makefile.is_file()]
 
 
 def make_dep():
     for makefile in PATH:
         makefile: pathlib.Path
-        os.chdir(makefile)
+        os.chdir(makefile.parent)
         print(f"Now path: {os.getcwd()}")
         print(f"make dep: {makefile.cwd()}")
         os.system(f"make dep >> ~/log/{makefile.parent.name}.log")
@@ -103,7 +104,7 @@ def make_dep():
 def make_init():
     for makefile in PATH:
         makefile: pathlib.Path
-        os.chdir(makefile)
+        os.chdir(makefile.parent)
         print(f"Now path: {os.getcwd()}")
         print(f"make init: {makefile.cwd()}")
         os.system(f"make init >> ~/log/{makefile.parent.name}.log")
