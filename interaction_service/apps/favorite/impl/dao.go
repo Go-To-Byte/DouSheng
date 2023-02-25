@@ -8,7 +8,6 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
-	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	"time"
 )
 
@@ -84,28 +83,13 @@ func (f *favoriteServiceImpl) NewFavoritePo(ctx context.Context, req *favorite.F
 }
 
 // 获取喜欢视频列表
-func (f *favoriteServiceImpl) GetFavoriteListPo(ctx context.Context, req *favorite.GetFavoriteListRequest) ([]*video.VideoPo, error) {
-	//根据Token获取User
-	tokenReq := token.NewValidateTokenRequest(req.Token)
-	validatedToken, err := f.tokenService.ValidateToken(ctx, tokenReq)
-	if err != nil {
-		f.l.Errorf(err.Error())
-		return nil, err
-	}
+func (f *favoriteServiceImpl) GetFavoriteListPo(ctx context.Context, req *favorite.GetFavoriteListRequest) ([]*favorite.FavoritePo, error) {
 	//向数据库查询所有数据
 	db := f.db.WithContext(ctx)
-	// 鉴权token解析出的ID暂不做处理
-	_ = validatedToken.GetUserId()
 	//统计记录数量
-	var count int64 = 0
-	//左连接查询Video信息
-	db.Table("favorite").Where("user_id = ?", req.UserId).Joins("left join video on video.id = favorite.user_id").Count(&count)
-	if db.Error != nil {
-		return nil, db.Error
-	}
-	pos := make([]*video.VideoPo, count)
-
-	db.Joins("left join favorite on favorite.user_id = ? AND favorite.video_id = video.id", req.UserId).Find(&pos)
+	//在favorite表中查找对应用户点赞的记录
+	pos := make([]*favorite.FavoritePo, 0)
+	db.Where("user_id = ?", req.UserId).Find(&pos)
 	if db.Error != nil {
 		return nil, db.Error
 	}
