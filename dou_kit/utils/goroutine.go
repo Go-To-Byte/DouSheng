@@ -15,17 +15,15 @@ import (
 // the grpc's return is filled with response and error
 // Example:
 //
-//	wait := sync.WaitGroup{}
-//	wait.Add(1)
-//	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-//	defer cancel()
-//	run := GoRunGrpc{
-//		Ctx:      &ctx,
-//		Wait:     &wait,
-//		Request:  user.NewUserInfoRequest(),
-//		Rpc:      h.service.UserInfo,
+//	func example() {
+//		wait := sync.WaitGroup{}
+//		wait.Add(1)
+//		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+//		defer cancel()
+//		run := NewGoRunGrpc(&ctx, &wait, nil, nil)
+//		go run.Run()
+//		wait.Wait()
 //	}
-//	go run.Run()
 type GoRunGrpc struct {
 	Err      error
 	Ctx      *context.Context
@@ -35,8 +33,18 @@ type GoRunGrpc struct {
 	Rpc      func(ctx context.Context, request any) (response any, err error) // grpc function
 }
 
-func NewGoRunGrpc() GoRunGrpc {
-	return GoRunGrpc{}
+func NewGoRunGrpc(
+	ctx *context.Context,
+	wait *sync.WaitGroup,
+	rpc func(ctx context.Context, request any) (response any, err error),
+	req any,
+) GoRunGrpc {
+	return GoRunGrpc{
+		Ctx:     ctx,
+		Wait:    wait,
+		Rpc:     rpc,
+		Request: req,
+	}
 }
 
 func (g GoRunGrpc) Run() {
@@ -65,7 +73,7 @@ func (g GoRunGrpc) Run() {
 //	wait := sync.WaitGroup{}
 //	wait.Add(1)
 //	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-//	go GORUN(ctx, wait, user.NewUserInfoRequest, h.service.UserInfo, userInfoResp{})
+//	go GORUN(ctx, wait, h.service.UserInfo, user.NewUserInfoRequest, userInfoResp{})
 func GORUN(
 	ctx *context.Context, // context.WithTimeout()
 	wait *sync.WaitGroup, // sync.WaitGroup{}
@@ -92,11 +100,7 @@ func example() {
 	wait.Add(1)
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	run := GoRunGrpc{
-		Ctx:     &ctx,
-		Wait:    &wait,
-		Request: nil,
-		Rpc:     nil,
-	}
+	run := NewGoRunGrpc(&ctx, &wait, nil, nil)
 	go run.Run()
+	wait.Wait()
 }
