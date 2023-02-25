@@ -6,9 +6,7 @@ import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
-	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -29,7 +27,7 @@ func (f *favoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.
 		if err != nil {
 			f.l.Errorf("视频点赞失败:%s", err.Error())
 			return nil, status.Error(codes.PermissionDenied,
-				constant.Code2Msg(constant.WRONG_USER_NOT_EXIST))
+				constant.Code2Msg(constant.ERROR_SAVE))
 		}
 		//点赞成功处理
 		return favorite.NewFavoriteActionResponse(), err
@@ -44,11 +42,12 @@ func (f *favoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.
 		}
 		//取消点赞成功
 		return favorite.NewFavoriteActionResponse(), nil
+	default:
+		//ActionType参数错误
+		f.l.Errorf("ActionType参数错误")
+		return nil, status.Error(codes.PermissionDenied,
+			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
-	//ActionType参数错误
-	f.l.Errorf("ActionType参数错误")
-	return nil, status.Error(codes.PermissionDenied,
-		constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 }
 
 // 实现获取喜欢视频列表
@@ -66,40 +65,22 @@ func (f *favoriteServiceImpl) GetFavoriteList(ctx context.Context, req *favorite
 	}
 	// 根据列表分别获取用户信息
 	videoList := make([]*video.Video, len(pos))
+	rsp := favorite.NewDefaultGetFavoriteListResponse()
+	if len(videoList) == 0 {
+		rsp.VideoList = videoList
+		return rsp, nil
+	}
 	//将用户信息和视频信息组合成Response
 	for index, po := range pos {
-		userReq := user.NewUserInfoRequest()
-		userReq.UserId = po.AuthorId
-		userRsp, err := f.userService.UserInfo(ctx, userReq)
-		if err != nil {
-			return nil, err
-		}
-		videoVo, err := f.videoPo2videoPo(po, userRsp.User)
+		videoReq := video.NewGetVideoRequest()
+		videoReq.VideoId = po.VideoId
+		videoVo, err := f.videoService.GetVideo(ctx, videoReq)
 		if err != nil {
 			return nil, err
 		}
 		videoList[index] = videoVo
 	}
-	res := favorite.NewDefaultGetFavoriteListResponse()
-	res.VideoList = videoList
-	return res, nil
-}
-
-func (f *favoriteServiceImpl) videoPo2videoPo(po *video.VideoPo,
-	userInfo *user.User) (*video.Video, error) {
-	// 也可以是单个查询
-	if userInfo == nil {
-		// 走GRPC调用，获取用户信息
-		req := user.NewUserInfoRequest()
-		req.UserId = po.AuthorId
-	}
-
-	// po -> vo
-	return &video.Video{
-		Id:       po.Id,
-		Author:   userInfo,
-		PlayUrl:  utils.URLPrefix(po.PlayUrl),
-		CoverUrl: utils.URLPrefix(po.CoverUrl),
-		Title:    po.Title,
-	}, nil
+	rsp = favorite.NewDefaultGetFavoriteListResponse()
+	rsp.VideoList = videoList
+	return rsp, nil
 }
