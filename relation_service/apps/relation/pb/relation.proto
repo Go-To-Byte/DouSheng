@@ -72,10 +72,10 @@ message UserFriend{
 // 获取关系列表 的接口请求 model
 message FollowListRequest {
   // 用户ID
-  // @gotags: form:"user_id" validate:"required" binding:"required"
+  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: form:"token" binding:"required"
+  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
   string token = 2;
 }
 
@@ -92,7 +92,7 @@ message FollowerListRequest {
   // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
   string token = 2;
 }
 
@@ -109,7 +109,7 @@ message FriendListRequest {
   // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
   string token = 2;
 }
 
@@ -126,10 +126,10 @@ message FollowActionRequest {
   // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
   int64 to_user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
   string token = 2;
   // 操作类型
-  // @gotags: json:"action_type" form:"action_type" binding:"required"
+  // @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
   int32 action_type = 3;
 }
 

@@ -29,14 +29,14 @@ type UserFollowPo struct {
 
 	// 用户ID
 	// @gotags: json:"user_id" gorm:"user_id"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" gorm:"user_id"`
 	// 关注用户ID
 	// @gotags: json:"follow_id" gorm:"follow_id"
-	FollowId int64 `protobuf:"varint,2,opt,name=follow_id,json=followId,proto3" json:"follow_id,omitempty"`
+	FollowId int64 `protobuf:"varint,2,opt,name=follow_id,json=followId,proto3" json:"follow_id" gorm:"follow_id"`
 	// 关注用户状态, 0:取关, 1:关注
 	// TODO 2: 互相关注
 	// @gotags: json:"follow_flag" gorm:"follow_flag"
-	FollowFlag bool `protobuf:"varint,3,opt,name=follow_flag,json=followFlag,proto3" json:"follow_flag,omitempty"`
+	FollowFlag bool `protobuf:"varint,3,opt,name=follow_flag,json=followFlag,proto3" json:"follow_flag" gorm:"follow_flag"`
 }
 
 func (x *UserFollowPo) Reset() {
@@ -100,14 +100,14 @@ type UserFollowerPo struct {
 
 	// 用户ID
 	// @gotags: json:"user_id" gorm:"user_id"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" gorm:"user_id"`
 	// 粉丝用户ID
 	// @gotags: json:"follower_id" gorm:"follower_id"
-	FollowerId int64 `protobuf:"varint,2,opt,name=follower_id,json=followerId,proto3" json:"follower_id,omitempty"`
+	FollowerId int64 `protobuf:"varint,2,opt,name=follower_id,json=followerId,proto3" json:"follower_id" gorm:"follower_id"`
 	// 粉丝用户状态, 0:取关, 1:关注
 	// TODO 2: 互相关注
 	// @gotags: json:"follower_flag" gorm:"follower_flag"
-	FollowerFlag bool `protobuf:"varint,3,opt,name=follower_flag,json=followerFlag,proto3" json:"follower_flag,omitempty"`
+	FollowerFlag bool `protobuf:"varint,3,opt,name=follower_flag,json=followerFlag,proto3" json:"follower_flag" gorm:"follower_flag"`
 }
 
 func (x *UserFollowerPo) Reset() {
@@ -171,24 +171,24 @@ type UserFriend struct {
 
 	// 用户ID
 	// @gotags: json:"id"
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
 	// 用户名称
 	// @gotags: json:"name"
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
 	// 关注总数
 	// @gotags: json:"follow_count"
-	FollowCount *int64 `protobuf:"varint,3,opt,name=follow_count,json=followCount,proto3,oneof" json:"follow_count,omitempty"`
+	FollowCount *int64 `protobuf:"varint,3,opt,name=follow_count,json=followCount,proto3,oneof" json:"follow_count"`
 	// 粉丝总数
 	// @gotags: json:"follower_count"
-	FollowerCount *int64 `protobuf:"varint,4,opt,name=follower_count,json=followerCount,proto3,oneof" json:"follower_count,omitempty"`
+	FollowerCount *int64 `protobuf:"varint,4,opt,name=follower_count,json=followerCount,proto3,oneof" json:"follower_count"`
 	// 已关注-true，false-未关注
 	IsFollow bool `protobuf:"varint,5,opt,name=is_follow,json=isFollow,proto3" json:"is_follow,omitempty"`
 	// 和该好友聊天的最新消息
 	// @gotags: json:"message"
-	Message string `protobuf:"bytes,6,opt,name=message,proto3" json:"message,omitempty"`
+	Message string `protobuf:"bytes,6,opt,name=message,proto3" json:"message"`
 	// message消息的类型, 0 => 当前请求用户接收的消息, 1 => 当前请求用户发送的消息
 	// @gotags: json:"msg_type"
-	MsgType int64 `protobuf:"varint,7,opt,name=msgType,proto3" json:"msgType,omitempty"`
+	MsgType int64 `protobuf:"varint,7,opt,name=msgType,proto3" json:"msg_type"`
 }
 
 func (x *UserFriend) Reset() {
@@ -279,11 +279,11 @@ type FollowListRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户ID
-	// @gotags: form:"user_id" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
 	// 用户鉴权Token
-	// @gotags: form:"token" binding:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	// @gotags: json:"token" form:"token" validate:"required" binding:"required"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" validate:"required" binding:"required"`
 }
 
 func (x *FollowListRequest) Reset() {
@@ -340,7 +340,7 @@ type FollowListResponse struct {
 
 	// 关注列表用户信息
 	// @gotags: json:"user"
-	UserList []*user.User `protobuf:"bytes,1,rep,name=user_list,json=userList,proto3" json:"user_list,omitempty"`
+	UserList []*user.User `protobuf:"bytes,1,rep,name=user_list,json=userList,proto3" json:"user"`
 }
 
 func (x *FollowListResponse) Reset() {
@@ -390,10 +390,10 @@ type FollowerListRequest struct {
 
 	// 用户ID
 	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	// @gotags: json:"token" form:"token" validate:"required" binding:"required"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" validate:"required" binding:"required"`
 }
 
 func (x *FollowerListRequest) Reset() {
@@ -450,7 +450,7 @@ type FollowerListResponse struct {
 
 	// 关注列表用户信息
 	// @gotags: json:"user"
-	UserList []*user.User `protobuf:"bytes,1,rep,name=user_list,json=userList,proto3" json:"user_list,omitempty"`
+	UserList []*user.User `protobuf:"bytes,1,rep,name=user_list,json=userList,proto3" json:"user"`
 }
 
 func (x *FollowerListResponse) Reset() {
@@ -500,10 +500,10 @@ type FriendListRequest struct {
 
 	// 用户ID
 	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	// @gotags: json:"token" form:"token" validate:"required" binding:"required"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" validate:"required" binding:"required"`
 }
 
 func (x *FriendListRequest) Reset() {
@@ -560,7 +560,7 @@ type FriendListResponse struct {
 
 	// 用户好友列表
 	// @gotags: json:"user"
-	FriendList []*UserFriend `protobuf:"bytes,1,rep,name=friend_list,json=friendList,proto3" json:"friend_list,omitempty"`
+	FriendList []*UserFriend `protobuf:"bytes,1,rep,name=friend_list,json=friendList,proto3" json:"user"`
 }
 
 func (x *FriendListResponse) Reset() {
@@ -610,13 +610,13 @@ type FollowActionRequest struct {
 
 	// 被关注或被取关的用户ID
 	// @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
-	ToUserId int64 `protobuf:"varint,1,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`
+	ToUserId int64 `protobuf:"varint,1,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"`
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	// @gotags: json:"token" form:"token" validate:"required" binding:"required"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" validate:"required" binding:"required"`
 	// 操作类型
-	// @gotags: json:"action_type" form:"action_type" binding:"required"
-	ActionType int32 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type,omitempty"`
+	// @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
+	ActionType int32 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type" form:"action_type" validate:"required" binding:"required"`
 }
 
 func (x *FollowActionRequest) Reset() {
@@ -680,7 +680,7 @@ type FollowActionResponse struct {
 
 	// 可以携带一些额外属性
 	// @gotags: json:"mate"
-	Mate map[string]string `protobuf:"bytes,1,rep,name=mate,proto3" json:"mate,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Mate map[string]string `protobuf:"bytes,1,rep,name=mate,proto3" json:"mate" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (x *FollowActionResponse) Reset() {

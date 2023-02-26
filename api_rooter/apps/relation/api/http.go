@@ -47,8 +47,6 @@ func (h *Handler) Registry(r gin.IRoutes) {
 func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
 	r.GET("/follow/list/", exception.GinErrWrapper(h.followList))
 	r.GET("/follower/list/", exception.GinErrWrapper(h.followerList))
-	// TODO 待处理
-	// r.POST("/action/", exception.GinErrWrapper(h.followAction))
 	r.POST("/action/", exception.GinErrWrapper(h.followAction))
 	r.GET("/friend/list/", exception.GinErrWrapper(h.friendList))
 }
