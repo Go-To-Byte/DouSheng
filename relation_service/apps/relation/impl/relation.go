@@ -15,8 +15,6 @@ import (
 
 func (s *relationServiceImpl) FollowList(ctx context.Context, req *relation.FollowListRequest) (
 	*relation.FollowListResponse, error) {
-	
-	s.l.Errorf("relation: FollowList ", req)
 
 	// 1、校验参数[防止GRPC调用时参数异常]
 	if err := req.Validate(); err != nil {
@@ -89,10 +87,26 @@ func (s *relationServiceImpl) FollowAction(ctx context.Context, req *relation.Fo
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 
-	_, err := s.insert(ctx, req)
+	if req.ActionType == constant.FOLLOW_ACTION {
+		s.l.Errorf("relation: FollowAction 关注", req)
+		_, err := s.insert(ctx, req)
+		if err != nil {
+			return relation.NewFollowActionResponse(), err
+		}
+	}else if req.ActionType == constant.UNFOLLOW_ACTION {
+		s.l.Errorf("relation: FollowAction 取消关注", req)
+		_, err := s.update(ctx, req)
+		if err != nil {
+			return relation.NewFollowActionResponse(), err
+		}
+	}else {
+		s.l.Errorf("relation: FollowAction 未知的动作类型：", req.ActionType)
+		return nil, status.Error(codes.InvalidArgument,
+			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
+	}
 
 	// 这里不需要返回数据，若需要，可以包装在 Mate 中返回
-	return relation.NewFollowActionResponse(), err
+	return relation.NewFollowActionResponse(), nil
 
 }
 

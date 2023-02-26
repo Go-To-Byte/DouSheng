@@ -4,6 +4,8 @@ package impl
 import (
 	"context"
 
+	// "reflect"
+
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
@@ -20,7 +22,7 @@ func (s *relationServiceImpl) getFollowListByUserId(ctx context.Context, userId 
 
 	// 构建条件、排序、 查询
 	// s.db.Where("id = ?", userId).Order("created_at desc").Find(&set)
-	s.db.Where("user_id=?", userId).Find(&set)
+	s.db.Where("user_id=?", userId).Where("follow_flag=?", constant.FOLLOW_ACTION).Find(&set)
 	if db.Error != nil {
 		s.l.Errorf("relation: query 查询错误: %s", db.Error.Error())
 		return set, db.Error
@@ -38,13 +40,45 @@ func (s *relationServiceImpl) getFollowerListByUserId(ctx context.Context, userI
 
 	// 构建条件、排序、 查询
 	// s.db.Where("id = ?", userId).Order("created_at desc").Find(&set)
-	s.db.Where("user_id=?", userId).Find(&set)
+	s.db.Where("user_id=?", userId).Where("follower_flag=?", constant.FOLLOW_ACTION).Find(&set)
 	if db.Error != nil {
 		s.l.Errorf("relation: query 查询错误: %s", db.Error.Error())
 		return set, db.Error
 	}
 
 	return set, nil
+}
+
+func (s *relationServiceImpl) update(ctx context.Context, req *relation.FollowActionRequest) (
+	*relation.UserFollowPo, error) {
+	
+	// 获取 UserFollow po 对象
+	userFollowPo, err := s.getUserFollowPo(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	// 更新关注数据
+	tx := s.db.WithContext(ctx).Where("user_id=?", userFollowPo.UserId).Where("follow_id=?", userFollowPo.FollowId).Save(userFollowPo)
+	if tx.Error != nil {
+		s.l.Errorf(tx.Error.Error())
+		return nil, exception.WithStatusCode(constant.ERROR_SAVE)
+	}
+
+	// 获取 UserFollower po 对象
+	userFollowerPo, err := s.getUserFollowerPo(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	// 更新粉丝数据
+	tx = s.db.WithContext(ctx).Where("user_id=?", userFollowerPo.UserId).Where("follower_id=?", userFollowerPo.FollowerId).Save(userFollowerPo)
+	if tx.Error != nil {
+		s.l.Errorf(tx.Error.Error())
+		return nil, exception.WithStatusCode(constant.ERROR_SAVE)
+	}
+
+	return nil, err
 }
 
 func (s *relationServiceImpl) insert(ctx context.Context, req *relation.FollowActionRequest) (
@@ -97,6 +131,7 @@ func (s *relationServiceImpl) getUserFollowPo(ctx context.Context, req *relation
 
 	userFollowPo := relation.NewUserFollowPo(req)
 	userFollowPo.UserId = validatedToken.GetUserId()
+	userFollowPo.FollowFlag = req.ActionType
 	return userFollowPo, nil
 }
 
@@ -115,5 +150,6 @@ func (s *relationServiceImpl) getUserFollowerPo(ctx context.Context, req *relati
 
 	userFollowerPo := relation.NewUserFollowerPo(req)
 	userFollowerPo.FollowerId = validatedToken.GetUserId()
+	userFollowerPo.FollowerFlag = req.ActionType
 	return userFollowerPo, nil
 }

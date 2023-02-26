@@ -28,7 +28,7 @@ message UserFollowPo {
   // 关注用户状态, 0:取关, 1:关注
   // TODO 2: 互相关注
   // @gotags: json:"follow_flag" gorm:"follow_flag"
-  bool follow_flag = 3;
+  int32 follow_flag = 3;
 }
 
 // 用户粉丝表:与数据库对应的PO对象
@@ -42,7 +42,7 @@ message UserFollowerPo {
   // 粉丝用户状态, 0:取关, 1:关注
   // TODO 2: 互相关注
   // @gotags: json:"follower_flag" gorm:"follower_flag"
-  bool follower_flag = 3;
+  int32 follower_flag = 3;
 }
 
 // 用户好友

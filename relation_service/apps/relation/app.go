@@ -18,7 +18,7 @@ func NewUserFollowPo(req *FollowActionRequest) *UserFollowPo {
 	return &UserFollowPo{
 		UserId: 1,
 		FollowId:     req.ToUserId,
-		FollowFlag: true,
+		FollowFlag: 1,
 	}
 }
 
@@ -27,7 +27,7 @@ func NewUserFollowerPo(req *FollowActionRequest) *UserFollowerPo {
 	return &UserFollowerPo{
 		UserId: req.ToUserId,
 		FollowerId:     1,
-		FollowerFlag: true,
+		FollowerFlag: 1,
 	}
 }
 
