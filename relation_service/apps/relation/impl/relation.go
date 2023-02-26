@@ -315,6 +315,11 @@ func (s *relationServiceImpl) followerPo2FriendVo(ctx context.Context, po *relat
 	}
 
 	msgList := msgResp.MessageList
+	content := ""
+	if len(msgList) > 0 {
+		content = msgList[0].Content
+	}
+	
 
 	// userInfo.User
 	// user.is_follow = true
@@ -325,7 +330,7 @@ func (s *relationServiceImpl) followerPo2FriendVo(ctx context.Context, po *relat
 		FollowCount: 	toUser.FollowCount,
 		FollowerCount: 	toUser.FollowerCount,
 		IsFollow: 		toUser.IsFollow,
-		Message: 		msgList[0].Content,
+		Message: 		content,
 		MsgType: 		1,
 	}, nil
 }
