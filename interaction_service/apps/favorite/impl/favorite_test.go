@@ -44,8 +44,9 @@ func TestFavoriteServiceImpl_GetFavoriteList(t *testing.T) {
 	should := assert.New(t)
 	newReq := favorite.NewDefaultGetFavoriteListRequest()
 	newReq.UserId = 15
-	newReq.Token = "sPDgHB87RaWwMCP1vJlDrIdG"
+	newReq.Token = "6NwFlNQ9sZNfOpJGCOrxQFzS"
 	res, err := service.GetFavoriteList(context.Background(), newReq)
+	fmt.Println(err)
 	if should.NoError(err) {
 		fmt.Println("获取喜欢视频列表成功！")
 		fmt.Println(res.VideoList)

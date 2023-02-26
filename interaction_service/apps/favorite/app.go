@@ -3,8 +3,6 @@
 package favorite
 
 import (
-	"context"
-	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -45,21 +43,6 @@ func (*FavoritePo) TableName() string {
 	return AppName
 }
 
-func po2vo(ctx context.Context, po *video.VideoPo) (*video.Video, error) {
-	//获取User对象
-
-	return &video.Video{
-		Id: po.Id,
-		//Author:
-		PlayUrl:  po.PlayUrl,
-		CoverUrl: po.CoverUrl,
-		//FavoriteCount:
-		//CommentCount:
-		//IsFavorite:
-		Title: po.Title,
-	}, nil
-}
-
 func NewDefaultGetFavoriteListRequest() *GetFavoriteListRequest {
 	return &GetFavoriteListRequest{}
 }
@@ -67,23 +50,4 @@ func NewDefaultGetFavoriteListRequest() *GetFavoriteListRequest {
 // 获取视频列表响应体
 func NewDefaultGetFavoriteListResponse() *GetFavoriteListResponse {
 	return &GetFavoriteListResponse{}
-}
-
-func NewGetFavoriteListResponse(ctx context.Context, pos []*video.VideoPo) (*GetFavoriteListResponse, error) {
-	set := make([]*video.Video, len(pos))
-	if pos == nil || len(pos) <= 0 {
-		// 只是没有查到，不应该抛异常出去
-		res := NewDefaultGetFavoriteListResponse()
-		return res, nil
-	}
-	for i, po := range pos {
-		vo, err := po2vo(ctx, po)
-		if err != nil {
-			return nil, err
-		}
-		set[i] = vo
-	}
-	res := NewDefaultGetFavoriteListResponse()
-	res.VideoList = set
-	return res, nil
 }
