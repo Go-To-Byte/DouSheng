@@ -7,8 +7,8 @@ import (
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/message_service/apps/message"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 
 	"github.com/Go-To-Byte/DouSheng/relation_service/apps/relation"
 )
@@ -35,7 +35,7 @@ func (s *relationServiceImpl) FollowList(ctx context.Context, req *relation.Foll
 
 func (s *relationServiceImpl) FollowerList(ctx context.Context, req *relation.FollowerListRequest) (
 	*relation.FollowerListResponse, error) {
-	
+
 	// 1、校验参数[防止GRPC调用时参数异常]
 	if err := req.Validate(); err != nil {
 		s.l.Errorf("relation: FollowerList 参数校验失败：%s", err.Error())
@@ -55,7 +55,7 @@ func (s *relationServiceImpl) FollowerList(ctx context.Context, req *relation.Fo
 
 func (s *relationServiceImpl) FriendList(ctx context.Context, req *relation.FriendListRequest) (
 	*relation.FriendListResponse, error) {
-	
+
 	s.l.Errorf("relation: FriendList ", req)
 
 	// 1、校验参数[防止GRPC调用时参数异常]
@@ -77,7 +77,7 @@ func (s *relationServiceImpl) FriendList(ctx context.Context, req *relation.Frie
 
 func (s *relationServiceImpl) FollowAction(ctx context.Context, req *relation.FollowActionRequest) (
 	*relation.FollowActionResponse, error) {
-	
+
 	s.l.Errorf("relation: Token ：%s", req.Token)
 
 	// 1、请求参数校验
@@ -93,13 +93,13 @@ func (s *relationServiceImpl) FollowAction(ctx context.Context, req *relation.Fo
 		if err != nil {
 			return relation.NewFollowActionResponse(), err
 		}
-	}else if req.ActionType == constant.UNFOLLOW_ACTION {
+	} else if req.ActionType == constant.UNFOLLOW_ACTION {
 		s.l.Errorf("relation: FollowAction 取消关注", req)
 		_, err := s.update(ctx, req)
 		if err != nil {
 			return relation.NewFollowActionResponse(), err
 		}
-	}else {
+	} else {
 		s.l.Errorf("relation: FollowAction 未知的动作类型：", req.ActionType)
 		return nil, status.Error(codes.InvalidArgument,
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
@@ -112,7 +112,7 @@ func (s *relationServiceImpl) FollowAction(ctx context.Context, req *relation.Fo
 
 func (s *relationServiceImpl) composeFollowListResp(ctx context.Context, pos []*relation.UserFollowPo) (
 	*relation.FollowListResponse, error) {
-	
+
 	set := relation.NewFollowListResponse()
 	if pos == nil || len(pos) <= 0 {
 		// 可能存在用户关注列表为空, 不应该抛出异常而范围空值
@@ -131,7 +131,7 @@ func (s *relationServiceImpl) composeFollowListResp(ctx context.Context, pos []*
 
 func (s *relationServiceImpl) composeFollowerListResp(ctx context.Context, pos []*relation.UserFollowerPo) (
 	*relation.FollowerListResponse, error) {
-	
+
 	set := relation.NewFollowerListResponse()
 	if pos == nil || len(pos) <= 0 {
 		// 可能存在用户粉丝列表为空, 不应该抛出异常而范围空值
@@ -150,7 +150,7 @@ func (s *relationServiceImpl) composeFollowerListResp(ctx context.Context, pos [
 
 func (s *relationServiceImpl) composeFriendListResp(ctx context.Context, pos []*relation.UserFollowerPo, userToken string) (
 	*relation.FriendListResponse, error) {
-	
+
 	set := relation.NewFriendListResponse()
 	if pos == nil || len(pos) <= 0 {
 		// 可能存在用户粉丝列表为空, 不应该抛出异常而范围空值
@@ -253,7 +253,7 @@ func (s *relationServiceImpl) friendPos2Vos(ctx context.Context, pos []*relation
 
 func (s *relationServiceImpl) followPo2Vo(ctx context.Context, po *relation.UserFollowPo) (
 	*user.User, error) {
-	
+
 	// 走GRPC调用，获取用户信息
 	req := user.NewUserInfoRequest()
 	req.UserId = po.FollowId
@@ -272,7 +272,7 @@ func (s *relationServiceImpl) followPo2Vo(ctx context.Context, po *relation.User
 
 func (s *relationServiceImpl) followerPo2Vo(ctx context.Context, po *relation.UserFollowerPo) (
 	*user.User, error) {
-	
+
 	// 走GRPC调用，获取用户信息
 	req := user.NewUserInfoRequest()
 	req.UserId = po.FollowerId
@@ -290,7 +290,7 @@ func (s *relationServiceImpl) followerPo2Vo(ctx context.Context, po *relation.Us
 
 func (s *relationServiceImpl) followerPo2FriendVo(ctx context.Context, po *relation.UserFollowerPo, userToken string) (
 	*relation.UserFriend, error) {
-	
+
 	// 走GRPC调用，获取用户粉丝信息
 	req := user.NewUserInfoRequest()
 	req.UserId = po.FollowerId
@@ -319,18 +319,17 @@ func (s *relationServiceImpl) followerPo2FriendVo(ctx context.Context, po *relat
 	if len(msgList) > 0 {
 		content = msgList[0].Content
 	}
-	
 
 	// userInfo.User
 	// user.is_follow = true
 	// po -> vo
-	return &relation.UserFriend {
-		Id: 			toUser.Id,
-		Name: 			toUser.Name,
-		FollowCount: 	toUser.FollowCount,
-		FollowerCount: 	toUser.FollowerCount,
-		IsFollow: 		toUser.IsFollow,
-		Message: 		content,
-		MsgType: 		1,
+	return &relation.UserFriend{
+		Id:            toUser.Id,
+		Name:          toUser.Name,
+		FollowCount:   toUser.FollowCount,
+		FollowerCount: toUser.FollowerCount,
+		IsFollow:      toUser.IsFollow,
+		Message:       content,
+		MsgType:       1,
 	}, nil
 }
