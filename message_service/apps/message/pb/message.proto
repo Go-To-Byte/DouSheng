@@ -16,7 +16,7 @@ service Service {
 // 获取聊天记录消息列表 的接口请求 model
 message ChatMessageListRequest {
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
   string token = 1;
   // 对方用户ID
   // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
@@ -33,7 +33,7 @@ message ChatMessageListResponse {
 // 发送消息 的接口请求 model
 message ChatMessageActionRequest {
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
   string token = 1;
   // 对方用户ID
   // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
@@ -42,7 +42,7 @@ message ChatMessageActionRequest {
   // @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
   int32 action_type = 3;
   // 消息内容
-  // @gotags: json:"content" form:"content" binding:"required"
+  // @gotags: json:"content" form:"content" validate:"required" binding:"required"
   string content = 4;
 }
 

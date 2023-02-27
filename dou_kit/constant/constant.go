@@ -103,6 +103,12 @@ const (
 	BAD_UPLOAD_FILE StatusCode = 80002
 )
 
+// relation service 
+const (
+	FOLLOW_ACTION int32 = 1
+	UNFOLLOW_ACTION int32 = 2
+)
+
 func Msg2Code(msg string) int32 {
 	if msg == "" {
 		return CODE_ERROR

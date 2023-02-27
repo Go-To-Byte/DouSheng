@@ -29,10 +29,10 @@ type ChatMessageListRequest struct {
 
 	// 用户鉴权Token
 	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
 	// 对方用户ID
 	// @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
-	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`
+	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"`
 }
 
 func (x *ChatMessageListRequest) Reset() {
@@ -89,7 +89,7 @@ type ChatMessageListResponse struct {
 
 	// 关注列表用户信息
 	// @gotags: json:"message"
-	MessageList []*Message `protobuf:"bytes,1,rep,name=message_list,json=messageList,proto3" json:"message_list,omitempty"`
+	MessageList []*Message `protobuf:"bytes,1,rep,name=message_list,json=messageList,proto3" json:"message"`
 }
 
 func (x *ChatMessageListResponse) Reset() {
@@ -139,16 +139,16 @@ type ChatMessageActionRequest struct {
 
 	// 用户鉴权Token
 	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
 	// 对方用户ID
 	// @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
-	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`
+	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"`
 	// 1-发送消息
 	// @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
-	ActionType int32 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type,omitempty"`
+	ActionType int32 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type" form:"action_type" validate:"required" binding:"required"`
 	// 消息内容
 	// @gotags: json:"content" form:"content" binding:"required"
-	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content" form:"content" binding:"required"`
 }
 
 func (x *ChatMessageActionRequest) Reset() {
@@ -219,7 +219,7 @@ type ChatMessageActionResponse struct {
 
 	// 可以携带一些额外属性
 	// @gotags: json:"mate"
-	Mate map[string]string `protobuf:"bytes,1,rep,name=mate,proto3" json:"mate,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Mate map[string]string `protobuf:"bytes,1,rep,name=mate,proto3" json:"mate" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (x *ChatMessageActionResponse) Reset() {
@@ -268,19 +268,19 @@ type Message struct {
 
 	// 消息id
 	// @gotags: json:"id"
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id"`
 	// 该消息接收者id
 	// @gotags: json:"to_user_id"
-	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`
+	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id"`
 	// 该消息发送者id
 	// @gotags: json:"from_user_id"
-	FromUserId int64 `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id,omitempty"`
+	FromUserId int64 `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id"`
 	// 消息内容
 	// @gotags: json:"content"
-	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content"`
 	// 消息创建时间
 	// @gotags: json:"created_at"
-	CreatedAt int64 `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt int64 `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3" json:"created_at"`
 }
 
 func (x *Message) Reset() {
@@ -358,19 +358,19 @@ type MessagePo struct {
 
 	// 消息id
 	// @gotags: json:"id" gorm:"id"
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id" gorm:"id"`
 	// 该消息接收者id
 	// @gotags: json:"to_user_id" gorm:"to_user_id"
-	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`
+	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" gorm:"to_user_id"`
 	// 该消息发送者id
 	// @gotags: json:"from_user_id" gorm:"from_user_id"
-	FromUserId int64 `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id,omitempty"`
+	FromUserId int64 `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id" gorm:"from_user_id"`
 	// 消息内容
 	// @gotags: json:"content" gorm:"content"
-	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content" gorm:"content"`
 	// 消息创建时间
 	// @gotags: json:"created_at" gorm:"created_at"
-	CreatedAt int64 `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt int64 `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3" json:"created_at" gorm:"created_at"`
 }
 
 func (x *MessagePo) Reset() {

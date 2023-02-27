@@ -17,6 +17,7 @@ func (s *messageServiceImpl) ChatMessageList(ctx context.Context, req *message.C
 
 	// 1、校验参数[防止GRPC调用时参数异常]
 	if err := req.Validate(); err != nil {
+		s.l.Errorf("message: ChatMessageList 参数校验失败：%s", req)
 		s.l.Errorf("message: ChatMessageList 参数校验失败：%s", err.Error())
 		return nil, status.Error(codes.InvalidArgument,
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
