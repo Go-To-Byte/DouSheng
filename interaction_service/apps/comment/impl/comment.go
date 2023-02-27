@@ -130,12 +130,12 @@ func (c *commentServiceImpl) GetCommentCountById(ctx context.Context, req *comme
 	}
 	commentReq := comment.NewDefaultGetCommentCountByIdRequest()
 	commentReq.VideoId = req.VideoId
-	countRsp := comment.NewDefaultGetCommentCountByIdResponse()
 	count, err := c.GetCommentCount(ctx, commentReq)
 	if err != nil {
 		c.l.Errorf("获取视频评论总数失败:%s", err.Error())
 		return nil, err
 	}
+	countRsp := comment.NewDefaultGetCommentCountByIdResponse()
 	countRsp.CommentCount = *count
 	return countRsp, nil
 }
