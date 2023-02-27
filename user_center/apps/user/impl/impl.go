@@ -25,7 +25,7 @@ type userServiceImpl struct {
 	l  logger.Logger
 	db *gorm.DB
 
-	user     user.UnimplementedServiceServer
+	user.UnimplementedServiceServer
 	video    video.UnimplementedServiceServer
 	relation relation.UnimplementedServiceServer
 	favorite favorite.UnimplementedServiceServer
@@ -57,14 +57,11 @@ func (u *userServiceImpl) Name() string {
 }
 
 func (u *userServiceImpl) Registry(s *grpc.Server) {
-	mu := sync.Mutex{}
-	mu.Lock()
-	defer mu.Unlock()
 	wait := sync.WaitGroup{}
 	wait.Add(4)
 	go func() {
 		defer wait.Done()
-		user.RegisterServiceServer(s, impl.user)
+		user.RegisterServiceServer(s, impl)
 	}()
 	go func() {
 		defer wait.Done()
