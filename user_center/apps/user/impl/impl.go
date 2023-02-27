@@ -2,17 +2,19 @@
 package impl
 
 import (
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
-	"google.golang.org/grpc"
-	"gorm.io/gorm"
-
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/api_rooter/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
-
+	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
+	"github.com/Go-To-Byte/DouSheng/relation_service/apps/relation"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
+	"github.com/infraboard/mcube/logger"
+	"github.com/infraboard/mcube/logger/zap"
+	"google.golang.org/grpc"
+	"gorm.io/gorm"
+	"sync"
 )
 
 // 用于注入IOC中
@@ -23,8 +25,10 @@ type userServiceImpl struct {
 	l  logger.Logger
 	db *gorm.DB
 
-	user.UnimplementedServiceServer
-
+	user     user.UnimplementedServiceServer
+	video    video.UnimplementedServiceServer
+	relation relation.UnimplementedServiceServer
+	favorite favorite.UnimplementedServiceServer
 	// 用于管理Token
 	tokenService token.ServiceClient
 }
@@ -53,7 +57,28 @@ func (u *userServiceImpl) Name() string {
 }
 
 func (u *userServiceImpl) Registry(s *grpc.Server) {
-	user.RegisterServiceServer(s, impl)
+	mu := sync.Mutex{}
+	mu.Lock()
+	defer mu.Unlock()
+	wait := sync.WaitGroup{}
+	wait.Add(4)
+	go func() {
+		defer wait.Done()
+		user.RegisterServiceServer(s, impl.user)
+	}()
+	go func() {
+		defer wait.Done()
+		video.RegisterServiceServer(s, impl.video)
+	}()
+	go func() {
+		defer wait.Done()
+		relation.RegisterServiceServer(s, impl.relation)
+	}()
+	go func() {
+		defer wait.Done()
+		favorite.RegisterServiceServer(s, impl.favorite)
+	}()
+	wait.Wait()
 }
 
 func init() {

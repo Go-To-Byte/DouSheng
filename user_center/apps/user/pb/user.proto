@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package dousheng.user;
-option go_package="github.com/Go-To-Byte/DouSheng/user_center/apps/user";
+option go_package = "github.com/Go-To-Byte/DouSheng/user_center/apps/user";
 
 
 // 定义 user 模块的接口
@@ -56,20 +56,21 @@ message UserInfoResponse {
 
 // 调用用户信息 时返回的User
 message User {
-  // 用户ID
   // @gotags: json:"id"
-  int64 id = 1;
-  // 用户名称
+  int64 id = 1; // 用户id
   // @gotags: json:"name"
-  string name = 2;
-  // 关注总数
+  string name = 2; // 用户名称
   // @gotags: json:"follow_count"
-  optional int64 follow_count = 3;
-  // 粉丝总数
+  optional int64 follow_count = 3; // 关注总数
   // @gotags: json:"follower_count"
-  optional int64 follower_count = 4;
-  // 已关注-true，false-未关注
-  bool is_follow = 5;
+  optional int64 follower_count = 4; // 粉丝总数
+  bool is_follow = 5; // true-已关注，false-未关注
+  optional string avatar = 6; //用户头像
+  optional string background_image = 7; //用户个人页顶部大图
+  optional string signature = 8; //个人简介
+  optional int64 total_favorited = 9; //获赞数量
+  optional int64 work_count = 10; //作品数量
+  optional int64 favorite_count = 11; //点赞数量
 }
 
 // 与数据库对应的 PO 对象
