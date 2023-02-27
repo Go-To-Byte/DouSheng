@@ -7,9 +7,12 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
+	interactionrpc "github.com/Go-To-Byte/DouSheng/interaction_service/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/relation_service/apps/relation"
+	relationrpc "github.com/Go-To-Byte/DouSheng/relation_service/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
+	videoRpc "github.com/Go-To-Byte/DouSheng/video_service/client/rpc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
@@ -26,28 +29,68 @@ type userServiceImpl struct {
 	db *gorm.DB
 
 	user.UnimplementedServiceServer
-	video    video.UnimplementedServiceServer
-	relation relation.UnimplementedServiceServer
-	favorite favorite.UnimplementedServiceServer
 	// 用于管理Token
+	video        video.ServiceClient
+	relation     relation.ServiceClient
+	favorite     favorite.ServiceClient
 	tokenService token.ServiceClient
 }
 
 func (u *userServiceImpl) Init() error {
 	u.l = zap.L().Named("User")
+	errors := make([]error, 0)
 
-	db, err := conf.C().MySQL.GetDB()
-	if err != nil {
-		return err
-	}
-	u.db = db
+	wait := sync.WaitGroup{}
+	wait.Add(1)
+	defer wait.Wait()
+	go func() {
+		defer wait.Done()
+		if db, err := conf.C().MySQL.GetDB(); err != nil {
+			errors = append(errors, err)
+		} else {
+			u.db = db
+		}
+	}()
 
-	client, err := rpc.NewApiRooterClientFromCfg()
-	if err != nil {
-		return err
-	}
+	go func() {
+		wait.Add(1)
+		defer wait.Done()
+		if client, err := rpc.NewApiRooterClientFromCfg(); err != nil {
+			errors = append(errors, err)
+		} else {
+			u.tokenService = client.TokenService()
+		}
+	}()
 
-	u.tokenService = client.TokenService()
+	go func() {
+		wait.Add(1)
+		defer wait.Done()
+		if client, err := videoRpc.NewVideoServiceClientFromCfg(); err != nil {
+			errors = append(errors, err)
+		} else {
+			u.video = client.VideoService()
+		}
+	}()
+
+	go func() {
+		wait.Add(1)
+		defer wait.Done()
+		if client, err := relationrpc.NewRelationServiceClientFromCfg(); err != nil {
+			errors = append(errors, err)
+		} else {
+			u.relation = client.RelationService()
+		}
+	}()
+
+	go func() {
+		wait.Add(1)
+		defer wait.Done()
+		if client, err := interactionrpc.NewInteractionServiceClientFromConfig(); err != nil {
+			errors = append(errors, err)
+		} else {
+			u.favorite = client.FavoriteService()
+		}
+	}()
 
 	return nil
 }
@@ -57,25 +100,7 @@ func (u *userServiceImpl) Name() string {
 }
 
 func (u *userServiceImpl) Registry(s *grpc.Server) {
-	wait := sync.WaitGroup{}
-	wait.Add(4)
-	go func() {
-		defer wait.Done()
-		user.RegisterServiceServer(s, impl)
-	}()
-	go func() {
-		defer wait.Done()
-		video.RegisterServiceServer(s, impl.video)
-	}()
-	go func() {
-		defer wait.Done()
-		relation.RegisterServiceServer(s, impl.relation)
-	}()
-	go func() {
-		defer wait.Done()
-		favorite.RegisterServiceServer(s, impl.favorite)
-	}()
-	wait.Wait()
+	user.RegisterServiceServer(s, impl)
 }
 
 func init() {
