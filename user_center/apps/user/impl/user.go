@@ -6,7 +6,6 @@ import (
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception/custom"
-	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
 	"github.com/Go-To-Byte/DouSheng/relation_service/apps/relation"
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	"google.golang.org/grpc/codes"
@@ -156,19 +155,19 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 	}()
 
 	// get favorite list, user += favoriteCount
-	go func() {
-		wait.Add(1)
-		defer wait.Done()
-		favoriteListReq := &favorite.GetFavoriteListRequest{ // TODO: favorite model's naming specification
-			Token:  req.Token,
-			UserId: req.UserId,
-		}
-		favoriteList, err := s.favorite.GetFavoriteList(ctx, favoriteListReq) // TODO: favorite model's naming specification
-		favoriteCount := int64(len(favoriteList.VideoList))
-		response.User.FavoriteCount = &favoriteCount
-		errors = append(errors, err)
-	}()
-	
+	// go func() {
+	// 	wait.Add(1)
+	// 	defer wait.Done()
+	// 	favoriteListReq := &favorite.GetFavoriteListRequest{ // TODO: favorite model's naming specification
+	// 		Token:  req.Token,
+	// 		UserId: req.UserId,
+	// 	}
+	// 	favoriteList, err := s.favorite.GetFavoriteList(ctx, favoriteListReq) // TODO: favorite model's naming specification
+	// 	favoriteCount := int64(len(favoriteList.VideoList))
+	// 	response.User.FavoriteCount = &favoriteCount
+	// 	errors = append(errors, err)
+	// }()
+
 	wait.Wait()
 	for _, err := range errors {
 		if err != nil {
