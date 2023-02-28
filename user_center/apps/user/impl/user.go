@@ -89,7 +89,7 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 
 	response.User = user.NewDefaultUser()
 	// get user info, user += userInfo
-	wait.Add(1)
+	wait.Add(5)
 	go func() {
 		defer wait.Done()
 		userReq := NewGetUserReq()
@@ -111,7 +111,6 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 
 	// get follow list count, user += followListCount, user += isFollow
 	go func() {
-		wait.Add(1)
 		defer wait.Done()
 		followListReq := relation.NewFollowListRequest()
 		followListReq.Token = req.Token
@@ -135,7 +134,6 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 
 	// get follower list, user += followerList
 	go func() {
-		wait.Add(1)
 		defer wait.Done()
 		followerListReq := relation.NewFollowerListRequest()
 		followerListReq.Token = req.Token
@@ -148,7 +146,6 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 
 	// get publish list, user += publishCount
 	go func() {
-		wait.Add(1)
 		defer wait.Done()
 		publishListReq := video.NewPublishListRequest()
 		publishListReq.Token = req.Token
@@ -161,7 +158,6 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 
 	// get favorite list, user += favoriteCount
 	go func() {
-		wait.Add(1)
 		defer wait.Done()
 		favoriteListReq := &favorite.GetFavoriteListRequest{ // TODO: favorite model's naming specification
 			Token:  req.Token,
