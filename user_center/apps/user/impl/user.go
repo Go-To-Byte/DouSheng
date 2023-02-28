@@ -94,6 +94,10 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 		userReq := NewGetUserReq()
 		userReq.UserIds = append(userReq.UserIds, req.UserId)
 		userPoRes, err := s.GetUser(ctx, userReq)
+		if len(userPoRes) == 0 || err != nil {
+			errors = append(errors, err)
+			return
+		}
 		response.User.Id = userPoRes[0].Id
 		response.User.Name = userPoRes[0].Username
 		var avatar = ""
@@ -102,7 +106,6 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 		response.User.Avatar = &avatar              // TODO: database
 		response.User.Signature = &signature        // TODO: database
 		response.User.BackgroundImage = &background // TODO: database
-		errors = append(errors, err)
 	}()
 
 	// get follow list count, user += followListCount, user += isFollow
