@@ -16,10 +16,13 @@ require (
 require (
 	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230224144015-6f6616610285
 	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230224144015-6f6616610285
+	github.com/Go-To-Byte/DouSheng/interaction_service v0.0.0-20230224141637-260bbaafacaf
+	github.com/Go-To-Byte/DouSheng/relation_service v0.0.0-20230224141637-260bbaafacaf
 )
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
+	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230224141637-260bbaafacaf // indirect
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/caarlos0/env v3.5.0+incompatible // indirect

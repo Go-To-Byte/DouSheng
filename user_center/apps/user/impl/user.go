@@ -3,11 +3,15 @@ package impl
 
 import (
 	"context"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception/custom"
+	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
+	"github.com/Go-To-Byte/DouSheng/relation_service/apps/relation"
+	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"sync"
 
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
@@ -71,38 +75,116 @@ func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 }
 
 func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (*user.UserInfoResponse, error) {
+	var (
+		errors   []error
+		wait     = sync.WaitGroup{}
+		response = user.NewUserInfoResponse()
+	)
 
-	// 1、请求参数校验
+	// 请求参数校验
 	if err := req.Validate(); err != nil {
 		return nil, status.Error(codes.InvalidArgument,
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 
-	// 2、根据 Id 查询此用户
-	userReq := NewGetUserReq()
-	userReq.UserIds = append(userReq.UserIds, req.UserId)
-	userPoRes, err := s.GetUser(ctx, userReq)
+	response.User = user.NewDefaultUser()
+	// get user info, user += userInfo
+	wait.Add(5)
+	go func() {
+		defer wait.Done()
+		userReq := NewGetUserReq()
+		userReq.UserIds = append(userReq.UserIds, req.UserId)
+		userPoRes, err := s.GetUser(ctx, userReq)
+		if len(userPoRes) == 0 || err != nil || userPoRes[0] == nil {
+			errors = append(errors, err)
+			return
+		}
+		response.User.Id = userPoRes[0].Id
+		response.User.Name = userPoRes[0].Username
+		var avatar = ""
+		var signature = "hello world"
+		var background = ""
+		response.User.Avatar = &avatar              // TODO: database
+		response.User.Signature = &signature        // TODO: database
+		response.User.BackgroundImage = &background // TODO: database
+	}()
 
-	if err != nil {
-		switch e := err.(type) {
-		case *custom.Exception:
-			return nil, status.Error(codes.NotFound, e.Error())
-		default:
-			return nil, status.Error(codes.Unknown, e.Error())
+	// get follow list count, user += followListCount, user += isFollow
+	go func() {
+		defer wait.Done()
+		followListReq := relation.NewFollowListRequest()
+		followListReq.Token = req.Token
+		followListReq.UserId = req.UserId
+		followList, err := s.relation.FollowList(ctx, followListReq)
+		followCount := int64(len(followList.UserList))
+		response.User.FollowCount = &followCount
+		errors = append(errors, err)
+
+		// 获取用户ID
+		tokenReq := token.NewValidateTokenRequest(req.Token)
+		t, err := s.tokenService.ValidateToken(ctx, tokenReq)
+		errors = append(errors, err)
+
+		for _, follow := range followList.UserList {
+			if follow.Id == t.GetUserId() {
+				response.User.IsFollow = true
+			}
+		}
+	}()
+
+	// get follower list, user += followerList
+	go func() {
+		defer wait.Done()
+		followerListReq := relation.NewFollowerListRequest()
+		followerListReq.Token = req.Token
+		followerListReq.UserId = req.UserId
+		followerList, err := s.relation.FollowerList(ctx, followerListReq)
+		followerCount := int64(len(followerList.UserList))
+		response.User.FollowerCount = &followerCount
+		errors = append(errors, err)
+	}()
+
+	// get publish list, user += publishCount
+	go func() {
+		defer wait.Done()
+		publishListReq := video.NewPublishListRequest()
+		publishListReq.Token = req.Token
+		publishListReq.UserId = req.UserId
+		publishList, err := s.video.PublishList(ctx, publishListReq)
+		publishCount := int64(len(publishList.VideoList))
+		response.User.WorkCount = &publishCount
+		errors = append(errors, err)
+	}()
+
+	// get favorite list, user += favoriteCount
+	go func() {
+		defer wait.Done()
+		favoriteListReq := &favorite.GetFavoriteListRequest{ // TODO: favorite model's naming specification
+			Token:  req.Token,
+			UserId: req.UserId,
+		}
+		favoriteList, err := s.favorite.GetFavoriteList(ctx, favoriteListReq) // TODO: favorite model's naming specification
+		favoriteCount := int64(len(favoriteList.VideoList))
+		response.User.FavoriteCount = &favoriteCount
+		errors = append(errors, err)
+	}()
+
+	wait.Wait()
+	for _, err := range errors {
+		if err != nil {
+			switch e := err.(type) {
+			case *custom.Exception:
+				return nil, status.Error(codes.NotFound, e.Error())
+			default:
+				return nil, status.Error(codes.Unknown, e.Error())
+			}
 		}
 	}
-
-	response := user.NewUserInfoResponse()
-	// userPoRes[0]：因为前面只查询了一个，所以来到这里，直接取出就行
-	response.User = userPoRes[0].Po2vo()
-
-	// TODO：组合其他参数[如：关注数、粉丝数]
 
 	return response, nil
 }
 
 func (s *userServiceImpl) UserMap(ctx context.Context, req *user.UserMapRequest) (*user.UserMapResponse, error) {
-
 	// 1、获取用户列表 []User
 	userReq := NewGetUserReq()
 	userReq.UserIds = req.UserIds

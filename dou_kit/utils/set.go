@@ -1,4 +1,4 @@
-// @Author: Ciusyan 2023/2/23
+// Package utils @Author: Ciusyan 2023/2/23
 package utils
 
 type Set map[int64]struct{}
@@ -15,7 +15,7 @@ func (s Set) Add(item int64) {
 
 // Items 获取所有的元素
 func (s Set) Items() (items []int64) {
-	for k, _ := range s {
+	for k := range s {
 		items = append(items, k)
 	}
 	return
