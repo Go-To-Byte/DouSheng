@@ -263,14 +263,21 @@ type User struct {
 	// @gotags: json:"follow_count"
 	FollowCount *int64 `protobuf:"varint,3,opt,name=follow_count,json=followCount,proto3,oneof" json:"follow_count"` // 关注总数
 	// @gotags: json:"follower_count"
-	FollowerCount   *int64  `protobuf:"varint,4,opt,name=follower_count,json=followerCount,proto3,oneof" json:"follower_count"`      // 粉丝总数
-	IsFollow        bool    `protobuf:"varint,5,opt,name=is_follow,json=isFollow,proto3" json:"is_follow,omitempty"`                           // true-已关注，false-未关注
-	Avatar          *string `protobuf:"bytes,6,opt,name=avatar,proto3,oneof" json:"avatar,omitempty"`                                          //用户头像
-	BackgroundImage *string `protobuf:"bytes,7,opt,name=background_image,json=backgroundImage,proto3,oneof" json:"background_image,omitempty"` //用户个人页顶部大图
-	Signature       *string `protobuf:"bytes,8,opt,name=signature,proto3,oneof" json:"signature,omitempty"`                                    //个人简介
-	TotalFavorited  *int64  `protobuf:"varint,9,opt,name=total_favorited,json=totalFavorited,proto3,oneof" json:"total_favorited,omitempty"`   //获赞数量
-	WorkCount       *int64  `protobuf:"varint,10,opt,name=work_count,json=workCount,proto3,oneof" json:"work_count,omitempty"`                 //作品数量
-	FavoriteCount   *int64  `protobuf:"varint,11,opt,name=favorite_count,json=favoriteCount,proto3,oneof" json:"favorite_count,omitempty"`     //点赞数量
+	FollowerCount *int64 `protobuf:"varint,4,opt,name=follower_count,json=followerCount,proto3,oneof" json:"follower_count"` // 粉丝总数
+	// @gotags: json:"is_follow"
+	IsFollow bool `protobuf:"varint,5,opt,name=is_follow,json=isFollow,proto3" json:"is_follow"` // true-已关注，false-未关
+	// @gotags: json:"avatar"
+	Avatar *string `protobuf:"bytes,6,opt,name=avatar,proto3,oneof" json:"avatar"` //用户头像
+	// @gotags: json:"background_image"
+	BackgroundImage *string `protobuf:"bytes,7,opt,name=background_image,json=backgroundImage,proto3,oneof" json:"background_image"` //用户个人页顶部大图
+	// @gotags: json:"signature"
+	Signature *string `protobuf:"bytes,8,opt,name=signature,proto3,oneof" json:"signature"` //个人简介
+	// @gotags: json:"total_favorited"
+	TotalFavorited *int64 `protobuf:"varint,9,opt,name=total_favorited,json=totalFavorited,proto3,oneof" json:"total_favorited"` //获赞数量
+	// @gotags: json:"work_count"
+	WorkCount *int64 `protobuf:"varint,10,opt,name=work_count,json=workCount,proto3,oneof" json:"work_count"` //作品数
+	// @gotags: json:"favorite_count"
+	FavoriteCount *int64 `protobuf:"varint,11,opt,name=favorite_count,json=favoriteCount,proto3,oneof" json:"favorite_count"` //点赞数量
 }
 
 func (x *User) Reset() {
