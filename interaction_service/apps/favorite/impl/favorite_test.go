@@ -53,6 +53,17 @@ func TestFavoriteServiceImpl_GetFavoriteList(t *testing.T) {
 	}
 }
 
+func TestFavoriteServiceImpl_GetFavoriteCountById(t *testing.T) {
+	should := assert.New(t)
+	newReq := favorite.NewDefaultGetFavoriteCountByIdRequest()
+	newReq.VideoId = 3
+	res, err := service.GetFavoriteCountById(context.Background(), newReq)
+	if should.NoError(err) {
+		fmt.Println("获取视频点赞总数成功")
+		fmt.Println(res.FavoriteCount)
+	}
+}
+
 func init() {
 
 	// 加载配置文件

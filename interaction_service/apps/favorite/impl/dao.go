@@ -97,4 +97,14 @@ func (f *favoriteServiceImpl) GetFavoriteListPo(ctx context.Context, req *favori
 
 }
 
-//TODO 返回指定video_id视频点赞数量
+// TODO 返回指定video_id视频点赞数量
+func (f *favoriteServiceImpl) GetFavoriteCount(ctx context.Context, req *favorite.GetFavoriteCountByIdRequest) (*int64, error) {
+	db := f.db.WithContext(ctx)
+	var count int64
+	db.Table("favorite").Where(" video_id = ?", req.VideoId).Count(&count)
+	if db.Error != nil {
+		f.l.Errorf("喜欢视频总数查询失败:%s", db.Error.Error())
+		return nil, db.Error
+	}
+	return &count, nil
+}

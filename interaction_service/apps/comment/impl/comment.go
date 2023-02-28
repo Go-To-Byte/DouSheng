@@ -121,3 +121,21 @@ func (c *commentServiceImpl) NewCommentActionResponse(ctx context.Context, vo *c
 	res.Comment = vo
 	return res, nil
 }
+
+func (c *commentServiceImpl) GetCommentCountById(ctx context.Context, req *comment.GetCommentCountByIdRequest) (*comment.GetCommentCountByIdResponse, error) {
+	//	参数校验
+	if err := req.Validate(); err != nil {
+		c.l.Errorf("interaction: CommentAction 参数校验失败：%s", err.Error())
+		return nil, status.Error(codes.InvalidArgument, constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
+	}
+	commentReq := comment.NewDefaultGetCommentCountByIdRequest()
+	commentReq.VideoId = req.VideoId
+	count, err := c.GetCommentCount(ctx, commentReq)
+	if err != nil {
+		c.l.Errorf("获取视频评论总数失败:%s", err.Error())
+		return nil, err
+	}
+	countRsp := comment.NewDefaultGetCommentCountByIdResponse()
+	countRsp.CommentCount = *count
+	return countRsp, nil
+}

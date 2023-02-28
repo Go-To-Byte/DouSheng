@@ -84,3 +84,22 @@ func (f *favoriteServiceImpl) GetFavoriteList(ctx context.Context, req *favorite
 	rsp.VideoList = videoList
 	return rsp, nil
 }
+
+// 获取视频点赞总数
+func (f *favoriteServiceImpl) GetFavoriteCountById(ctx context.Context, req *favorite.GetFavoriteCountByIdRequest) (*favorite.GetfavoriteCountByIdResponse, error) {
+	//参数校验
+	if err := req.Validate(); err != nil {
+		f.l.Errorf("interaction: FavoriteAction 参数校验失败！%s", err.Error())
+		return nil, status.Error(codes.InvalidArgument,
+			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
+	}
+	countReq := favorite.NewDefaultGetFavoriteCountByIdRequest()
+	countReq.VideoId = req.VideoId
+	favoriteCount, err := f.GetFavoriteCount(ctx, countReq)
+	if err != nil {
+		return nil, err
+	}
+	countRsp := favorite.NewDefaultGetFavoriteCountByIdResponse()
+	countRsp.FavoriteCount = *favoriteCount
+	return countRsp, nil
+}

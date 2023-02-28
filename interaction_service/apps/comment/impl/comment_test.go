@@ -56,6 +56,18 @@ func TestCommentServiceImpl_GetCommentList(t *testing.T) {
 	}
 }
 
+func TestCommentServiceImpl_GetCommentCountById(t *testing.T) {
+	should := assert.New(t)
+	newComment := comment.NewDefaultGetCommentCountByIdRequest()
+	newComment.VideoId = 2
+
+	rsp, err := service.GetCommentCountById(context.Background(), newComment)
+	if should.NoError(err) {
+		fmt.Println("获取评论总数成功！")
+		fmt.Println(rsp.CommentCount)
+	}
+}
+
 func init() {
 
 	// 加载配置文件
