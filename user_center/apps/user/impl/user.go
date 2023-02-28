@@ -87,6 +87,7 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 
+	response.User = user.NewDefaultUser()
 	// get user info, user += userInfo
 	wait.Add(1)
 	go func() {
@@ -94,7 +95,7 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 		userReq := NewGetUserReq()
 		userReq.UserIds = append(userReq.UserIds, req.UserId)
 		userPoRes, err := s.GetUser(ctx, userReq)
-		if len(userPoRes) == 0 || err != nil {
+		if len(userPoRes) == 0 || err != nil || userPoRes[0] == nil {
 			errors = append(errors, err)
 			return
 		}
