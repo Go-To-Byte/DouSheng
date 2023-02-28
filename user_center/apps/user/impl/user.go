@@ -101,9 +101,9 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 		}
 		response.User.Id = userPoRes[0].Id
 		response.User.Name = userPoRes[0].Username
-		var avatar = ""
+		var avatar = "https://cyan-1257348513.cos.ap-shanghai.myqcloud.com/avatar/7.jpg"
 		var signature = "hello world"
-		var background = ""
+		var background = "https://cyan-1257348513.cos.ap-shanghai.myqcloud.com/background/62.jpg"
 		response.User.Avatar = &avatar              // TODO: database
 		response.User.Signature = &signature        // TODO: database
 		response.User.BackgroundImage = &background // TODO: database
