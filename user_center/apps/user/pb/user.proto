@@ -42,8 +42,8 @@ message UserInfoRequest {
   // 用户ID
   // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
   int64 user_id = 1;
-  // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // 用户鉴权Token [注：这里用 validate，是因为内部方法也必须要用到 Token，并不是所有 token 都 validate]
+  // @gotags: json:"token" form:"token" binding:"required" validate:"required"
   string token = 2;
 }
 
@@ -98,6 +98,9 @@ message UserMapRequest {
   // 用户ID 列表
   // @gotags: json:"user_ids"
   repeated int64 user_ids = 1;
+  // 用户鉴权Token [注：这里用 validate，是因为内部方法也必须要用到 Token，并不是所有 token 都 validate]
+  // @gotags: json:"token" form:"token" binding:"required" validate:"required"
+  string token = 2;
 }
 
 // 用户列表：map[userId] = User

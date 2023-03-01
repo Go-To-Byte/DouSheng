@@ -51,19 +51,19 @@ func TestLogin(t *testing.T) {
 func TestUserInfo(t *testing.T) {
 	should := assert.New(t)
 	req := user.NewUserInfoRequest()
-	// req.Token = "JCRZKN1Wj7OVvawxHgA5J1Kq"
-	req.UserId = 16
+	req.Token = "xVXqrDdHbVG2uOKVE0BOnLj8"
+	req.UserId = 21
 	info, err := service.UserInfo(context.Background(), req)
 
 	if should.NoError(err) {
 		fmt.Println(info)
-		fmt.Println(info.User)
+		fmt.Println(info.User.IsFollow)
 	}
 }
 
 func BenchmarkUserServiceImpl_UserInfo(b *testing.B) {
 	req := user.NewUserInfoRequest()
-	//req.Token = "JCRZKN1Wj7OVvawxHgA5J1Kq"
+	req.Token = "kHdNO8b6zobfML4DF5WPuW7T"
 	req.UserId = 16
 	for i := 0; i < b.N; i++ {
 		_, _ = service.UserInfo(context.Background(), req)
@@ -73,6 +73,7 @@ func BenchmarkUserServiceImpl_UserInfo(b *testing.B) {
 func TestUserMap(t *testing.T) {
 	should := assert.New(t)
 	req := user.NewUserMapRequest()
+	req.Token = "kHdNO8b6zobfML4DF5WPuW7T"
 	req.UserIds = []int64{1, 2, 4, 16, 17, 18}
 	info, err := service.UserMap(context.Background(), req)
 
@@ -83,6 +84,7 @@ func TestUserMap(t *testing.T) {
 
 func BenchmarkUserServiceImpl_UserMap(b *testing.B) {
 	req := user.NewUserMapRequest()
+	req.Token = "kHdNO8b6zobfML4DF5WPuW7T"
 	req.UserIds = []int64{1, 2, 4, 16, 17, 18}
 	for i := 0; i < b.N; i++ {
 		_, _ = service.UserMap(context.Background(), req)

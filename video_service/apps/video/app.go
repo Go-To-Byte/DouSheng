@@ -103,3 +103,7 @@ func NewPublishListCountRequest(userId int64) *PublishListCountRequest {
 		UserId: userId,
 	}
 }
+
+func NewPublishListCountResponse() *PublishListCountResponse {
+	return &PublishListCountResponse{}
+}

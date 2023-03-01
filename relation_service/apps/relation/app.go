@@ -22,6 +22,10 @@ func NewUserFollowPo(req *FollowActionRequest) *UserFollowPo {
 	}
 }
 
+func NewDefaultUserFollowerPo() *UserFollowerPo {
+	return &UserFollowerPo{}
+}
+
 // NewUserFollowerPo TODO
 func NewUserFollowerPo(req *FollowActionRequest) *UserFollowerPo {
 	return &UserFollowerPo{
@@ -103,4 +107,8 @@ func NewListCountRequest() *ListCountRequest {
 
 func NewListCountResponse() *ListCountResponse {
 	return &ListCountResponse{}
+}
+
+func NewIsFollowerResponse() *IsFollowerResponse {
+	return &IsFollowerResponse{}
 }

@@ -15,8 +15,8 @@ service Service {
   rpc PublishList(PublishListRequest) returns (PublishListResponse);
   // 根据视频ID获取视频信息
   rpc GetVideo(GetVideoRequest) returns(Video);
-  // 根据用户ID获取 用户发布视频数目
-  rpc PublishListCount(PublishListCountRequest) returns(PublishListCountResponse);
+  // 根据用户ID获取 [用户发布视频数目 用户视频的获赞总数]
+  rpc ComposeVideoCount(PublishListCountRequest) returns(PublishListCountResponse);
 }
 
 message Video {
@@ -159,4 +159,7 @@ message PublishListCountResponse {
   // 用户发布的视频数目
   // @gotags: json:"publish_count"
   int64 publish_count = 1;
+  // 获得的总的点赞数量
+  // @gotags: json:"acquire_total_favorite"
+  int64 acquire_total_favorite = 2;
 }

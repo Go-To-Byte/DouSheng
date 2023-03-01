@@ -17,6 +17,9 @@ service Service {
   rpc FriendList(FriendListRequest) returns(FriendListResponse);
   // 关注操作-关注与取关
   rpc FollowAction(FollowActionRequest) returns(FollowActionResponse);
+
+  // 查看用户是否是我的粉丝
+  rpc IsFollower(UserFollowerPo) returns(IsFollowerResponse);
 }
 
 // 用户关注表:与数据库对应的PO对象
@@ -169,4 +172,10 @@ message ListCountResponse {
   // 粉丝数量
   // @gotags: json:"follower_count"
   int64 follower_count = 2;
+}
+
+message IsFollowerResponse {
+  // 是我的粉丝
+  // @gotags: json:"my_follower"
+  bool my_follower = 1;
 }

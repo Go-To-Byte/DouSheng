@@ -55,3 +55,7 @@ func NewFavoriteListResponse() *FavoriteListResponse {
 func NewFavoriteCountResponse() *FavoriteCountResponse {
 	return &FavoriteCountResponse{}
 }
+
+func NewFavoriteCountRequest() *FavoriteCountRequest {
+	return &FavoriteCountRequest{}
+}

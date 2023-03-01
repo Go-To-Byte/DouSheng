@@ -30,9 +30,6 @@ func (s *tokenServiceImpl) ValidateToken(ctx context.Context, req *token.Validat
 	// 获取 Token
 	tk, err := s.get(ctx, req.AccessToken)
 	if err != nil {
-		// TODO 调试信息
-		s.log.Errorf("token: AccessToken：%s", req.AccessToken)
-
 		s.log.Errorf("token: ValidateToken出现错误：%s", err.Error())
 		return nil, status.Error(codes.Unknown,
 			constant.Code2Msg(constant.ERROR_TOKEN_VALIDATE))
@@ -58,4 +55,18 @@ func (s *tokenServiceImpl) ValidateToken(ctx context.Context, req *token.Validat
 	}
 
 	return tk, nil
+}
+
+func (s *tokenServiceImpl) GetUIDFromTk(ctx context.Context, req *token.ValidateTokenRequest) (*token.UIDResponse, error) {
+	tk, err := s.get(ctx, req.AccessToken)
+	if err != nil {
+		s.log.Errorf("token: ValidateToken出现错误：%s", err.Error())
+		return nil, status.Error(codes.Unknown,
+			constant.Code2Msg(constant.ERROR_ACQUIRE))
+	}
+
+	resp := token.NewUIDResponse()
+	resp.UserId = tk.GetUserId()
+
+	return resp, nil
 }

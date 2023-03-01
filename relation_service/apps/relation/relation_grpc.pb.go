@@ -32,6 +32,8 @@ type ServiceClient interface {
 	FriendList(ctx context.Context, in *FriendListRequest, opts ...grpc.CallOption) (*FriendListResponse, error)
 	// 关注操作-关注与取关
 	FollowAction(ctx context.Context, in *FollowActionRequest, opts ...grpc.CallOption) (*FollowActionResponse, error)
+	// 查看用户是否是我的粉丝
+	IsFollower(ctx context.Context, in *UserFollowerPo, opts ...grpc.CallOption) (*IsFollowerResponse, error)
 }
 
 type serviceClient struct {
@@ -87,6 +89,15 @@ func (c *serviceClient) FollowAction(ctx context.Context, in *FollowActionReques
 	return out, nil
 }
 
+func (c *serviceClient) IsFollower(ctx context.Context, in *UserFollowerPo, opts ...grpc.CallOption) (*IsFollowerResponse, error) {
+	out := new(IsFollowerResponse)
+	err := c.cc.Invoke(ctx, "/dousheng.relation.Service/IsFollower", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
@@ -101,6 +112,8 @@ type ServiceServer interface {
 	FriendList(context.Context, *FriendListRequest) (*FriendListResponse, error)
 	// 关注操作-关注与取关
 	FollowAction(context.Context, *FollowActionRequest) (*FollowActionResponse, error)
+	// 查看用户是否是我的粉丝
+	IsFollower(context.Context, *UserFollowerPo) (*IsFollowerResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -122,6 +135,9 @@ func (UnimplementedServiceServer) FriendList(context.Context, *FriendListRequest
 }
 func (UnimplementedServiceServer) FollowAction(context.Context, *FollowActionRequest) (*FollowActionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FollowAction not implemented")
+}
+func (UnimplementedServiceServer) IsFollower(context.Context, *UserFollowerPo) (*IsFollowerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsFollower not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -226,6 +242,24 @@ func _Service_FollowAction_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_IsFollower_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserFollowerPo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).IsFollower(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/dousheng.relation.Service/IsFollower",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).IsFollower(ctx, req.(*UserFollowerPo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -252,6 +286,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FollowAction",
 			Handler:    _Service_FollowAction_Handler,
+		},
+		{
+			MethodName: "IsFollower",
+			Handler:    _Service_IsFollower_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

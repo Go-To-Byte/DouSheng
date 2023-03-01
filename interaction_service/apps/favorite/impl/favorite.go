@@ -98,17 +98,13 @@ func (f *favoriteServiceImpl) FavoriteList(ctx context.Context, req *favorite.Fa
 }
 
 // FavoriteCount 获取 1、用户喜欢列表的数目 2、获取视频点赞数
-func (f *favoriteServiceImpl) FavoriteCount(ctx context.Context, req *favorite.FavoritePo) (
+func (f *favoriteServiceImpl) FavoriteCount(ctx context.Context, req *favorite.FavoriteCountRequest) (
 	*favorite.FavoriteCountResponse, error) {
 
-	// 获取点赞数
-	count, err := f.getFavoriteCount(ctx, req)
+	resp, err := f.getFavoriteCount(ctx, req)
 	if err != nil {
 		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
 	}
 
-	countRsp := favorite.NewFavoriteCountResponse()
-	countRsp.FavoriteCount = count
-
-	return countRsp, nil
+	return resp, nil
 }

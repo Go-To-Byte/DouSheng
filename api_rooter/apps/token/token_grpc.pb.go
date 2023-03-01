@@ -26,6 +26,8 @@ type ServiceClient interface {
 	IssueToken(ctx context.Context, in *IssueTokenRequest, opts ...grpc.CallOption) (*Token, error)
 	// 验证Token （内部服务使用）
 	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*Token, error)
+	// 根据Token解析出 user_id
+	GetUIDFromTk(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*UIDResponse, error)
 }
 
 type serviceClient struct {
@@ -54,6 +56,15 @@ func (c *serviceClient) ValidateToken(ctx context.Context, in *ValidateTokenRequ
 	return out, nil
 }
 
+func (c *serviceClient) GetUIDFromTk(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*UIDResponse, error) {
+	out := new(UIDResponse)
+	err := c.cc.Invoke(ctx, "/dousheng.token.Service/GetUIDFromTk", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
@@ -62,6 +73,8 @@ type ServiceServer interface {
 	IssueToken(context.Context, *IssueTokenRequest) (*Token, error)
 	// 验证Token （内部服务使用）
 	ValidateToken(context.Context, *ValidateTokenRequest) (*Token, error)
+	// 根据Token解析出 user_id
+	GetUIDFromTk(context.Context, *ValidateTokenRequest) (*UIDResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -74,6 +87,9 @@ func (UnimplementedServiceServer) IssueToken(context.Context, *IssueTokenRequest
 }
 func (UnimplementedServiceServer) ValidateToken(context.Context, *ValidateTokenRequest) (*Token, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
+}
+func (UnimplementedServiceServer) GetUIDFromTk(context.Context, *ValidateTokenRequest) (*UIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUIDFromTk not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -124,6 +140,24 @@ func _Service_ValidateToken_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_GetUIDFromTk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetUIDFromTk(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/dousheng.token.Service/GetUIDFromTk",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetUIDFromTk(ctx, req.(*ValidateTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -138,6 +172,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidateToken",
 			Handler:    _Service_ValidateToken_Handler,
+		},
+		{
+			MethodName: "GetUIDFromTk",
+			Handler:    _Service_GetUIDFromTk_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

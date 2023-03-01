@@ -57,11 +57,12 @@ func TestFavoriteServiceImpl_FavoriteList(t *testing.T) {
 
 func TestFavoriteServiceImpl_FavoriteCount(t *testing.T) {
 	should := assert.New(t)
-	newReq := favorite.NewFavoritePo()
-	newReq.VideoId = 16
+	newReq := favorite.NewFavoriteCountRequest()
+	newReq.VideoIds = []int64{17, 18, 24, 25}
 	res, err := service.FavoriteCount(context.Background(), newReq)
 	if should.NoError(err) {
 		fmt.Println("获取点赞总数成功")
+		fmt.Println(res.AcquireFavoriteCount)
 		fmt.Println(res.FavoriteCount)
 	}
 }

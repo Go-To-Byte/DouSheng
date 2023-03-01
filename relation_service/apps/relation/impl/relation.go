@@ -125,6 +125,28 @@ func (s *relationServiceImpl) ListCount(ctx context.Context, req *relation.ListC
 	return resp, nil
 }
 
+func (s *relationServiceImpl) IsFollower(ctx context.Context, req *relation.UserFollowerPo) (
+	*relation.IsFollowerResponse, error) {
+
+	// 只是查询，看看是否有条记录
+	db := s.db.WithContext(ctx).
+		Where("user_id = ? AND follower_id = ?", req.UserId, req.FollowerId).
+		Find(relation.NewDefaultUserFollowerPo())
+
+	if db.Error != nil {
+		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
+	}
+
+	resp := relation.NewIsFollowerResponse()
+
+	// 查到唯一的一条记录了，说明是我的粉丝
+	if db.RowsAffected == 1 {
+		resp.MyFollower = true
+	}
+
+	return resp, nil
+}
+
 func (s *relationServiceImpl) composeFollowListResp(ctx context.Context, pos []*relation.UserFollowPo) (
 	*relation.FollowListResponse, error) {
 

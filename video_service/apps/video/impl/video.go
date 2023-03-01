@@ -83,7 +83,7 @@ func (s *videoServiceImpl) GetVideo(ctx context.Context, req *video.GetVideoRequ
 	return po.Po2vo(userMap), nil
 }
 
-func (s *videoServiceImpl) PublishListCount(ctx context.Context, req *video.PublishListCountRequest) (
+func (s *videoServiceImpl) ComposeVideoCount(ctx context.Context, req *video.PublishListCountRequest) (
 	*video.PublishListCountResponse, error) {
 
 	// 1、校验参数[防止GRPC调用时参数异常]
@@ -94,14 +94,12 @@ func (s *videoServiceImpl) PublishListCount(ctx context.Context, req *video.Publ
 	}
 
 	// 查询用户视频数量
-	resp := &video.PublishListCountResponse{}
-	db := s.db.WithContext(ctx).
-		Model(&video.VideoPo{}).Where("author_id = ?", req.UserId).Count(&resp.PublishCount)
+	resp, err := s.getTotalCount(ctx, req.UserId)
 
-	if db.Error != nil {
+	if err != nil {
 		// 查询失败
-		s.l.Errorf(db.Error.Error())
-		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
+		s.l.Errorf("video ComposeVideoCount：", err.Error())
+		return resp, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
 	}
 
 	return resp, nil

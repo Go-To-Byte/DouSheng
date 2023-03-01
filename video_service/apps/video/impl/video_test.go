@@ -59,14 +59,15 @@ func TestPublishList(t *testing.T) {
 	}
 }
 
-func TestVideoServiceImpl_PublishListCount(t *testing.T) {
+func TestVideoServiceImpl_ComposeVideoCount(t *testing.T) {
 
 	should := assert.New(t)
 	request := video.NewPublishListCountRequest(17)
-	count, err := service.PublishListCount(context.Background(), request)
+	resp, err := service.ComposeVideoCount(context.Background(), request)
 
 	if should.NoError(err) {
-		t.Log(count)
+		t.Log(resp.PublishCount)
+		t.Log(resp.AcquireTotalFavorite)
 	}
 }
 

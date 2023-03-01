@@ -100,26 +100,32 @@ func (f *favoriteServiceImpl) getFavoriteListPo(ctx context.Context, req *favori
 	return pos, nil
 }
 
-// FavoriteCount TODO 返回指定video_id视频点赞数量
-func (f *favoriteServiceImpl) getFavoriteCount(ctx context.Context, req *favorite.FavoritePo) (int64, error) {
+// getFavoriteCount 点赞数、被赞数 TODO  (这里可以精确控制、可按照 relation Count 里面做)
+func (f *favoriteServiceImpl) getFavoriteCount(ctx context.Context, req *favorite.FavoriteCountRequest) (
+	*favorite.FavoriteCountResponse, error) {
 
+	resp := favorite.NewFavoriteCountResponse()
 	db := f.db.WithContext(ctx).Model(&favorite.FavoritePo{})
-	if req.UserId > 0 && req.VideoId <= 0 { // 查用户点赞视频数
-		db.Where(" user_id = ?", req.UserId)
-	} else if req.VideoId > 0 && req.UserId <= 0 { // 查视频点赞数
-		db.Where(" video_id = ?", req.VideoId)
-	} else {
-		f.l.Error("favorite getFavoriteCount：你的参数可能有问题哟~")
-		return 0, nil
-	}
 
-	var count int64
-	db.Count(&count)
+	if req.UserId > 0 {
+		// 查询点赞总数
+		db.Where("user_id = ?", req.UserId).Count(&resp.FavoriteCount)
+	}
 
 	if db.Error != nil {
-		f.l.Errorf("喜欢视频总数查询失败:%s", db.Error.Error())
-		return 0, db.Error
+		f.l.Errorf("favorite getFavoriteCount：喜欢视频总数查询失败，%s", db.Error.Error())
+		return resp, db.Error
 	}
 
-	return count, nil
+	if req.VideoIds != nil && len(req.VideoIds) > 0 {
+		// 查询获得的点赞数
+		db.Where("video_id IN ?", req.VideoIds).Count(&resp.AcquireFavoriteCount)
+	}
+
+	if db.Error != nil {
+		f.l.Errorf("favorite getFavoriteCount：查询获得点赞数目失败，%s", db.Error.Error())
+		return resp, db.Error
+	}
+
+	return resp, nil
 }
