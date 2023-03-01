@@ -11,6 +11,8 @@ service Service {
   rpc FollowList(FollowListRequest) returns(FollowListResponse);
   // 获取粉丝列表
   rpc FollowerList(FollowerListRequest) returns(FollowerListResponse);
+  // 获取 1、关注数量 2、粉丝数量
+  rpc ListCount(ListCountRequest) returns(ListCountResponse);
   // 获取好友列表
   rpc FriendList(FriendListRequest) returns(FriendListResponse);
   // 关注操作-关注与取关
@@ -46,7 +48,7 @@ message UserFollowerPo {
 }
 
 // 用户好友
-message UserFriend{
+message UserFriend {
   // 用户ID
   // @gotags: json:"id"
   int64 id = 1;
@@ -75,14 +77,14 @@ message FollowListRequest {
   // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
+  // @gotags: json:"token" form:"token" binding:"required"
   string token = 2;
 }
 
 // 获取关注列表 的接口响应 model
 message FollowListResponse {
   // 关注列表用户信息
-  // @gotags: json:"user"
+  // @gotags: json:"user_list"
   repeated user.User user_list = 1;
 }
 
@@ -92,14 +94,14 @@ message FollowerListRequest {
   // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
+  // @gotags: json:"token" form:"token" binding:"required"
   string token = 2;
 }
 
 // 获取粉丝列表 的接口响应 model
 message FollowerListResponse {
   // 关注列表用户信息
-  // @gotags: json:"user"
+  // @gotags: json:"user_list"
   repeated user.User user_list = 1;
 }
 
@@ -109,14 +111,14 @@ message FriendListRequest {
   // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
+  // @gotags: json:"token" form:"token" binding:"required"
   string token = 2;
 }
 
 // 获取用户好友列表 的接口响应 model
 message FriendListResponse {
   // 用户好友列表
-  // @gotags: json:"user"
+  // @gotags: json:"friend_list"
   repeated UserFriend friend_list = 1;
 }
 
@@ -126,7 +128,7 @@ message FollowActionRequest {
   // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
   int64 to_user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
+  // @gotags: json:"token" form:"token" binding:"required"
   string token = 2;
   // 操作类型
   // @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
@@ -138,4 +140,33 @@ message FollowActionResponse {
   // 可以携带一些额外属性
   // @gotags: json:"mate"
   map<string, string> mate = 1;
+}
+
+// 查询的数量类型
+enum CountType {
+  // 关注数
+  FOLLOW = 0;
+  // 粉丝数
+  FOLLOWER = 1;
+  // 两个都查出来
+  ALL = 2;
+}
+
+message ListCountRequest {
+  // 用户ID
+  // @gotags: json:"user_id" validate:"required"
+  int64 user_id = 1;
+  // 查询的总数类型
+  // @gotags: json:"type"
+  CountType type = 2;
+}
+
+// 用于获取总数、[粉丝数量、关注数量]
+message ListCountResponse {
+  // 关注数量
+  // @gotags: json:"follow_count"
+  int64 follow_count = 1;
+  // 粉丝数量
+  // @gotags: json:"follower_count"
+  int64 follower_count = 2;
 }

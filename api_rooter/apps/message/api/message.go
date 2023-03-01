@@ -21,7 +21,6 @@ type chatMessageActionResp struct {
 	*message.ChatMessageActionResponse
 }
 
-
 func (h *Handler) chatMessageList(ctx *gin.Context) error {
 	req := message.NewChatMessageListRequest()
 	// 1、接收参数
@@ -37,7 +36,7 @@ func (h *Handler) chatMessageList(ctx *gin.Context) error {
 
 	// 获取成功
 	ctx.JSON(http.StatusOK, chatMessageListResp{
-		CodeMsg:             custom.Ok(constant.ACQUIRE_OK),
+		CodeMsg:                 custom.Ok(constant.ACQUIRE_OK),
 		ChatMessageListResponse: resp,
 	})
 	return nil
@@ -58,7 +57,7 @@ func (h *Handler) chatMessageAction(ctx *gin.Context) error {
 
 	// 获取成功
 	ctx.JSON(http.StatusOK, chatMessageActionResp{
-		CodeMsg:             custom.Ok(constant.ACQUIRE_OK),
+		CodeMsg:                   custom.Ok(constant.ACQUIRE_OK),
 		ChatMessageActionResponse: resp,
 	})
 	return nil

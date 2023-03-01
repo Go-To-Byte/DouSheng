@@ -14,9 +14,9 @@ import (
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	userRpc "github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 
-	"github.com/Go-To-Byte/DouSheng/relation_service/apps/relation"
 	"github.com/Go-To-Byte/DouSheng/message_service/apps/message"
 	messageRpc "github.com/Go-To-Byte/DouSheng/message_service/client/rpc"
+	"github.com/Go-To-Byte/DouSheng/relation_service/apps/relation"
 )
 
 var (

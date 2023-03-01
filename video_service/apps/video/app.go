@@ -2,10 +2,13 @@
 package video
 
 import (
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
 	"github.com/go-playground/validator/v10"
 	"time"
+
+	kitUtil "github.com/Go-To-Byte/DouSheng/dou_kit/utils"
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
+
+	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
 )
 
 const (
@@ -55,7 +58,7 @@ func NewPublishVideoResponse() *PublishVideoResponse {
 func NewFeedVideosRequest() *FeedVideosRequest {
 	return &FeedVideosRequest{
 		Page:       NewPageRequest(),
-		LatestTime: utils.V2P(time.Now().UnixMilli()),
+		LatestTime: kitUtil.V2P(time.Now().UnixMilli()),
 	}
 }
 
@@ -93,4 +96,10 @@ func (po *VideoPo) Po2vo(userMap map[int64]*user.User) *Video {
 
 func NewGetVideoRequest() *GetVideoRequest {
 	return &GetVideoRequest{}
+}
+
+func NewPublishListCountRequest(userId int64) *PublishListCountRequest {
+	return &PublishListCountRequest{
+		UserId: userId,
+	}
 }

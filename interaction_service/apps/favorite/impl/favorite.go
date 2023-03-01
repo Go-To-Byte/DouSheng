@@ -4,15 +4,18 @@ package impl
 
 import (
 	"context"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
-	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
-	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
+	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
+
+	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
 )
 
-// 视频点赞接口实现:成功返回nil,失败返回错误信息
-func (f *favoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.FavoriteActionRequest) (*favorite.FavoriteActionResponse, error) {
+// FavoriteAction 视频点赞接口实现:成功返回nil,失败返回错误信息
+func (f *favoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.FavoriteActionRequest) (
+	*favorite.FavoriteActionResponse, error) {
 	//参数校验
 	if err := req.Validate(); err != nil {
 		f.l.Errorf("interaction: FavoriteAction 参数校验失败！%s", err.Error())
@@ -50,56 +53,62 @@ func (f *favoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.
 	}
 }
 
-// 实现获取喜欢视频列表
-func (f *favoriteServiceImpl) GetFavoriteList(ctx context.Context, req *favorite.GetFavoriteListRequest) (*favorite.GetFavoriteListResponse, error) {
-	//参数校验
+// FavoriteList 实现获取喜欢视频列表
+func (f *favoriteServiceImpl) FavoriteList(ctx context.Context, req *favorite.FavoriteListRequest) (
+	*favorite.FavoriteListResponse, error) {
+
+	// 参数校验
 	if err := req.Validate(); err != nil {
 		f.l.Errorf("interaction: FavoriteAction 参数校验失败！%s", err.Error())
 		return nil, status.Error(codes.InvalidArgument,
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
+
 	//	获取喜欢视频列表
-	pos, err := f.GetFavoriteListPo(ctx, req)
+	pos, err := f.getFavoriteListPo(ctx, req)
 	if err != nil {
-		return nil, err
+		f.l.Errorf("interaction: FavoriteAction 参数校验失败！%s", err.Error())
+		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
 	}
+
+	resp := favorite.NewFavoriteListResponse()
+
 	// 根据列表分别获取用户信息
 	videoList := make([]*video.Video, len(pos))
-	rsp := favorite.NewDefaultGetFavoriteListResponse()
+	resp.VideoList = videoList
+
 	if len(videoList) == 0 {
-		rsp.VideoList = videoList
-		return rsp, nil
+		return resp, nil
 	}
+
 	//将用户信息和视频信息组合成Response
-	for index, po := range pos {
+	for i, po := range pos {
 		videoReq := video.NewGetVideoRequest()
 		videoReq.VideoId = po.VideoId
 		videoVo, err := f.videoService.GetVideo(ctx, videoReq)
 		if err != nil {
+			f.l.Errorf(err.Error())
 			return nil, err
 		}
-		videoList[index] = videoVo
+
+		resp.VideoList[i] = videoVo
 	}
-	rsp = favorite.NewDefaultGetFavoriteListResponse()
-	rsp.VideoList = videoList
-	return rsp, nil
+
+	return resp, nil
 }
 
-// 获取视频点赞总数
-func (f *favoriteServiceImpl) GetFavoriteCountById(ctx context.Context, req *favorite.GetFavoriteCountByIdRequest) (*favorite.GetfavoriteCountByIdResponse, error) {
-	//参数校验
-	if err := req.Validate(); err != nil {
-		f.l.Errorf("interaction: FavoriteAction 参数校验失败！%s", err.Error())
-		return nil, status.Error(codes.InvalidArgument,
-			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
-	}
-	countReq := favorite.NewDefaultGetFavoriteCountByIdRequest()
-	countReq.VideoId = req.VideoId
-	favoriteCount, err := f.GetFavoriteCount(ctx, countReq)
+// FavoriteCount 获取 1、用户喜欢列表的数目 2、获取视频点赞数
+func (f *favoriteServiceImpl) FavoriteCount(ctx context.Context, req *favorite.FavoritePo) (
+	*favorite.FavoriteCountResponse, error) {
+
+	// 获取点赞数
+	count, err := f.getFavoriteCount(ctx, req)
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
 	}
-	countRsp := favorite.NewDefaultGetFavoriteCountByIdResponse()
-	countRsp.FavoriteCount = *favoriteCount
+
+	countRsp := favorite.NewFavoriteCountResponse()
+	countRsp.FavoriteCount = count
+
 	return countRsp, nil
 }

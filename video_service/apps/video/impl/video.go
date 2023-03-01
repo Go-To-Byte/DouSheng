@@ -11,7 +11,6 @@ import (
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
-	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
 )
 
 func (s *videoServiceImpl) FeedVideos(ctx context.Context, req *video.FeedVideosRequest) (
@@ -84,6 +83,30 @@ func (s *videoServiceImpl) GetVideo(ctx context.Context, req *video.GetVideoRequ
 	return po.Po2vo(userMap), nil
 }
 
+func (s *videoServiceImpl) PublishListCount(ctx context.Context, req *video.PublishListCountRequest) (
+	*video.PublishListCountResponse, error) {
+
+	// 1、校验参数[防止GRPC调用时参数异常]
+	if req.UserId <= 0 {
+		s.l.Errorf("video: PublishListCount ：请正确的传递用户ID，%d", req.UserId)
+		return nil, status.Error(codes.InvalidArgument,
+			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
+	}
+
+	// 查询用户视频数量
+	resp := &video.PublishListCountResponse{}
+	db := s.db.WithContext(ctx).
+		Model(&video.VideoPo{}).Where("author_id = ?", req.UserId).Count(&resp.PublishCount)
+
+	if db.Error != nil {
+		// 查询失败
+		s.l.Errorf(db.Error.Error())
+		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
+	}
+
+	return resp, nil
+}
+
 // 获取视频流的列表
 func (s *videoServiceImpl) composeFeedSetResp(ctx context.Context, pos []*video.VideoPo) (
 	*video.FeedSetResponse, error) {
@@ -113,7 +136,7 @@ func (s *videoServiceImpl) composeFeedSetResp(ctx context.Context, pos []*video.
 	// 3、转换并且组合用户信息
 	set.VideoList = s.pos2vos(pos, userMap.GetUserMap())
 	// 获取此处的最后一条的视频 创建时间， 作为下次调用的请求开始时间
-	set.NextTime = utils.V2P(pos[len(pos)-1].CreatedAt)
+	set.NextTime = kitUtils.V2P(pos[len(pos)-1].CreatedAt)
 
 	return set, nil
 }

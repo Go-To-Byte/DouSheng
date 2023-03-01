@@ -78,8 +78,6 @@ func (s *relationServiceImpl) FriendList(ctx context.Context, req *relation.Frie
 func (s *relationServiceImpl) FollowAction(ctx context.Context, req *relation.FollowActionRequest) (
 	*relation.FollowActionResponse, error) {
 
-	s.l.Errorf("relation: Token ：%s", req.Token)
-
 	// 1、请求参数校验
 	if err := req.Validate(); err != nil {
 		s.l.Errorf("relation: FollowAction 参数校验失败：%s", err.Error())
@@ -88,13 +86,11 @@ func (s *relationServiceImpl) FollowAction(ctx context.Context, req *relation.Fo
 	}
 
 	if req.ActionType == constant.FOLLOW_ACTION {
-		s.l.Errorf("relation: FollowAction 关注", req)
 		_, err := s.insert(ctx, req)
 		if err != nil {
 			return relation.NewFollowActionResponse(), err
 		}
 	} else if req.ActionType == constant.UNFOLLOW_ACTION {
-		s.l.Errorf("relation: FollowAction 取消关注", req)
 		_, err := s.update(ctx, req)
 		if err != nil {
 			return relation.NewFollowActionResponse(), err
@@ -108,6 +104,25 @@ func (s *relationServiceImpl) FollowAction(ctx context.Context, req *relation.Fo
 	// 这里不需要返回数据，若需要，可以包装在 Mate 中返回
 	return relation.NewFollowActionResponse(), nil
 
+}
+
+func (s *relationServiceImpl) ListCount(ctx context.Context, req *relation.ListCountRequest) (
+	*relation.ListCountResponse, error) {
+
+	// 1、请求参数校验
+	if err := req.Validate(); err != nil {
+		s.l.Errorf("relation: FollowAction 参数校验失败：%s", err.Error())
+		return nil, status.Error(codes.InvalidArgument,
+			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
+	}
+
+	// 2、获取数目
+	resp, err := s.getFavoriteCount(ctx, req)
+	if err != nil {
+		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
+	}
+
+	return resp, nil
 }
 
 func (s *relationServiceImpl) composeFollowListResp(ctx context.Context, pos []*relation.UserFollowPo) (

@@ -32,7 +32,7 @@ func newDefault(clientSet *client.ClientSet) *InteractionServiceClient {
 	}
 }
 
-// 从配置文件读取视频互动RPC服务配置，构建客户端
+// NewInteractionServiceClientFromConfig 从配置文件读取视频互动RPC服务配置，构建客户端
 func NewInteractionServiceClientFromConfig() (*InteractionServiceClient, error) {
 	//注册中心配置读取
 	cfg := conf.C().Consul.Discovers[discoverName]
@@ -44,7 +44,7 @@ func NewInteractionServiceClientFromConfig() (*InteractionServiceClient, error) 
 	return newDefault(clientSet), nil
 }
 
-// 从环境变量读取视频互动服务RPC服务，构建客户端
+// NewInteractionServiceClientFromEnv 从环境变量读取视频互动服务RPC服务，构建客户端
 func NewInteractionServiceClientFromEnv() (*InteractionServiceClient, error) {
 	cfg := conf.NewDefaultDiscover()
 	cfg.SetAddr(os.Getenv("CONSUL_ADDR"))
@@ -60,7 +60,7 @@ func NewInteractionServiceClientFromEnv() (*InteractionServiceClient, error) {
 	return newDefault(clientSet), nil
 }
 
-// 视频点赞RPC客户端实例
+// FavoriteService 视频点赞RPC客户端实例
 func (c *InteractionServiceClient) FavoriteService() favorite.ServiceClient {
 	//构建客户端失败，返回错误信息
 	if c.favoriteService == nil {
@@ -70,7 +70,7 @@ func (c *InteractionServiceClient) FavoriteService() favorite.ServiceClient {
 	return c.favoriteService
 }
 
-// 视频评论RPC客户端
+// CommentService 视频评论RPC客户端
 func (c *InteractionServiceClient) CommentService() comment.ServiceClient {
 	if c.commentService == nil {
 		c.l.Errorf("获取视频评论客户端[comment 服务]失败")

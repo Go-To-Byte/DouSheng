@@ -49,12 +49,24 @@ func TestPublishList(t *testing.T) {
 	should := assert.New(t)
 
 	request := video.NewPublishListRequest()
-	request.UserId = 4
+	request.UserId = 17
+	request.Token = "JCRZKN1Wj7OVvawxHgA5J1Kq"
 
 	set, err := service.PublishList(context.Background(), request)
 
 	if should.NoError(err) {
 		t.Log(set.VideoList)
+	}
+}
+
+func TestVideoServiceImpl_PublishListCount(t *testing.T) {
+
+	should := assert.New(t)
+	request := video.NewPublishListCountRequest(17)
+	count, err := service.PublishListCount(context.Background(), request)
+
+	if should.NoError(err) {
+		t.Log(count)
 	}
 }
 

@@ -2,6 +2,12 @@
 package impl
 
 import (
+	"github.com/infraboard/mcube/logger"
+	"github.com/infraboard/mcube/logger/zap"
+	"google.golang.org/grpc"
+	"gorm.io/gorm"
+	"sync"
+
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/api_rooter/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
@@ -10,14 +16,10 @@ import (
 	interactionrpc "github.com/Go-To-Byte/DouSheng/interaction_service/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/relation_service/apps/relation"
 	relationrpc "github.com/Go-To-Byte/DouSheng/relation_service/client/rpc"
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/Go-To-Byte/DouSheng/video_service/apps/video"
 	videoRpc "github.com/Go-To-Byte/DouSheng/video_service/client/rpc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
-	"google.golang.org/grpc"
-	"gorm.io/gorm"
-	"sync"
+
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
 // 用于注入IOC中

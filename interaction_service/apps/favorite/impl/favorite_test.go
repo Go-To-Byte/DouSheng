@@ -5,12 +5,14 @@ package impl
 import (
 	"context"
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
-	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
-	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
+
+	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
 )
 
 var service favorite.ServiceServer
@@ -31,21 +33,21 @@ func TestFavoriteServiceImpl_FavoriteAction(t *testing.T) {
 func TestFavoriteServiceImpl_Delete(t *testing.T) {
 	should := assert.New(t)
 	newFavorite := favorite.NewFavoriteActionRequest()
-	newFavorite.Token = "sPDgHB87RaWwMCP1vJlDrIdG"
-	newFavorite.ActionType = 2
-	newFavorite.VideoId = 2
+	newFavorite.Token = "bpnAkzIpL6mUFNcn148JTdUF"
+	newFavorite.ActionType = 1
+	newFavorite.VideoId = 23
 	_, err := service.FavoriteAction(context.Background(), newFavorite)
 	if should.NoError(err) {
 		fmt.Println("取消点赞成功！")
 	}
 }
 
-func TestFavoriteServiceImpl_GetFavoriteList(t *testing.T) {
+func TestFavoriteServiceImpl_FavoriteList(t *testing.T) {
 	should := assert.New(t)
-	newReq := favorite.NewDefaultGetFavoriteListRequest()
-	newReq.UserId = 15
-	newReq.Token = "6NwFlNQ9sZNfOpJGCOrxQFzS"
-	res, err := service.GetFavoriteList(context.Background(), newReq)
+	newReq := favorite.NewFavoriteListRequest()
+	newReq.UserId = 17
+	newReq.Token = "bpnAkzIpL6mUFNcn148JTdUF"
+	res, err := service.FavoriteList(context.Background(), newReq)
 	fmt.Println(err)
 	if should.NoError(err) {
 		fmt.Println("获取喜欢视频列表成功！")
@@ -53,13 +55,13 @@ func TestFavoriteServiceImpl_GetFavoriteList(t *testing.T) {
 	}
 }
 
-func TestFavoriteServiceImpl_GetFavoriteCountById(t *testing.T) {
+func TestFavoriteServiceImpl_FavoriteCount(t *testing.T) {
 	should := assert.New(t)
-	newReq := favorite.NewDefaultGetFavoriteCountByIdRequest()
-	newReq.VideoId = 3
-	res, err := service.GetFavoriteCountById(context.Background(), newReq)
+	newReq := favorite.NewFavoritePo()
+	newReq.VideoId = 16
+	res, err := service.FavoriteCount(context.Background(), newReq)
 	if should.NoError(err) {
-		fmt.Println("获取视频点赞总数成功")
+		fmt.Println("获取点赞总数成功")
 		fmt.Println(res.FavoriteCount)
 	}
 }

@@ -43,8 +43,8 @@ install: ## Install depence go package
 	@go install github.com/favadi/protoc-go-inject-tag@latest
 
 gen: ## generate protobuf file
-	# @protoc -I=. -I=common/pb --go_out=. --go_opt=module=${PKG} --go-grpc_out=. --go-grpc_opt=module=${PKG} apps/*/pb/*.proto common/pb/*.proto
-	@protoc -I=. --go_out=. --go_opt=module=${PKG} --go-grpc_out=. --go-grpc_opt=module=${PKG} apps/*/pb/*.proto
+	@protoc -I=. -I=common/pb --go_out=. --go_opt=module=${PKG} --go-grpc_out=. --go-grpc_opt=module=${PKG} apps/*/pb/*.proto
+	# @protoc -I=. --go_out=. --go_opt=module=${PKG} --go-grpc_out=. --go-grpc_opt=module=${PKG} apps/*/pb/*.proto
 	@go fmt ./...
 	@protoc-go-inject-tag -input=apps/*/*.pb.go
 	# @protoc-go-inject-tag -input=common/*.pb.go

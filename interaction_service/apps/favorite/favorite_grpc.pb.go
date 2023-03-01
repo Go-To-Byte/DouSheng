@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.12
-// source: favorite.proto
+// source: apps/favorite/pb/favorite.proto
 
 package favorite
 
@@ -25,9 +25,9 @@ type ServiceClient interface {
 	// 点赞/取消点赞 操作
 	FavoriteAction(ctx context.Context, in *FavoriteActionRequest, opts ...grpc.CallOption) (*FavoriteActionResponse, error)
 	// 获取喜欢列表
-	GetFavoriteList(ctx context.Context, in *GetFavoriteListRequest, opts ...grpc.CallOption) (*GetFavoriteListResponse, error)
-	// 通过视频ID获取点赞数
-	GetFavoriteCountById(ctx context.Context, in *GetFavoriteCountByIdRequest, opts ...grpc.CallOption) (*GetfavoriteCountByIdResponse, error)
+	FavoriteList(ctx context.Context, in *FavoriteListRequest, opts ...grpc.CallOption) (*FavoriteListResponse, error)
+	// 获取 1、用户喜欢列表的数目 2、获取视频点赞数
+	FavoriteCount(ctx context.Context, in *FavoritePo, opts ...grpc.CallOption) (*FavoriteCountResponse, error)
 }
 
 type serviceClient struct {
@@ -47,18 +47,18 @@ func (c *serviceClient) FavoriteAction(ctx context.Context, in *FavoriteActionRe
 	return out, nil
 }
 
-func (c *serviceClient) GetFavoriteList(ctx context.Context, in *GetFavoriteListRequest, opts ...grpc.CallOption) (*GetFavoriteListResponse, error) {
-	out := new(GetFavoriteListResponse)
-	err := c.cc.Invoke(ctx, "/dousheng.interaction.favorite.Service/GetFavoriteList", in, out, opts...)
+func (c *serviceClient) FavoriteList(ctx context.Context, in *FavoriteListRequest, opts ...grpc.CallOption) (*FavoriteListResponse, error) {
+	out := new(FavoriteListResponse)
+	err := c.cc.Invoke(ctx, "/dousheng.interaction.favorite.Service/FavoriteList", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) GetFavoriteCountById(ctx context.Context, in *GetFavoriteCountByIdRequest, opts ...grpc.CallOption) (*GetfavoriteCountByIdResponse, error) {
-	out := new(GetfavoriteCountByIdResponse)
-	err := c.cc.Invoke(ctx, "/dousheng.interaction.favorite.Service/GetFavoriteCountById", in, out, opts...)
+func (c *serviceClient) FavoriteCount(ctx context.Context, in *FavoritePo, opts ...grpc.CallOption) (*FavoriteCountResponse, error) {
+	out := new(FavoriteCountResponse)
+	err := c.cc.Invoke(ctx, "/dousheng.interaction.favorite.Service/FavoriteCount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -72,9 +72,9 @@ type ServiceServer interface {
 	// 点赞/取消点赞 操作
 	FavoriteAction(context.Context, *FavoriteActionRequest) (*FavoriteActionResponse, error)
 	// 获取喜欢列表
-	GetFavoriteList(context.Context, *GetFavoriteListRequest) (*GetFavoriteListResponse, error)
-	// 通过视频ID获取点赞数
-	GetFavoriteCountById(context.Context, *GetFavoriteCountByIdRequest) (*GetfavoriteCountByIdResponse, error)
+	FavoriteList(context.Context, *FavoriteListRequest) (*FavoriteListResponse, error)
+	// 获取 1、用户喜欢列表的数目 2、获取视频点赞数
+	FavoriteCount(context.Context, *FavoritePo) (*FavoriteCountResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -85,11 +85,11 @@ type UnimplementedServiceServer struct {
 func (UnimplementedServiceServer) FavoriteAction(context.Context, *FavoriteActionRequest) (*FavoriteActionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FavoriteAction not implemented")
 }
-func (UnimplementedServiceServer) GetFavoriteList(context.Context, *GetFavoriteListRequest) (*GetFavoriteListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFavoriteList not implemented")
+func (UnimplementedServiceServer) FavoriteList(context.Context, *FavoriteListRequest) (*FavoriteListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FavoriteList not implemented")
 }
-func (UnimplementedServiceServer) GetFavoriteCountById(context.Context, *GetFavoriteCountByIdRequest) (*GetfavoriteCountByIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFavoriteCountById not implemented")
+func (UnimplementedServiceServer) FavoriteCount(context.Context, *FavoritePo) (*FavoriteCountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FavoriteCount not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -122,38 +122,38 @@ func _Service_FavoriteAction_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_GetFavoriteList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFavoriteListRequest)
+func _Service_FavoriteList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FavoriteListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).GetFavoriteList(ctx, in)
+		return srv.(ServiceServer).FavoriteList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/dousheng.interaction.favorite.Service/GetFavoriteList",
+		FullMethod: "/dousheng.interaction.favorite.Service/FavoriteList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).GetFavoriteList(ctx, req.(*GetFavoriteListRequest))
+		return srv.(ServiceServer).FavoriteList(ctx, req.(*FavoriteListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_GetFavoriteCountById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFavoriteCountByIdRequest)
+func _Service_FavoriteCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FavoritePo)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).GetFavoriteCountById(ctx, in)
+		return srv.(ServiceServer).FavoriteCount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/dousheng.interaction.favorite.Service/GetFavoriteCountById",
+		FullMethod: "/dousheng.interaction.favorite.Service/FavoriteCount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).GetFavoriteCountById(ctx, req.(*GetFavoriteCountByIdRequest))
+		return srv.(ServiceServer).FavoriteCount(ctx, req.(*FavoritePo))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -170,14 +170,14 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_FavoriteAction_Handler,
 		},
 		{
-			MethodName: "GetFavoriteList",
-			Handler:    _Service_GetFavoriteList_Handler,
+			MethodName: "FavoriteList",
+			Handler:    _Service_FavoriteList_Handler,
 		},
 		{
-			MethodName: "GetFavoriteCountById",
-			Handler:    _Service_GetFavoriteCountById_Handler,
+			MethodName: "FavoriteCount",
+			Handler:    _Service_FavoriteCount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "favorite.proto",
+	Metadata: "apps/favorite/pb/favorite.proto",
 }

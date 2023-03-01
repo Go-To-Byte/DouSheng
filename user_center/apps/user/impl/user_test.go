@@ -23,7 +23,7 @@ var (
 func TestRegister(t *testing.T) {
 	should := assert.New(t)
 	newUser := user.NewLoginAndRegisterRequest()
-	newUser.Username = "test"
+	newUser.Username = "test001"
 	newUser.Password = "222222"
 	token, err := service.Register(context.Background(), newUser)
 
@@ -51,13 +51,22 @@ func TestLogin(t *testing.T) {
 func TestUserInfo(t *testing.T) {
 	should := assert.New(t)
 	req := user.NewUserInfoRequest()
-	req.Token = "YkCotWjNZO7f6Axz4h06aQpx"
-	req.UserId = 17
+	// req.Token = "JCRZKN1Wj7OVvawxHgA5J1Kq"
+	req.UserId = 16
 	info, err := service.UserInfo(context.Background(), req)
 
 	if should.NoError(err) {
 		fmt.Println(info)
 		fmt.Println(info.User)
+	}
+}
+
+func BenchmarkUserServiceImpl_UserInfo(b *testing.B) {
+	req := user.NewUserInfoRequest()
+	//req.Token = "JCRZKN1Wj7OVvawxHgA5J1Kq"
+	req.UserId = 16
+	for i := 0; i < b.N; i++ {
+		_, _ = service.UserInfo(context.Background(), req)
 	}
 }
 
@@ -69,6 +78,14 @@ func TestUserMap(t *testing.T) {
 
 	if should.NoError(err) {
 		fmt.Println(info)
+	}
+}
+
+func BenchmarkUserServiceImpl_UserMap(b *testing.B) {
+	req := user.NewUserMapRequest()
+	req.UserIds = []int64{1, 2, 4, 16, 17, 18}
+	for i := 0; i < b.N; i++ {
+		_, _ = service.UserMap(context.Background(), req)
 	}
 }
 
