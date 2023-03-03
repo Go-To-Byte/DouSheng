@@ -81,9 +81,10 @@ func (f *favoriteServiceImpl) FavoriteList(ctx context.Context, req *favorite.Fa
 		return resp, nil
 	}
 
-	//将用户信息和视频信息组合成Response
+	// 将用户信息和视频信息组合成Response TODO：换成批量查询
+	videoReq := video.NewGetVideoRequest()
+	videoReq.Token = req.Token
 	for i, po := range pos {
-		videoReq := video.NewGetVideoRequest()
 		videoReq.VideoId = po.VideoId
 		videoVo, err := f.videoService.GetVideo(ctx, videoReq)
 		if err != nil {

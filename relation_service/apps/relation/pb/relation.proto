@@ -19,7 +19,7 @@ service Service {
   rpc FollowAction(FollowActionRequest) returns(FollowActionResponse);
 
   // 查看用户是否是我的粉丝
-  rpc IsFollower(UserFollowerPo) returns(IsFollowerResponse);
+  rpc IsFollower(UserFollowPo) returns(IsFollowerResponse);
 }
 
 // 用户关注表:与数据库对应的PO对象
@@ -31,9 +31,8 @@ message UserFollowPo {
   // @gotags: json:"follow_id" gorm:"follow_id"
   int64 follow_id = 2;
   // 关注用户状态, 0:取关, 1:关注
-  // TODO 2: 互相关注
   // @gotags: json:"follow_flag" gorm:"follow_flag"
-  int32 follow_flag = 3;
+  ActionType follow_flag = 3;
 }
 
 // 用户粉丝表:与数据库对应的PO对象
@@ -45,33 +44,41 @@ message UserFollowerPo {
   // @gotags: json:"follower_id" gorm:"follower_id"
   int64 follower_id = 2;
   // 粉丝用户状态, 0:取关, 1:关注
-  // TODO 2: 互相关注
   // @gotags: json:"follower_flag" gorm:"follower_flag"
-  int32 follower_flag = 3;
+  ActionType follower_flag = 3;
 }
 
-// 用户好友
+// 用户好友 [因为官方的接口需要将字段平铺返回，所以不能直接组合 user.User，只能 copy一份...]
 message UserFriend {
-  // 用户ID
   // @gotags: json:"id"
-  int64 id = 1;
-  // 用户名称
+  int64 id = 1; // 用户id
   // @gotags: json:"name"
-  string name = 2;
-  // 关注总数
+  string name = 2; // 用户名称
   // @gotags: json:"follow_count"
-  optional int64 follow_count = 3;
-  // 粉丝总数
+  optional int64 follow_count = 3; // 关注总数
   // @gotags: json:"follower_count"
-  optional int64 follower_count = 4;
-  // 已关注-true，false-未关注
-  bool is_follow = 5;
+  optional int64 follower_count = 4; // 粉丝总数
+  // @gotags: json:"is_follow"
+  bool is_follow = 5; // true-已关注，false-未关
+  // @gotags: json:"avatar"
+  optional string avatar = 6; //用户头像
+  // @gotags: json:"background_image"
+  optional string background_image = 7; //用户个人页顶部大图
+  // @gotags: json:"signature"
+  optional string signature = 8; //个人简介
+  // @gotags: json:"total_favorited"
+  optional int64 total_favorited = 9; //获赞数量
+  // @gotags: json:"work_count"
+  optional int64 work_count = 10; //作品数
+  // @gotags: json:"favorite_count"
+  optional int64 favorite_count = 11; //点赞数量
+
   // 和该好友聊天的最新消息
   // @gotags: json:"message"
-  string message = 6;
+  string message = 12;
   // message消息的类型, 0 => 当前请求用户接收的消息, 1 => 当前请求用户发送的消息
   // @gotags: json:"msg_type"
-  int64 msgType = 7;
+  int64 msgType = 13;
 }
 
 // 获取关系列表 的接口请求 model
@@ -121,8 +128,18 @@ message FriendListRequest {
 // 获取用户好友列表 的接口响应 model
 message FriendListResponse {
   // 用户好友列表
-  // @gotags: json:"friend_list"
-  repeated UserFriend friend_list = 1;
+  // @gotags: json:"user_list"
+  repeated UserFriend user_list = 1;
+}
+
+// 操作类型、顺便做 flag
+enum ActionType {
+  // 取消关注后，再次关注
+  AGAIN_FOLLOW = 0;
+  // 关注
+  FOLLOW_ACTION = 1;
+  // 取消关注
+  UN_FOLLOW_ACTION = 2;
 }
 
 // 关注操作 的接口请求 model
@@ -135,7 +152,7 @@ message FollowActionRequest {
   string token = 2;
   // 操作类型
   // @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
-  int32 action_type = 3;
+  ActionType action_type = 4;
 }
 
 // 关注操作 的接口相应 model

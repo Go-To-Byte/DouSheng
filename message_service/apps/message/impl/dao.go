@@ -3,6 +3,7 @@ package impl
 
 import (
 	"context"
+	"time"
 
 	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
@@ -12,13 +13,12 @@ import (
 )
 
 // 根据接收者userid和当前用户token获取聊天消息列表(DAO层)
-func (s *messageServiceImpl) getChatMessageListByUserId(ctx context.Context, toUserId int64, userToken string) (
+func (s *messageServiceImpl) getChatMessageListByUserId(ctx context.Context, req *message.ChatMessageListRequest) (
 	[]*message.MessagePo, error) {
-	
-	tokenReq := token.NewValidateTokenRequest(userToken)
 
 	// 获取用户ID
-	validatedToken, err := s.tokenService.ValidateToken(ctx, tokenReq)
+	tokenReq := token.NewValidateTokenRequest(req.Token)
+	validatedToken, err := s.tokenService.GetUIDFromTk(ctx, tokenReq)
 
 	if err != nil {
 		s.l.Errorf("message: 验证用户Token失败: %s", err.Error())
@@ -26,13 +26,25 @@ func (s *messageServiceImpl) getChatMessageListByUserId(ctx context.Context, toU
 	}
 
 	// 发送方userId & 接收方userId
-	var fromUserId = validatedToken.GetUserId()
+	fromUserId := validatedToken.GetUserId()
 
 	db := s.db.WithContext(ctx)
 	set := make([]*message.MessagePo, 50)
 
-	// 查询
-	s.db.Where("to_user_id=?", toUserId).Where("from_user_id=?", fromUserId).Order("created_at desc").Find(&set)
+	// 查询双方聊天的所有消息
+
+	// 这里是为了适配客户端传入的时间戳不统一，做的额外操作
+	nowS := time.Now().Unix()
+	//if req.PreMsgTime < nowS {
+	//	req.PreMsgTime = time.Unix(req.PreMsgTime, 0).UnixMilli()
+	//}
+	//lastTime := time.UnixMilli(req.PreMsgTime).Add(time.Second).Unix()
+
+	// 构建sql并且查询
+	db.Where("created_at > ? AND created_at < ?", req.PreMsgTime, nowS).
+		Where("(to_user_id = ? AND from_user_id = ?) OR (to_user_id = ? AND from_user_id = ?)",
+			req.ToUserId, fromUserId, fromUserId, req.ToUserId).
+		Order("created_at asc").Find(&set)
 	if db.Error != nil {
 		s.l.Errorf("message: query 查询错误: %s", db.Error.Error())
 		return set, db.Error
@@ -41,10 +53,9 @@ func (s *messageServiceImpl) getChatMessageListByUserId(ctx context.Context, toU
 	return set, nil
 }
 
-
 func (s *messageServiceImpl) insert(ctx context.Context, req *message.ChatMessageActionRequest) (
 	*message.MessagePo, error) {
-	
+
 	// 写入消息记录
 	messagePo, err := s.getMessagePo(ctx, req)
 	if err != nil {
@@ -63,10 +74,9 @@ func (s *messageServiceImpl) insert(ctx context.Context, req *message.ChatMessag
 func (s *messageServiceImpl) getMessagePo(ctx context.Context, req *message.ChatMessageActionRequest) (
 	*message.MessagePo, error) {
 
+	// 获取用户ID
 	tokenReq := token.NewValidateTokenRequest(req.Token)
-
-	// 这里主要是为了获取 用户ID
-	validatedToken, err := s.tokenService.ValidateToken(ctx, tokenReq)
+	tk, err := s.tokenService.GetUIDFromTk(ctx, tokenReq)
 
 	if err != nil {
 		s.l.Errorf(err.Error())
@@ -75,6 +85,6 @@ func (s *messageServiceImpl) getMessagePo(ctx context.Context, req *message.Chat
 	}
 
 	MessagePo := message.NewMessagePo(req)
-	MessagePo.FromUserId = validatedToken.GetUserId()
+	MessagePo.FromUserId = tk.GetUserId()
 	return MessagePo, nil
 }

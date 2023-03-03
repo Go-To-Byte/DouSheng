@@ -31,6 +31,7 @@ func (c *commentServiceImpl) CommentAction(ctx context.Context, req *comment.Com
 		}
 		userReq := user.NewUserInfoRequest()
 		userReq.UserId = po.UserId
+		userReq.Token = req.Token
 		userRsp, err := c.userService.UserInfo(ctx, userReq)
 		fmt.Println(userRsp)
 		if err != nil {
@@ -89,14 +90,18 @@ func (c *commentServiceImpl) GetCommentList(ctx context.Context, req *comment.Ge
 		res.CommentList = commentList
 		return res, nil
 	}
+
+	// TODO：批量查询
+
+	userReq := user.NewUserInfoRequest()
+	userReq.Token = req.Token
 	for index, po := range pos {
-		userReq := user.UserInfoRequest{
-			UserId: po.UserId,
-		}
-		userRsp, err := c.userService.UserInfo(ctx, &userReq)
+		userReq.UserId = po.UserId
+		userRsp, err := c.userService.UserInfo(ctx, userReq)
 		if err != nil {
 			return nil, err
 		}
+
 		commentVo := c.commentP2commentVo(ctx, po, userRsp.User)
 		commentList[index] = commentVo
 	}

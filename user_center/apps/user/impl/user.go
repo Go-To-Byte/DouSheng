@@ -110,13 +110,6 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 
 func (s *userServiceImpl) UserMap(ctx context.Context, req *user.UserMapRequest) (*user.UserMapResponse, error) {
 
-	// 请求参数校验
-	if err := req.Validate(); err != nil {
-		s.l.Errorf("user UserInfo：参数校验失败，%s", err.Error())
-		return nil, status.Error(codes.InvalidArgument,
-			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
-	}
-
 	// 1、获取用户列表 []User
 	userPoRes, err := s.userList(ctx, req.UserIds)
 

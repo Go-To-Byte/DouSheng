@@ -469,8 +469,8 @@ type UserMapRequest struct {
 	// @gotags: json:"user_ids"
 	UserIds []int64 `protobuf:"varint,1,rep,packed,name=user_ids,json=userIds,proto3" json:"user_ids"`
 	// 用户鉴权Token [注：这里用 validate，是因为内部方法也必须要用到 Token，并不是所有 token 都 validate]
-	// @gotags: json:"token" form:"token" binding:"required" validate:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" binding:"required" validate:"required"`
+	// @gotags: json:"token" validate:"required"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" validate:"required"`
 }
 
 func (x *UserMapRequest) Reset() {

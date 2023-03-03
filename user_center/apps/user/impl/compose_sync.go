@@ -41,9 +41,9 @@ func (s *userServiceImpl) composeRelation(ctx context.Context, uResp *user.User)
 	}
 
 	// 是否关注查询用户
-	req := relation.NewDefaultUserFollowerPo()
-	req.UserId = uResp.Id // 查看此用户登录用户是否是查询用户的粉丝
-	req.FollowerId = loginUId
+	req := relation.NewUserFollowPo()
+	req.UserId = loginUId
+	req.FollowId = uResp.Id
 	isFollow, err := s.relation.IsFollower(ctx, req)
 	if err != nil {
 		s.l.Error(err)
@@ -61,12 +61,18 @@ func (s *userServiceImpl) getLoginUID(ctx context.Context) (int64, error) {
 	loginUserId := ctx.Value(constant.USER_ID)
 	if loginUserId == nil {
 		// 从Token中获取
-		tkReq := token.NewValidateTokenRequest(ctx.Value(constant.REQUEST_TOKEN).(string))
+		tkValue := ctx.Value(constant.REQUEST_TOKEN)
+		if tkValue == nil {
+			tkValue = ""
+		}
+
+		tkReq := token.NewValidateTokenRequest(tkValue.(string))
 		uIdResp, err := s.tokenService.GetUIDFromTk(ctx, tkReq)
 		loginUserId = uIdResp.UserId
 		if err != nil {
 			return 0, err
 		}
+
 	}
 
 	return loginUserId.(int64), nil

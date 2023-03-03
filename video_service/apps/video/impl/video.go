@@ -23,7 +23,10 @@ func (s *videoServiceImpl) FeedVideos(ctx context.Context, req *video.FeedVideos
 	}
 
 	// 2、根据返回的视频列表，组装用户信息
-	return s.composeFeedSetResp(ctx, pos)
+	// 将Token放入Ctx
+	tkCtx := context.WithValue(ctx, constant.REQUEST_TOKEN, req.Token)
+
+	return s.composeFeedSetResp(tkCtx, pos)
 }
 
 func (s *videoServiceImpl) PublishVideo(ctx context.Context, req *video.PublishVideoRequest) (
@@ -58,14 +61,17 @@ func (s *videoServiceImpl) PublishList(ctx context.Context, req *video.PublishLi
 	}
 
 	// 3、组合视频的用户信息
-	return s.composeUserListResp(ctx, pos)
+	// 将Token放入Ctx
+	tkCtx := context.WithValue(ctx, constant.REQUEST_TOKEN, req.Token)
+
+	return s.composeUserListResp(tkCtx, pos)
 }
 
 func (s *videoServiceImpl) GetVideo(ctx context.Context, req *video.GetVideoRequest) (*video.Video, error) {
 
 	// 1、参数校验
-	if req.VideoId == 0 {
-		s.l.Errorf("video: GetVideo 参数校验失败：video_id 不能为空")
+	if err := req.Validate(); err != nil {
+		s.l.Errorf("video GetVideo: 参数校验失败，%s", err.Error())
 		return nil, status.Error(codes.InvalidArgument,
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
@@ -73,8 +79,11 @@ func (s *videoServiceImpl) GetVideo(ctx context.Context, req *video.GetVideoRequ
 	// 2、查询
 	po := video.NewVideoPo()
 	s.db.WithContext(ctx).Where("id = ?", req.VideoId).Find(&po)
-	// 走GRPC调用，获取视频对应的用户信息
-	userMap, err := s.GetUser(ctx, po)
+
+	// 获取视频对应的用户信息
+	// 将Token放入Ctx
+	tkCtx := context.WithValue(ctx, constant.REQUEST_TOKEN, req.Token)
+	userMap, err := s.getUser(tkCtx, po)
 	if err != nil {
 		return nil, err
 	}
@@ -124,6 +133,12 @@ func (s *videoServiceImpl) composeFeedSetResp(ctx context.Context, pos []*video.
 	// 2、获取UserMap列表
 	userMapReq := user.NewUserMapRequest()
 	userMapReq.UserIds = userIds.Items()
+	tkValue := ctx.Value(constant.REQUEST_TOKEN)
+	if tkValue == nil || tkValue.(*string) == nil {
+		userMapReq.Token = ""
+	} else {
+		userMapReq.Token = *tkValue.(*string)
+	}
 
 	// GRPC调用
 	userMap, err := s.userServer.UserMap(ctx, userMapReq)
@@ -150,7 +165,7 @@ func (s *videoServiceImpl) composeUserListResp(ctx context.Context, pos []*video
 	}
 
 	// 走GRPC调用，获取视频对应的用户信息
-	userMap, err := s.GetUser(ctx, pos[0])
+	userMap, err := s.getUser(ctx, pos[0])
 	if err != nil {
 		return nil, err
 	}
@@ -183,13 +198,16 @@ func (s *videoServiceImpl) pos2vos(pos []*video.VideoPo, userMap map[int64]*user
 	return set
 }
 
-// GetUser GRPC调用，去获取用户信息
-func (s *videoServiceImpl) GetUser(ctx context.Context, po *video.VideoPo) (map[int64]*user.User, error) {
+// getUser GRPC调用，去获取用户信息
+func (s *videoServiceImpl) getUser(ctx context.Context, po *video.VideoPo) (map[int64]*user.User, error) {
+
 	req := user.NewUserInfoRequest()
 	req.UserId = po.AuthorId
+	req.Token = kitUtils.TokenStrFromCtx(ctx)
 	info, err := s.userServer.UserInfo(ctx, req)
 	if err != nil {
 		return nil, err
 	}
+
 	return map[int64]*user.User{info.User.Id: info.User}, nil
 }

@@ -151,8 +151,12 @@ message PublishListResponse {
 // 视频ID
 message GetVideoRequest {
   // 视频ID
-  // @gotags: json:"video_id"
+  // @gotags: json:"video_id" validate:"required"
   int64 video_id = 1;
+
+  // 用户鉴权Token
+  // @gotags: json:"token" validate:"required"
+  string token = 2;
 }
 
 message PublishListCountResponse {

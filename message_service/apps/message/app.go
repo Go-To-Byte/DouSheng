@@ -16,13 +16,12 @@ var (
 
 func NewMessagePo(req *ChatMessageActionRequest) *MessagePo {
 	return &MessagePo{
-		ToUserId: req.ToUserId,
+		ToUserId:   req.ToUserId,
 		FromUserId: 0,
-		Content: req.Content,
-		CreatedAt: time.Now().UnixMilli(),
+		Content:    req.Content,
+		CreatedAt:  time.Now().Unix(),
 	}
 }
-
 
 // 获取聊天消息列表 相关
 func (r *ChatMessageListRequest) Validate() error {
@@ -37,7 +36,7 @@ func NewChatMessageListResponse() *ChatMessageListResponse {
 	return &ChatMessageListResponse{}
 }
 
-// 发送聊天消息 相关
+// Validate 发送聊天消息 相关
 func (r *ChatMessageActionRequest) Validate() error {
 	return validate.Struct(r)
 }
@@ -54,4 +53,3 @@ func NewChatMessageActionResponse() *ChatMessageActionResponse {
 func (*MessagePo) TableName() string {
 	return "message"
 }
-

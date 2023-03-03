@@ -2,6 +2,7 @@
 package relation
 
 import (
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -13,26 +14,13 @@ var (
 	validate = validator.New()
 )
 
-// NewUserFollowPo TODO UserFollowPo 可以不初始化Id吗
-func NewUserFollowPo(req *FollowActionRequest) *UserFollowPo {
-	return &UserFollowPo{
-		UserId:     1,
-		FollowId:   req.ToUserId,
-		FollowFlag: 1,
-	}
-}
-
-func NewDefaultUserFollowerPo() *UserFollowerPo {
-	return &UserFollowerPo{}
+func NewUserFollowPo() *UserFollowPo {
+	return &UserFollowPo{}
 }
 
 // NewUserFollowerPo TODO
-func NewUserFollowerPo(req *FollowActionRequest) *UserFollowerPo {
-	return &UserFollowerPo{
-		UserId:       req.ToUserId,
-		FollowerId:   1,
-		FollowerFlag: 1,
-	}
+func NewUserFollowerPo() *UserFollowerPo {
+	return &UserFollowerPo{}
 }
 
 // Validate 获取关注列表 相关
@@ -111,4 +99,22 @@ func NewListCountResponse() *ListCountResponse {
 
 func NewIsFollowerResponse() *IsFollowerResponse {
 	return &IsFollowerResponse{}
+}
+
+func NewUserFriend(toUser *user.User) *UserFriend {
+	return &UserFriend{
+		Id:              toUser.Id,
+		Name:            toUser.Name,
+		FollowCount:     toUser.FollowCount,
+		FollowerCount:   toUser.FollowerCount,
+		IsFollow:        toUser.IsFollow,
+		Avatar:          toUser.Avatar,
+		BackgroundImage: toUser.BackgroundImage,
+		Signature:       toUser.Signature,
+		TotalFavorited:  toUser.TotalFavorited,
+		WorkCount:       toUser.WorkCount,
+		FavoriteCount:   toUser.FavoriteCount,
+
+		MsgType: 1,
+	}
 }

@@ -16,6 +16,18 @@ import (
 // TODO：完善测试用例
 
 func TestRelationServiceImpl_FollowAction(t *testing.T) {
+	should := assert.New(t)
+
+	req := relation.NewFollowActionRequest()
+	// 16 -> 17
+	req.Token = "nuo7A79Qp4Ms7144BAyQwW4H"
+	req.ToUserId = 17
+	req.ActionType = relation.ActionType_UN_FOLLOW_ACTION
+
+	_, err := service.FollowAction(context.Background(), req)
+	if should.NoError(err) {
+		t.Log("关注成功")
+	}
 
 }
 
@@ -28,7 +40,18 @@ func TestRelationServiceImpl_FollowList(t *testing.T) {
 }
 
 func TestRelationServiceImpl_FriendList(t *testing.T) {
+	should := assert.New(t)
 
+	req := relation.NewFriendListRequest()
+	// 查询 16的朋友
+	req.Token = "nuo7A79Qp4Ms7144BAyQwW4H"
+	req.UserId = 16
+
+	resp, err := service.FriendList(context.Background(), req)
+
+	if should.NoError(err) {
+		t.Log(resp)
+	}
 }
 
 func TestRelationServiceImpl_ListCount(t *testing.T) {

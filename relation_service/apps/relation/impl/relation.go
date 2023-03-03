@@ -2,6 +2,8 @@ package impl
 
 import (
 	"context"
+	"github.com/Go-To-Byte/DouSheng/api_rooter/apps/token"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -30,7 +32,10 @@ func (s *relationServiceImpl) FollowList(ctx context.Context, req *relation.Foll
 	}
 
 	// 3、组合用户关注列表信息
-	return s.composeFollowListResp(ctx, pos)
+	// 将Token放入Ctx
+	tkCtx := context.WithValue(ctx, constant.REQUEST_TOKEN, req.Token)
+
+	return s.composeFollowListResp(tkCtx, pos)
 }
 
 func (s *relationServiceImpl) FollowerList(ctx context.Context, req *relation.FollowerListRequest) (
@@ -50,13 +55,14 @@ func (s *relationServiceImpl) FollowerList(ctx context.Context, req *relation.Fo
 	}
 
 	// 3、组合用户粉丝列表信息
-	return s.composeFollowerListResp(ctx, pos)
+	// 将Token放入Ctx
+	tkCtx := context.WithValue(ctx, constant.REQUEST_TOKEN, req.Token)
+
+	return s.composeFollowerListResp(tkCtx, pos)
 }
 
 func (s *relationServiceImpl) FriendList(ctx context.Context, req *relation.FriendListRequest) (
 	*relation.FriendListResponse, error) {
-
-	s.l.Errorf("relation: FriendList ", req)
 
 	// 1、校验参数[防止GRPC调用时参数异常]
 	if err := req.Validate(); err != nil {
@@ -66,13 +72,16 @@ func (s *relationServiceImpl) FriendList(ctx context.Context, req *relation.Frie
 	}
 
 	// 2、根据用户ID获取粉丝列表
-	pos, err := s.getFollowerListByUserId(ctx, req.UserId)
+	pos, err := s.getFriendListByUId(ctx, req.UserId)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, constant.Code2Msg(constant.ERROR_ACQUIRE))
 	}
 
 	// 3、组合用户关注列表信息
-	return s.composeFriendListResp(ctx, pos, req.Token)
+	// 将Token放入Ctx
+	tkCtx := context.WithValue(ctx, constant.REQUEST_TOKEN, req.Token)
+
+	return s.composeFriendListResp(tkCtx, pos)
 }
 
 func (s *relationServiceImpl) FollowAction(ctx context.Context, req *relation.FollowActionRequest) (
@@ -85,25 +94,8 @@ func (s *relationServiceImpl) FollowAction(ctx context.Context, req *relation.Fo
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 
-	if req.ActionType == constant.FOLLOW_ACTION {
-		_, err := s.insert(ctx, req)
-		if err != nil {
-			return relation.NewFollowActionResponse(), err
-		}
-	} else if req.ActionType == constant.UNFOLLOW_ACTION {
-		_, err := s.update(ctx, req)
-		if err != nil {
-			return relation.NewFollowActionResponse(), err
-		}
-	} else {
-		s.l.Errorf("relation: FollowAction 未知的动作类型：", req.ActionType)
-		return nil, status.Error(codes.InvalidArgument,
-			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
-	}
-
-	// 这里不需要返回数据，若需要，可以包装在 Mate 中返回
-	return relation.NewFollowActionResponse(), nil
-
+	// 这里不需要返回数据，若需要，可以包装在 Mate 中返回 [主要是 grpc 调用，不能返回 nil，会序列化失败]
+	return relation.NewFollowActionResponse(), s.followAction(ctx, req)
 }
 
 func (s *relationServiceImpl) ListCount(ctx context.Context, req *relation.ListCountRequest) (
@@ -125,26 +117,61 @@ func (s *relationServiceImpl) ListCount(ctx context.Context, req *relation.ListC
 	return resp, nil
 }
 
-func (s *relationServiceImpl) IsFollower(ctx context.Context, req *relation.UserFollowerPo) (
+func (s *relationServiceImpl) IsFollower(ctx context.Context, req *relation.UserFollowPo) (
 	*relation.IsFollowerResponse, error) {
 
-	// 只是查询，看看是否有条记录
-	db := s.db.WithContext(ctx).
-		Where("user_id = ? AND follower_id = ?", req.UserId, req.FollowerId).
-		Find(relation.NewDefaultUserFollowerPo())
-
-	if db.Error != nil {
+	isFollow, err := s.exist(ctx, req)
+	if err != nil {
 		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
 	}
 
 	resp := relation.NewIsFollowerResponse()
-
-	// 查到唯一的一条记录了，说明是我的粉丝
-	if db.RowsAffected == 1 {
-		resp.MyFollower = true
-	}
+	resp.MyFollower = isFollow
 
 	return resp, nil
+}
+
+func (s *relationServiceImpl) followAction(ctx context.Context, req *relation.FollowActionRequest) error {
+
+	// 1、获取登录用户的ID
+	tokenReq := token.NewValidateTokenRequest(req.Token)
+	loginUid, err := s.tokenService.GetUIDFromTk(ctx, tokenReq)
+	if err != nil {
+		s.l.Errorf(err.Error())
+		return err
+	}
+
+	// 2、获取 UserFollow po 对象
+	userFollowPo := relation.NewUserFollowPo()
+	userFollowPo.UserId = loginUid.UserId
+	userFollowPo.FollowId = req.ToUserId
+	userFollowPo.FollowFlag = req.ActionType
+
+	// 3、获取 UserFollower po 对象
+	userFollowerPo := relation.NewUserFollowerPo()
+	userFollowerPo.UserId = req.ToUserId
+	userFollowerPo.FollowerId = loginUid.UserId
+	userFollowerPo.FollowerFlag = req.ActionType
+
+	po := newSavePo(userFollowPo, userFollowerPo)
+	po.action = req.ActionType
+
+	// 如果是关注操作，需要检查是否是 再次关注的
+	if req.ActionType == relation.ActionType_FOLLOW_ACTION {
+		exist, err := s.exist(ctx, userFollowPo)
+		if err != nil {
+			return err
+		}
+
+		// 如果存在用户，，将 操作类型 调整为 ActionType_UN_FOLLOW_ACTION (再次关注)
+		if exist {
+			po.action = relation.ActionType_AGAIN_FOLLOW
+		}
+
+	}
+
+	// 4、保存操作
+	return s.save(ctx, po)
 }
 
 func (s *relationServiceImpl) composeFollowListResp(ctx context.Context, pos []*relation.UserFollowPo) (
@@ -180,12 +207,13 @@ func (s *relationServiceImpl) composeFollowerListResp(ctx context.Context, pos [
 	if err != nil {
 		return set, err
 	}
+
 	set.UserList = vos
 
 	return set, nil
 }
 
-func (s *relationServiceImpl) composeFriendListResp(ctx context.Context, pos []*relation.UserFollowerPo, userToken string) (
+func (s *relationServiceImpl) composeFriendListResp(ctx context.Context, pos []*relation.UserFollowerPo) (
 	*relation.FriendListResponse, error) {
 
 	set := relation.NewFriendListResponse()
@@ -195,11 +223,12 @@ func (s *relationServiceImpl) composeFriendListResp(ctx context.Context, pos []*
 	}
 
 	// 转换 pos -> vos
-	vos, err := s.friendPos2Vos(ctx, pos, userToken)
+	vos, err := s.friendPos2Vos(ctx, pos)
 	if err != nil {
 		return set, err
 	}
-	set.FriendList = vos
+
+	set.UserList = vos
 
 	return set, nil
 }
@@ -213,20 +242,14 @@ func (s *relationServiceImpl) followPos2Vos(ctx context.Context, pos []*relation
 		return set, nil
 	}
 
-	errCount := 0
 	for i, po := range pos {
 		// 将 po -> vo
 		vo, err := s.followPo2Vo(ctx, po)
 		if err != nil {
-
-			errCount++
-			if errCount > 1 {
-				return nil, err
-			}
-
 			s.l.Errorf("relation: composeFollowListResp 组合关注用户信息异常：%s", err.Error())
-			continue
+			return set, err
 		}
+
 		set[i] = vo
 	}
 
@@ -242,18 +265,12 @@ func (s *relationServiceImpl) followerPos2Vos(ctx context.Context, pos []*relati
 		return set, nil
 	}
 
-	errCount := 0
 	for i, po := range pos {
 		// 将 po -> vo
 		vo, err := s.followerPo2Vo(ctx, po)
 		if err != nil {
-			errCount++
-			if errCount > 1 {
-				return nil, err
-			}
-
 			s.l.Errorf("relation: composeFollowListResp 组合关注用户信息异常：%s", err.Error())
-			continue
+			return nil, err
 		}
 		set[i] = vo
 	}
@@ -261,7 +278,7 @@ func (s *relationServiceImpl) followerPos2Vos(ctx context.Context, pos []*relati
 	return set, nil
 }
 
-func (s *relationServiceImpl) friendPos2Vos(ctx context.Context, pos []*relation.UserFollowerPo, userToken string) (
+func (s *relationServiceImpl) friendPos2Vos(ctx context.Context, pos []*relation.UserFollowerPo) (
 	[]*relation.UserFriend, error) {
 
 	set := make([]*relation.UserFriend, len(pos))
@@ -270,21 +287,17 @@ func (s *relationServiceImpl) friendPos2Vos(ctx context.Context, pos []*relation
 		return set, nil
 	}
 
-	errCount := 0
 	for i, po := range pos {
 		// 将 po -> vo
-		vo, err := s.followerPo2FriendVo(ctx, po, userToken)
+		vo, err := s.followerPo2FriendVo(ctx, po)
 		if err != nil {
-			errCount++
-			if errCount > 1 {
-				return nil, err
-			}
-
 			s.l.Errorf("relation: composeFriendListResp 组合关注用户信息异常：%s", err.Error())
-			continue
+			return set, err
 		}
+
 		set[i] = vo
 	}
+
 	return set, nil
 }
 
@@ -294,7 +307,7 @@ func (s *relationServiceImpl) followPo2Vo(ctx context.Context, po *relation.User
 	// 走GRPC调用，获取用户信息
 	req := user.NewUserInfoRequest()
 	req.UserId = po.FollowId
-
+	req.Token = utils.TokenStrFromCtx(ctx)
 	userInfo, err := s.userServer.UserInfo(ctx, req)
 	if err != nil {
 		return nil, err
@@ -313,7 +326,7 @@ func (s *relationServiceImpl) followerPo2Vo(ctx context.Context, po *relation.Us
 	// 走GRPC调用，获取用户信息
 	req := user.NewUserInfoRequest()
 	req.UserId = po.FollowerId
-
+	req.Token = utils.TokenStrFromCtx(ctx)
 	userInfo, err := s.userServer.UserInfo(ctx, req)
 	if err != nil {
 		return nil, err
@@ -325,25 +338,26 @@ func (s *relationServiceImpl) followerPo2Vo(ctx context.Context, po *relation.Us
 	return userInfo.User, nil
 }
 
-func (s *relationServiceImpl) followerPo2FriendVo(ctx context.Context, po *relation.UserFollowerPo, userToken string) (
+func (s *relationServiceImpl) followerPo2FriendVo(ctx context.Context, po *relation.UserFollowerPo) (
 	*relation.UserFriend, error) {
 
 	// 走GRPC调用，获取用户粉丝信息
 	req := user.NewUserInfoRequest()
-	req.UserId = po.FollowerId
-
+	req.UserId = po.UserId
+	tk := utils.TokenStrFromCtx(ctx)
+	req.Token = tk
 	resp, err := s.userServer.UserInfo(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	toUser := resp.User
-	// 根据粉丝id与用户id去查找最新的聊天信息
-	// TODO 这样做效率不高, 待优化
-	msgReq := message.NewChatMessageListRequest()
-	msgReq.ToUserId = po.FollowerId
-	msgReq.Token = userToken
+	friend := relation.NewUserFriend(resp.User)
 
+	// 根据粉丝id与用户id去查找最新的聊天信息
+	// TODO 这样做效率不高, 待优化 （可用携程优化一下）
+	msgReq := message.NewChatMessageListRequest()
+	msgReq.ToUserId = po.UserId
+	msgReq.Token = tk
 	// 走GRPC调用, 获取最新聊天信息
 	msgResp, err := s.messageService.ChatMessageList(ctx, msgReq)
 	if err != nil {
@@ -352,21 +366,13 @@ func (s *relationServiceImpl) followerPo2FriendVo(ctx context.Context, po *relat
 	}
 
 	msgList := msgResp.MessageList
-	content := ""
 	if len(msgList) > 0 {
-		content = msgList[0].Content
+		friend.Message = msgList[len(msgList)-1].Content
 	}
 
 	// userInfo.User
 	// user.is_follow = true
 	// po -> vo
-	return &relation.UserFriend{
-		Id:            toUser.Id,
-		Name:          toUser.Name,
-		FollowCount:   toUser.FollowCount,
-		FollowerCount: toUser.FollowerCount,
-		IsFollow:      toUser.IsFollow,
-		Message:       content,
-		MsgType:       1,
-	}, nil
+
+	return friend, nil
 }

@@ -99,7 +99,7 @@ message UserMapRequest {
   // @gotags: json:"user_ids"
   repeated int64 user_ids = 1;
   // 用户鉴权Token [注：这里用 validate，是因为内部方法也必须要用到 Token，并不是所有 token 都 validate]
-  // @gotags: json:"token" form:"token" binding:"required" validate:"required"
+  // @gotags: json:"token" validate:"required"
   string token = 2;
 }
 

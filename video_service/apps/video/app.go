@@ -28,6 +28,10 @@ func (r *PublishListRequest) Validate() error {
 	return validate.Struct(r)
 }
 
+func (r *GetVideoRequest) Validate() error {
+	return validate.Struct(r)
+}
+
 func NewPublishVideoRequest() *PublishVideoRequest {
 	return &PublishVideoRequest{}
 }
