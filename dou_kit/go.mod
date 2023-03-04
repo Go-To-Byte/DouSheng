@@ -5,7 +5,6 @@ go 1.19
 require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible
-	github.com/bwmarrin/snowflake v0.3.0
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-gonic/gin v1.8.2
 	github.com/hashicorp/consul/api v1.18.0
@@ -15,7 +14,6 @@ require (
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.8.1
 	go.mongodb.org/mongo-driver v1.11.1
-	go.uber.org/zap v1.20.0
 	google.golang.org/grpc v1.52.3
 	gorm.io/driver/mysql v1.4.6
 	gorm.io/gorm v1.24.5
@@ -65,6 +63,7 @@ require (
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
+	go.uber.org/zap v1.20.0 // indirect
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.5.0 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
