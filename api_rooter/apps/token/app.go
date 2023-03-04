@@ -79,3 +79,7 @@ func (t *Token) GetUserId() int64 {
 	}
 	return int64(userId)
 }
+
+func NewUIDResponse() *UIDResponse {
+	return &UIDResponse{}
+}

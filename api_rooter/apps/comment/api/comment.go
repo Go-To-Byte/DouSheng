@@ -33,7 +33,7 @@ func (h *Handler) CommentAction(c *gin.Context) error {
 	}
 
 	// 2、进行接口调用
-	//ctx := context.WithValue(c.Request.Context(),"token",)
+	// ctx := context.WithValue(c.Request.Context(),"token",)
 
 	resp, err := h.commentService.CommentAction(c.Request.Context(), req)
 	if err != nil {

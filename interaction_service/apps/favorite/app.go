@@ -18,28 +18,23 @@ func NewFavoriteActionRequest() *FavoriteActionRequest {
 	return &FavoriteActionRequest{}
 }
 
-// 点赞/取消赞 参数校验
+// Validate 点赞/取消赞 参数校验
 func (r *FavoriteActionRequest) Validate() error {
 	return validate.Struct(r)
 }
 
-// 获取喜欢视频列表 参数校验
-func (r *GetFavoriteListRequest) Validate() error {
+// Validate 获取喜欢视频列表 参数校验
+func (r *FavoriteListRequest) Validate() error {
 	return validate.Struct(r)
 }
 
-// 通过video_id获取喜欢视频数量参数校验
-func (r *GetFavoriteCountByIdRequest) Validate() error {
-	return validate.Struct(r)
-}
-
-// 创建视频点赞响应体
+// NewFavoriteActionResponse 创建视频点赞响应体
 func NewFavoriteActionResponse() *FavoriteActionResponse {
 	return &FavoriteActionResponse{}
 }
 
-// 构建Po
-func NewDefaultFavoritePo() *FavoritePo {
+// NewFavoritePo 构建Po
+func NewFavoritePo() *FavoritePo {
 	return &FavoritePo{}
 }
 
@@ -48,21 +43,34 @@ func (*FavoritePo) TableName() string {
 	return AppName
 }
 
-func NewDefaultGetFavoriteListRequest() *GetFavoriteListRequest {
-	return &GetFavoriteListRequest{}
+func NewFavoriteListRequest() *FavoriteListRequest {
+	return &FavoriteListRequest{}
 }
 
-// 获取视频列表响应体
-func NewDefaultGetFavoriteListResponse() *GetFavoriteListResponse {
-	return &GetFavoriteListResponse{}
+// NewFavoriteListResponse 获取视频列表响应体
+func NewFavoriteListResponse() *FavoriteListResponse {
+	return &FavoriteListResponse{}
 }
 
-// 获取视频点赞总数请求体
-func NewDefaultGetFavoriteCountByIdRequest() *GetFavoriteCountByIdRequest {
-	return &GetFavoriteCountByIdRequest{}
+func NewFavoriteCountResponse() *FavoriteCountResponse {
+	return &FavoriteCountResponse{}
 }
 
-// 获取视频点赞总数响应体
-func NewDefaultGetFavoriteCountByIdResponse() *GetfavoriteCountByIdResponse {
-	return &GetfavoriteCountByIdResponse{}
+func NewFavoriteCountRequest() *FavoriteCountRequest {
+	return &FavoriteCountRequest{}
+}
+
+func NewFavoriteMapResponse() *FavoriteMapResponse {
+	return &FavoriteMapResponse{}
+}
+
+func NewFavoriteMapRequest() *FavoriteMapRequest {
+	return &FavoriteMapRequest{}
+}
+
+func NewFavoriteMap(count int64, isFavorite bool) *FavoriteMap {
+	return &FavoriteMap{
+		FavoriteCount: count,
+		IsFavorite:    isFavorite,
+	}
 }

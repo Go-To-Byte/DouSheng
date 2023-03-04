@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// 实现评论操作功能
+// CommentAction 实现评论操作功能
 func (c *commentServiceImpl) CommentAction(ctx context.Context, req *comment.CommentActionRequest) (*comment.CommentActionResponse, error) {
 	//	参数校验
 	if err := req.Validate(); err != nil {
@@ -31,18 +31,20 @@ func (c *commentServiceImpl) CommentAction(ctx context.Context, req *comment.Com
 		}
 		userReq := user.NewUserInfoRequest()
 		userReq.UserId = po.UserId
+		userReq.Token = req.Token
 		userRsp, err := c.userService.UserInfo(ctx, userReq)
 		fmt.Println(userRsp)
 		if err != nil {
 			return nil, err
 		}
-		commentVo := c.commentP2commentVo(ctx, po, userRsp.User)
+
 		//commentVo := c.commentP2commentVo(ctx, po, &user_one)
-		rsp, err := c.NewCommentActionResponse(ctx, commentVo)
+		resp := comment.NewDefaultCommentActionResponse()
+		resp.Comment = c.commentP2commentVo(ctx, po, userRsp.User)
 		if err != nil {
 			return nil, err
 		}
-		return rsp, nil
+		return resp, nil
 	case 2:
 		po, err := c.DeleteCommentById(ctx, req)
 		if err != nil {
@@ -57,25 +59,28 @@ func (c *commentServiceImpl) CommentAction(ctx context.Context, req *comment.Com
 		if err != nil {
 			return nil, err
 		}
-		commentVo := c.commentP2commentVo(ctx, po, userRsp.User)
-		rsp, err := c.NewCommentActionResponse(ctx, commentVo)
+
+		resp := comment.NewDefaultCommentActionResponse()
+		resp.Comment = c.commentP2commentVo(ctx, po, userRsp.User)
 		if err != nil {
 			return nil, err
 		}
-		return rsp, nil
+
+		return resp, nil
 	}
+
 	return nil, status.Error(codes.InvalidArgument,
 		constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 }
 
-// 获取评论列表，成功返回GetCommentListResponse对象地址，失败返回错误信息
+// GetCommentList 获取评论列表，成功返回GetCommentListResponse对象地址，失败返回错误信息
 func (c *commentServiceImpl) GetCommentList(ctx context.Context, req *comment.GetCommentListRequest) (*comment.GetCommentListResponse, error) {
 	//	参数校验
 	if err := req.Validate(); err != nil {
 		c.l.Errorf("interaction: CommentAction 参数校验失败：%s", err.Error())
 		return nil, status.Error(codes.InvalidArgument, constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
-	pos, err := c.GetCommentPoList(ctx, req)
+	pos, err := c.getCommentPoList(ctx, req)
 	fmt.Println()
 	if err != nil {
 		c.l.Errorf("获取视频评论列表失败：%s", err.Error())
@@ -89,14 +94,18 @@ func (c *commentServiceImpl) GetCommentList(ctx context.Context, req *comment.Ge
 		res.CommentList = commentList
 		return res, nil
 	}
+
+	// TODO：批量查询
+
+	userReq := user.NewUserInfoRequest()
+	userReq.Token = req.Token
 	for index, po := range pos {
-		userReq := user.UserInfoRequest{
-			UserId: po.UserId,
-		}
-		userRsp, err := c.userService.UserInfo(ctx, &userReq)
+		userReq.UserId = po.UserId
+		userRsp, err := c.userService.UserInfo(ctx, userReq)
 		if err != nil {
 			return nil, err
 		}
+
 		commentVo := c.commentP2commentVo(ctx, po, userRsp.User)
 		commentList[index] = commentVo
 	}
@@ -104,6 +113,32 @@ func (c *commentServiceImpl) GetCommentList(ctx context.Context, req *comment.Ge
 		CommentList: commentList,
 	}
 	return &res, nil
+}
+
+func (s *commentServiceImpl) CommentCountMap(ctx context.Context, req *comment.CommentMapRequest) (
+	*comment.CommentMapResponse, error) {
+	// 1、参数校验
+	resp := comment.NewCommentMapResponse()
+	if req.VideoIds == nil || len(req.VideoIds) <= 0 {
+		s.l.Errorf("user userList：你的参数可能有问题哟~")
+		return resp, nil
+	}
+
+	// 2、获取每个视频的点赞数
+	resp.CommentCountMap = make(map[int64]int64, 10)
+	for _, v := range req.VideoIds {
+		// 获取点赞数
+
+		count, err := s.getCommentCount(ctx, v)
+
+		if err != nil {
+			return resp, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
+		}
+
+		resp.CommentCountMap[v] = count
+	}
+
+	return resp, nil
 }
 
 func (c *commentServiceImpl) commentP2commentVo(ctx context.Context, po *comment.CommentPo, userInfo *user.User) *comment.Comment {
@@ -128,14 +163,13 @@ func (c *commentServiceImpl) GetCommentCountById(ctx context.Context, req *comme
 		c.l.Errorf("interaction: CommentAction 参数校验失败：%s", err.Error())
 		return nil, status.Error(codes.InvalidArgument, constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
-	commentReq := comment.NewDefaultGetCommentCountByIdRequest()
-	commentReq.VideoId = req.VideoId
-	count, err := c.GetCommentCount(ctx, commentReq)
+
+	count, err := c.getCommentCount(ctx, req.VideoId)
 	if err != nil {
 		c.l.Errorf("获取视频评论总数失败:%s", err.Error())
 		return nil, err
 	}
 	countRsp := comment.NewDefaultGetCommentCountByIdResponse()
-	countRsp.CommentCount = *count
+	countRsp.CommentCount = count
 	return countRsp, nil
 }

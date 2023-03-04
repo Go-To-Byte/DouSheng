@@ -2,6 +2,7 @@
 package relation
 
 import (
+	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -13,25 +14,16 @@ var (
 	validate = validator.New()
 )
 
-// TODO UserFollowPo 可以不初始化Id吗
-func NewUserFollowPo(req *FollowActionRequest) *UserFollowPo {
-	return &UserFollowPo{
-		UserId: 1,
-		FollowId:     req.ToUserId,
-		FollowFlag: 1,
-	}
+func NewUserFollowPo() *UserFollowPo {
+	return &UserFollowPo{}
 }
 
-// TODO 
-func NewUserFollowerPo(req *FollowActionRequest) *UserFollowerPo {
-	return &UserFollowerPo{
-		UserId: req.ToUserId,
-		FollowerId:     1,
-		FollowerFlag: 1,
-	}
+// NewUserFollowerPo TODO
+func NewUserFollowerPo() *UserFollowerPo {
+	return &UserFollowerPo{}
 }
 
-// 获取关注列表 相关
+// Validate 获取关注列表 相关
 func (r *FollowListRequest) Validate() error {
 	return validate.Struct(r)
 }
@@ -44,7 +36,7 @@ func NewFollowListResponse() *FollowListResponse {
 	return &FollowListResponse{}
 }
 
-// 获取粉丝列表 相关
+// Validate 获取粉丝列表 相关
 func (r *FollowerListRequest) Validate() error {
 	return validate.Struct(r)
 }
@@ -57,7 +49,7 @@ func NewFollowerListResponse() *FollowerListResponse {
 	return &FollowerListResponse{}
 }
 
-// 获取好友列表 相关
+// Validate 获取好友列表 相关
 func (r *FriendListRequest) Validate() error {
 	return validate.Struct(r)
 }
@@ -70,7 +62,7 @@ func NewFriendListResponse() *FriendListResponse {
 	return &FriendListResponse{}
 }
 
-// 关注操作 相关
+// Validate 关注操作 相关
 func (r *FollowActionRequest) Validate() error {
 	return validate.Struct(r)
 }
@@ -93,3 +85,36 @@ func (*UserFollowerPo) TableName() string {
 	return "user_follower"
 }
 
+func (r *ListCountRequest) Validate() error {
+	return validate.Struct(r)
+}
+
+func NewListCountRequest() *ListCountRequest {
+	return &ListCountRequest{}
+}
+
+func NewListCountResponse() *ListCountResponse {
+	return &ListCountResponse{}
+}
+
+func NewIsFollowerResponse() *IsFollowerResponse {
+	return &IsFollowerResponse{}
+}
+
+func NewUserFriend(toUser *user.User) *UserFriend {
+	return &UserFriend{
+		Id:              toUser.Id,
+		Name:            toUser.Name,
+		FollowCount:     toUser.FollowCount,
+		FollowerCount:   toUser.FollowerCount,
+		IsFollow:        toUser.IsFollow,
+		Avatar:          toUser.Avatar,
+		BackgroundImage: toUser.BackgroundImage,
+		Signature:       toUser.Signature,
+		TotalFavorited:  toUser.TotalFavorited,
+		WorkCount:       toUser.WorkCount,
+		FavoriteCount:   toUser.FavoriteCount,
+
+		MsgType: 1,
+	}
+}

@@ -11,47 +11,68 @@ import (
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 )
 
-func NewGetUserReq() *GetUserReq {
-	return &GetUserReq{}
+func newGetUserReq() *getUserReq {
+	return &getUserReq{}
 }
 
-// GetUserReq 查询用户信息
-type GetUserReq struct {
+// getUserReq 查询用户信息
+type getUserReq struct {
 	// 用户名
 	Username string `json:"username"`
 	// IDS
-	UserIds []int64 `json:"user_ids"`
+	UserId int64 `json:"user_id"`
 }
 
-// GetUser 根据用户名称获取用户
-func (s *userServiceImpl) GetUser(ctx context.Context, req *GetUserReq) ([]*user.UserPo, error) {
-	db := s.db.WithContext(ctx)
-	if req.Username != "" {
-		db = db.Where("username LIKE  ?", req.Username)
-	}
+// userList 根据用户名称获取用户
+func (s *userServiceImpl) userList(ctx context.Context, userIds []int64) ([]*user.UserPo, error) {
 
-	if req.UserIds != nil && len(req.UserIds) > 0 {
-		db = db.Where("id IN ?", req.UserIds)
+	pos := make([]*user.UserPo, 0)
+	if userIds == nil || len(userIds) <= 0 {
+		s.l.Errorf("user userList：你的参数可能有问题哟~")
+		return pos, nil
 	}
-
-	pos := make([]*user.UserPo, 1)
 
 	// 查询
-	db = db.Find(&pos)
-
-	if db.RowsAffected == 0 {
-		return nil, exception.WithStatusCode(constant.WRONG_USER_NOT_EXIST)
-	}
+	db := s.db.WithContext(ctx).Where("id IN ?", userIds).Find(&pos)
 
 	if db.Error != nil {
 		return nil, db.Error
 	}
 
+	if db.RowsAffected == 0 {
+		return nil, exception.WithStatusCode(constant.WRONG_USER_NOT_EXIST)
+	}
+
 	return pos, nil
 }
 
-// Insert 创建用户
-func (s *userServiceImpl) Insert(ctx context.Context, user *user.UserPo) (*user.UserPo, error) {
+// 通过user_id 或 username 查找用户
+func (s *userServiceImpl) getUser(ctx context.Context, req *getUserReq) (*user.UserPo, error) {
+
+	db := s.db.WithContext(ctx)
+
+	po := user.NewDefaultUserPo()
+	if req.Username != "" && req.UserId <= 0 {
+		db = db.Where("username = ?", req.Username)
+	} else if req.UserId > 0 && req.Username == "" {
+		db = db.Where("id = ?", req.UserId)
+	} else {
+		s.l.Errorf("user userList：你的参数可能有问题哟~")
+		return po, nil
+	}
+
+	db = db.Find(po)
+
+	if db.Error != nil {
+		s.l.Errorf("user getUser：%s", db.Error.Error())
+		return nil, db.Error
+	}
+
+	return po, nil
+}
+
+// insert 创建用户
+func (s *userServiceImpl) insert(ctx context.Context, user *user.UserPo) (*user.UserPo, error) {
 
 	res := s.db.WithContext(ctx).Create(user)
 

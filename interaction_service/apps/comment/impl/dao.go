@@ -78,26 +78,27 @@ func (c *commentServiceImpl) DeleteCommentById(ctx context.Context, req *comment
 	return commentPo, nil
 }
 
-func (c *commentServiceImpl) GetCommentPoList(ctx context.Context, req *comment.GetCommentListRequest) ([]*comment.CommentPo, error) {
-	db := c.db.WithContext(ctx)
-	var count int64 = 0
-	//查找评论数量
-	db.Table("comment").Where("video_id = ?", req.VideoId).Count(&count)
-	pos := make([]*comment.CommentPo, count)
-	if count == 0 {
-		return pos, nil
+func (s *commentServiceImpl) getCommentPoList(ctx context.Context, req *comment.GetCommentListRequest) ([]*comment.CommentPo, error) {
+	db := s.db.WithContext(ctx)
+
+	pos := make([]*comment.CommentPo, 10)
+	db.Where("video_id = ?", req.VideoId).Find(&pos)
+	if db.Error != nil {
+		s.l.Errorf("comment getCommentPoList：出现错误，%s", db.Error)
+		return pos, db.Error
 	}
-	db.Table("comment").Where("video_id = ?", req.VideoId).Find(&pos)
+
 	return pos, nil
 }
 
-func (c *commentServiceImpl) GetCommentCount(ctx context.Context, req *comment.GetCommentCountByIdRequest) (*int64, error) {
-	db := c.db.WithContext(ctx)
+func (s *commentServiceImpl) getCommentCount(ctx context.Context, videoId int64) (int64, error) {
+	db := s.db.WithContext(ctx)
 	var count int64
-	db.Table("comment").Where(" video_id = ?", req.VideoId).Count(&count)
+	db.Model(&comment.CommentPo{}).Where("video_id = ?", videoId).Count(&count)
 	if db.Error != nil {
-		c.l.Errorf("喜欢视频总数查询失败:%s", db.Error.Error())
-		return nil, db.Error
+		s.l.Errorf("喜欢视频总数查询失败:%s", db.Error.Error())
+		return 0, db.Error
 	}
-	return &count, nil
+
+	return count, nil
 }

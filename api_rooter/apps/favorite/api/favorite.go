@@ -19,7 +19,7 @@ type favoriteActionResponse struct {
 // userInfoResp 用户信息的响应对象
 type getFavoriteListResponse struct {
 	*custom.CodeMsg
-	*favorite.GetFavoriteListResponse
+	*favorite.FavoriteListResponse
 }
 
 func (h *Handler) FavoriteAction(c *gin.Context) error {
@@ -45,23 +45,23 @@ func (h *Handler) FavoriteAction(c *gin.Context) error {
 
 func (h *Handler) GetFavoriteList(c *gin.Context) error {
 
-	req := favorite.NewDefaultGetFavoriteListRequest()
+	req := favorite.NewFavoriteListRequest()
 
 	// 1、接收参数
-	if err := c.Bind(req); err != nil {
+	if err := c.ShouldBind(req); err != nil {
 		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
 
 	// 2、进行接口调用
-	resp, err := h.favoriteService.GetFavoriteList(c.Request.Context(), req)
+	resp, err := h.favoriteService.FavoriteList(c.Request.Context(), req)
 	if err != nil {
 		return exception.GrpcErrWrapper(err)
 	}
 
 	c.JSON(http.StatusOK,
 		getFavoriteListResponse{
-			CodeMsg:                 custom.NewWithCode(constant.OPERATE_OK),
-			GetFavoriteListResponse: resp,
+			CodeMsg:              custom.NewWithCode(constant.OPERATE_OK),
+			FavoriteListResponse: resp,
 		})
 	return nil
 }

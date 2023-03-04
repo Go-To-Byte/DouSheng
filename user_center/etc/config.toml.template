@@ -15,12 +15,30 @@ dir = "logs"
 format = "text"
 to = "stdout"
 
+# 注册本服务
 [consul.register]
 registry_name = "user_center"
 host = "127.0.0.1"
 port = 8500
 tags = ["用户中心", "user_center"]
 
+# 去发现 api_rooter 服务
 [consul.discovers.api_rooter]
 discover_name = "api_rooter"
 address = "127.0.0.1:8500"
+
+# 去发现视频服务
+[consul.discovers.video_service]
+discover_name = "video_service"
+address = "127.0.0.1:8500"
+
+# 去发现关系服务
+[consul.discovers.relation_service]
+discover_name = "relation_service"
+address = "127.0.0.1:8500"
+
+# 去发现互动服务
+[consul.discovers.interaction_service]
+discover_name = "interaction_service"
+address = "127.0.0.1:8500"
+

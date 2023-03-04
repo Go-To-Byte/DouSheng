@@ -31,3 +31,8 @@ address = "127.0.0.1:8500"
 [consul.discovers.user_center]
 discover_name = "user_center"
 address = "127.0.0.1:8500"
+
+# 去发现互动服务
+[consul.discovers.interaction_service]
+discover_name = "interaction_service"
+address = "127.0.0.1:8500"

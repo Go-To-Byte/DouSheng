@@ -21,12 +21,15 @@ message ChatMessageListRequest {
   // 对方用户ID
   // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
   int64 to_user_id = 2;
+  // 上次最新消息的时间
+  // @gotags: json:"pre_msg_time" form:"pre_msg_time"
+  int64 pre_msg_time=3;
 }
 
 // 获取聊天记录消息列表 的接口响应 model
 message ChatMessageListResponse {
   // 关注列表用户信息
-  // @gotags: json:"message"
+  // @gotags: json:"message_list"
   repeated Message message_list = 1;
 }
 
@@ -67,8 +70,8 @@ message Message {
   // @gotags: json:"content"
   string content = 4;
   // 消息创建时间
-  // @gotags: json:"created_at"
-  int64 created_at = 5;
+  // @gotags: json:"create_time"
+  int64 create_time = 5;
 }
 
 // 聊天记录表:与数据库对应的PO对象

@@ -17,14 +17,13 @@ func (s *messageServiceImpl) ChatMessageList(ctx context.Context, req *message.C
 
 	// 1、校验参数[防止GRPC调用时参数异常]
 	if err := req.Validate(); err != nil {
-		s.l.Errorf("message: ChatMessageList 参数校验失败：%s", req)
 		s.l.Errorf("message: ChatMessageList 参数校验失败：%s", err.Error())
 		return nil, status.Error(codes.InvalidArgument,
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 
 	// 2、根据接收用户ID和当前用户token获取消息列表
-	pos, err := s.getChatMessageListByUserId(ctx, req.ToUserId, req.Token)
+	pos, err := s.getChatMessageListByUserId(ctx, req)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, constant.Code2Msg(constant.ERROR_ACQUIRE))
 	}
@@ -35,7 +34,7 @@ func (s *messageServiceImpl) ChatMessageList(ctx context.Context, req *message.C
 
 func (s *messageServiceImpl) ChatMessageAction(ctx context.Context, req *message.ChatMessageActionRequest) (
 	*message.ChatMessageActionResponse, error) {
-	
+
 	s.l.Errorf("message: Token ：%s", req.Token)
 
 	// 1、请求参数校验
@@ -53,7 +52,7 @@ func (s *messageServiceImpl) ChatMessageAction(ctx context.Context, req *message
 
 func (s *messageServiceImpl) composeChatMessageListResp(ctx context.Context, pos []*message.MessagePo) (
 	*message.ChatMessageListResponse, error) {
-	
+
 	set := message.NewChatMessageListResponse()
 	if pos == nil || len(pos) <= 0 {
 		// 可能存在聊天记录为空, 不应该抛出异常而返回空值
@@ -79,17 +78,12 @@ func (s *messageServiceImpl) messagePos2Vos(ctx context.Context, pos []*message.
 		return set, nil
 	}
 
-	errCount := 0
 	for i, po := range pos {
 		// 将 po -> vo
 		vo, err := s.messagePo2Vo(ctx, po)
 		if err != nil {
-			errCount++
-			if errCount > 1 {
-				return nil, err
-			}
 			s.l.Errorf("message: composeMessageListResp 组合聊天消息异常：%s", err.Error())
-			continue
+			return nil, err
 		}
 		set[i] = vo
 	}
@@ -98,13 +92,12 @@ func (s *messageServiceImpl) messagePos2Vos(ctx context.Context, pos []*message.
 
 func (s *messageServiceImpl) messagePo2Vo(ctx context.Context, po *message.MessagePo) (
 	*message.Message, error) {
-	
+
 	return &message.Message{
-		Id: 		po.Id,
-		ToUserId: 	po.ToUserId,
+		Id:         po.Id,
+		ToUserId:   po.ToUserId,
 		FromUserId: po.FromUserId,
-		Content: 	po.Content,
-		CreatedAt: 	po.CreatedAt,
+		Content:    po.Content,
+		CreateTime: po.CreatedAt,
 	}, nil
 }
-

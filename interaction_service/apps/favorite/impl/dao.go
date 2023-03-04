@@ -8,6 +8,8 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"time"
 )
 
@@ -21,7 +23,7 @@ func (f *favoriteServiceImpl) InsertFavoriteRecord(ctx context.Context, req *fav
 	//检查是否已经存在此纪录
 	tokenReq := token.NewValidateTokenRequest(req.Token)
 	validatedToken, err := f.tokenService.ValidateToken(ctx, tokenReq)
-	po = favorite.NewDefaultFavoritePo()
+	po = favorite.NewFavoritePo()
 	db := f.db.WithContext(ctx)
 	db = db.Where("user_id = ? AND video_id = ?", validatedToken.GetUserId(), req.VideoId).Order("video_id").Find(&po)
 	if db.Error != nil {
@@ -74,7 +76,7 @@ func (f *favoriteServiceImpl) NewFavoritePo(ctx context.Context, req *favorite.F
 		return nil, err
 	}
 	//构造请求
-	favoritePo := favorite.NewDefaultFavoritePo()
+	favoritePo := favorite.NewFavoritePo()
 	//TODO 雪花算法实现
 	favoritePo.Id = time.Now().UnixNano()
 	favoritePo.UserId = validatedToken.GetUserId()
@@ -83,28 +85,76 @@ func (f *favoriteServiceImpl) NewFavoritePo(ctx context.Context, req *favorite.F
 }
 
 // 获取喜欢视频列表
-func (f *favoriteServiceImpl) GetFavoriteListPo(ctx context.Context, req *favorite.GetFavoriteListRequest) ([]*favorite.FavoritePo, error) {
+func (s *favoriteServiceImpl) getFavoriteListPo(ctx context.Context, po *favorite.FavoritePo) (
+	[]*favorite.FavoritePo, error) {
+
 	//向数据库查询所有数据
-	db := f.db.WithContext(ctx)
-	//统计记录数量
-	//在favorite表中查找对应用户点赞的记录
+	db := s.db.WithContext(ctx)
+
 	pos := make([]*favorite.FavoritePo, 0)
-	db.Where("user_id = ?", req.UserId).Find(&pos)
+	if po.UserId > 0 && po.VideoId <= 0 {
+		db = db.Where("user_id = ?", po.UserId)
+	} else if po.VideoId > 0 && po.UserId <= 0 {
+		db = db.Where("video_id = ?", po.VideoId)
+	} else {
+		s.l.Errorf("favorite getFavoriteListPo：你的参数可能有问题哟~")
+		return pos, nil
+	}
+
+	//在favorite表中查找对应用户点赞的记录
+	db.Find(&pos)
+
 	if db.Error != nil {
 		return nil, db.Error
 	}
-	return pos, nil
 
+	return pos, nil
 }
 
-// TODO 返回指定video_id视频点赞数量
-func (f *favoriteServiceImpl) GetFavoriteCount(ctx context.Context, req *favorite.GetFavoriteCountByIdRequest) (*int64, error) {
-	db := f.db.WithContext(ctx)
-	var count int64
-	db.Table("favorite").Where(" video_id = ?", req.VideoId).Count(&count)
-	if db.Error != nil {
-		f.l.Errorf("喜欢视频总数查询失败:%s", db.Error.Error())
-		return nil, db.Error
+// getFavoriteCount 点赞数、被赞数 TODO  (这里可以精确控制、可按照 relation Count 里面做)
+func (f *favoriteServiceImpl) getFavoriteCount(ctx context.Context, req *favorite.FavoriteCountRequest) (
+	*favorite.FavoriteCountResponse, error) {
+
+	resp := favorite.NewFavoriteCountResponse()
+	db := f.db.WithContext(ctx).Model(&favorite.FavoritePo{})
+
+	if req.UserId > 0 {
+		// 查询点赞总数
+		db.Where("user_id = ?", req.UserId).Count(&resp.FavoriteCount)
 	}
-	return &count, nil
+
+	if db.Error != nil {
+		f.l.Errorf("favorite getFavoriteCount：喜欢视频总数查询失败，%s", db.Error.Error())
+		return resp, db.Error
+	}
+
+	if req.VideoIds != nil && len(req.VideoIds) > 0 {
+		// 查询获得的点赞数
+		db.Where("video_id IN ?", req.VideoIds).Count(&resp.AcquireFavoriteCount)
+	}
+
+	if db.Error != nil {
+		f.l.Errorf("favorite getFavoriteCount：查询获得点赞数目失败，%s", db.Error.Error())
+		return resp, db.Error
+	}
+
+	return resp, nil
+}
+
+func (s *favoriteServiceImpl) isFavorite(ctx context.Context, po *favorite.FavoritePo) (bool, error) {
+
+	if po.UserId == 0 {
+		return false, nil
+	}
+
+	// 只是查询，看看是否有条记录
+	db := s.db.WithContext(ctx).
+		Where("user_id = ? AND video_id = ?", po.UserId, po.VideoId).Find(favorite.NewFavoritePo())
+
+	if db.Error != nil {
+		s.l.Errorf("relation isFollowerByUId：查询错误，%s", db.Error.Error())
+		return false, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
+	}
+
+	return db.RowsAffected == 1, nil
 }

@@ -5,6 +5,7 @@ import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/utils"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -36,6 +37,7 @@ func TestFeedVideos(t *testing.T) {
 	should := assert.New(t)
 
 	request := video.NewFeedVideosRequest()
+	request.Token = utils.V2P("P9cnDtk2HnBEPxg7ksxlrxkj")
 
 	set, err := service.FeedVideos(context.Background(), request)
 
@@ -49,12 +51,25 @@ func TestPublishList(t *testing.T) {
 	should := assert.New(t)
 
 	request := video.NewPublishListRequest()
-	request.UserId = 4
+	request.UserId = 17
+	request.Token = "JCRZKN1Wj7OVvawxHgA5J1Kq"
 
 	set, err := service.PublishList(context.Background(), request)
 
 	if should.NoError(err) {
 		t.Log(set.VideoList)
+	}
+}
+
+func TestVideoServiceImpl_ComposeVideoCount(t *testing.T) {
+
+	should := assert.New(t)
+	request := video.NewPublishListCountRequest(17)
+	resp, err := service.ComposeVideoCount(context.Background(), request)
+
+	if should.NoError(err) {
+		t.Log(resp.PublishCount)
+		t.Log(resp.AcquireTotalFavorite)
 	}
 }
 

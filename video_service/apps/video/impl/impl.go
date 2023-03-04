@@ -11,6 +11,9 @@ import (
 	apiRpc "github.com/Go-To-Byte/DouSheng/api_rooter/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
+	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/comment"
+	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
+	interactionRpc "github.com/Go-To-Byte/DouSheng/interaction_service/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
 	userRpc "github.com/Go-To-Byte/DouSheng/user_center/client/rpc"
 
@@ -32,6 +35,12 @@ type videoServiceImpl struct {
 
 	// 依赖User 的客户端
 	userServer user.ServiceClient
+
+	// 依赖 Favorite 的客户端
+	favoriteService favorite.ServiceClient
+
+	// 依赖 Comment 的客户端
+	commentService comment.ServiceClient
 }
 
 func (s *videoServiceImpl) Init() error {
@@ -48,6 +57,7 @@ func (s *videoServiceImpl) Init() error {
 	if err != nil {
 		return err
 	}
+
 	s.tokenService = apiRooter.TokenService()
 
 	// 获取用户中心的客户端[GRPC调用]
@@ -55,7 +65,17 @@ func (s *videoServiceImpl) Init() error {
 	if err != nil {
 		return err
 	}
+
 	s.userServer = userCenter.UserService()
+
+	// 获取用户中心的客户端[GRPC调用]
+	favoriteCenter, err := interactionRpc.NewInteractionServiceClientFromConfig()
+	if err != nil {
+		return err
+	}
+
+	s.favoriteService = favoriteCenter.FavoriteService()
+	s.commentService = favoriteCenter.CommentService()
 
 	return nil
 }

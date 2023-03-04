@@ -8,6 +8,8 @@ service Service {
   rpc IssueToken(IssueTokenRequest) returns(Token) {}
   // 验证Token （内部服务使用）
   rpc ValidateToken(ValidateTokenRequest) returns(Token) {}
+  // 根据Token解析出 user_id
+  rpc GetUIDFromTk(ValidateTokenRequest) returns(UIDResponse);
 }
 
 // Token
@@ -54,4 +56,10 @@ message ValidateTokenRequest {
   // access token
   // @gotags: json:"access_token"
   string access_token = 1;
+}
+
+message UIDResponse {
+  // access token
+  // @gotags: json:"user_id"
+  int64 user_id = 1;
 }
