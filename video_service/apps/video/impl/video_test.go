@@ -5,6 +5,7 @@ import (
 	"context"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
+	"github.com/Go-To-Byte/DouSheng/dou_kit/utils"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -36,6 +37,7 @@ func TestFeedVideos(t *testing.T) {
 	should := assert.New(t)
 
 	request := video.NewFeedVideosRequest()
+	request.Token = utils.V2P("P9cnDtk2HnBEPxg7ksxlrxkj")
 
 	set, err := service.FeedVideos(context.Background(), request)
 

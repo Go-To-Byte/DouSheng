@@ -44,8 +44,8 @@ func TestRelationServiceImpl_FriendList(t *testing.T) {
 
 	req := relation.NewFriendListRequest()
 	// 查询 16的朋友
-	req.Token = "nuo7A79Qp4Ms7144BAyQwW4H"
-	req.UserId = 16
+	req.Token = "F5Vp8Pa1H2owP3jjOU3bOdG2"
+	req.UserId = 25
 
 	resp, err := service.FriendList(context.Background(), req)
 

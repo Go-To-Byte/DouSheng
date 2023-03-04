@@ -63,3 +63,11 @@ func NewDefaultGetCommentCountByIdRequest() *GetCommentCountByIdRequest {
 func NewDefaultGetCommentCountByIdResponse() *GetCommentCountByIdResponse {
 	return &GetCommentCountByIdResponse{}
 }
+
+func NewCommentMapRequest() *CommentMapRequest {
+	return &CommentMapRequest{}
+}
+
+func NewCommentMapResponse() *CommentMapResponse {
+	return &CommentMapResponse{}
+}

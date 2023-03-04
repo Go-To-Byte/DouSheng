@@ -67,6 +67,22 @@ func TestFavoriteServiceImpl_FavoriteCount(t *testing.T) {
 	}
 }
 
+func TestFavoriteServiceImpl_FavoriteCountMap(t *testing.T) {
+	should := assert.New(t)
+	newReq := favorite.NewFavoriteMapRequest()
+	newReq.VideoIds = []int64{23, 16, 24, 25}
+	newReq.UserId = 17
+
+	res, err := service.FavoriteCountMap(context.Background(), newReq)
+	if should.NoError(err) {
+		fmt.Println("获取点赞总数成功")
+		for k, v := range res.FavoriteMap {
+			t.Log(k, v)
+			t.Log(k, v.FavoriteCount, v.IsFavorite)
+		}
+	}
+}
+
 func init() {
 
 	// 加载配置文件

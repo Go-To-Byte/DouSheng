@@ -120,13 +120,18 @@ func (s *relationServiceImpl) ListCount(ctx context.Context, req *relation.ListC
 func (s *relationServiceImpl) IsFollower(ctx context.Context, req *relation.UserFollowPo) (
 	*relation.IsFollowerResponse, error) {
 
-	isFollow, err := s.exist(ctx, req)
-	if err != nil {
+	// 只是查询，看看是否有条记录
+	db := s.db.WithContext(ctx).
+		Where("user_id = ? AND follow_id = ? AND follow_flag = ?",
+			req.UserId, req.FollowId, relation.ActionType_FOLLOW_ACTION).Find(relation.NewUserFollowPo())
+
+	if db.Error != nil {
+		s.l.Errorf("relation isFollowerByUId：查询错误，%s", db.Error.Error())
 		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
 	}
 
 	resp := relation.NewIsFollowerResponse()
-	resp.MyFollower = isFollow
+	resp.MyFollower = db.RowsAffected == 1
 
 	return resp, nil
 }

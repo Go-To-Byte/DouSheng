@@ -56,25 +56,10 @@ func (s *relationServiceImpl) getFriendListByUId(ctx context.Context, userId int
 	[]*relation.UserFollowerPo, error) {
 
 	db := s.db.WithContext(ctx)
-	set := make([]*relation.UserFollowerPo, 50)
+	set := make([]*relation.UserFollowerPo, 0)
 
 	// 构建条件、查询
-
-	subQuery := db.Model(&relation.UserFollowerPo{}).Select("user_id").
-		Where("user_id = ? AND follower_flag = ?", userId, relation.ActionType_FOLLOW_ACTION)
-
-	db.Where("follower_id IN (?) AND follower_flag = ?", subQuery, relation.ActionType_FOLLOW_ACTION).Find(&set)
-
-	/*
-		构建出形如：
-			SELECT
-				*
-			FROM
-				user_follower
-			WHERE
-				( follower_id IN ( SELECT user_id FROM user_follower WHERE user_id = 16 AND follower_flag = 1 ) )
-				AND follower_flag = 1;
-	*/
+	db.Raw(friendSql, relation.ActionType_FOLLOW_ACTION, relation.ActionType_FOLLOW_ACTION, userId).Scan(&set)
 
 	if db.Error != nil {
 		s.l.Errorf("relation query：查询错误: %s", db.Error.Error())

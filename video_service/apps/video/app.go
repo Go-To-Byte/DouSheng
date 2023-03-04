@@ -6,8 +6,6 @@ import (
 	"time"
 
 	kitUtil "github.com/Go-To-Byte/DouSheng/dou_kit/utils"
-	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
-
 	"github.com/Go-To-Byte/DouSheng/video_service/common/utils"
 )
 
@@ -85,13 +83,11 @@ func NewPublishListResponse() *PublishListResponse {
 	return &PublishListResponse{}
 }
 
-// Po2vo 将 videoPo -> video，并且会组合用户信息
-// userMap：用户信息 [userId] = User
-func (po *VideoPo) Po2vo(userMap map[int64]*user.User) *Video {
+// Po2vo 将 videoPo -> video
+func (po *VideoPo) Po2vo() *Video {
 	// po -> vo
 	return &Video{
 		Id:       po.Id,
-		Author:   userMap[po.AuthorId],
 		PlayUrl:  utils.URLPrefix(po.PlayUrl),
 		CoverUrl: utils.URLPrefix(po.CoverUrl),
 		Title:    po.Title,

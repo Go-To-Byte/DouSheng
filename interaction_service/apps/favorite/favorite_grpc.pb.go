@@ -28,6 +28,8 @@ type ServiceClient interface {
 	FavoriteList(ctx context.Context, in *FavoriteListRequest, opts ...grpc.CallOption) (*FavoriteListResponse, error)
 	// 获取 1、用户喜欢列表的数目 2、获取视频点赞数
 	FavoriteCount(ctx context.Context, in *FavoriteCountRequest, opts ...grpc.CallOption) (*FavoriteCountResponse, error)
+	// 获取视频点赞数量 map[videoId] = favorite_count + isFavorite
+	FavoriteCountMap(ctx context.Context, in *FavoriteMapRequest, opts ...grpc.CallOption) (*FavoriteMapResponse, error)
 }
 
 type serviceClient struct {
@@ -65,6 +67,15 @@ func (c *serviceClient) FavoriteCount(ctx context.Context, in *FavoriteCountRequ
 	return out, nil
 }
 
+func (c *serviceClient) FavoriteCountMap(ctx context.Context, in *FavoriteMapRequest, opts ...grpc.CallOption) (*FavoriteMapResponse, error) {
+	out := new(FavoriteMapResponse)
+	err := c.cc.Invoke(ctx, "/dousheng.interaction.favorite.Service/FavoriteCountMap", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
@@ -75,6 +86,8 @@ type ServiceServer interface {
 	FavoriteList(context.Context, *FavoriteListRequest) (*FavoriteListResponse, error)
 	// 获取 1、用户喜欢列表的数目 2、获取视频点赞数
 	FavoriteCount(context.Context, *FavoriteCountRequest) (*FavoriteCountResponse, error)
+	// 获取视频点赞数量 map[videoId] = favorite_count + isFavorite
+	FavoriteCountMap(context.Context, *FavoriteMapRequest) (*FavoriteMapResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -90,6 +103,9 @@ func (UnimplementedServiceServer) FavoriteList(context.Context, *FavoriteListReq
 }
 func (UnimplementedServiceServer) FavoriteCount(context.Context, *FavoriteCountRequest) (*FavoriteCountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FavoriteCount not implemented")
+}
+func (UnimplementedServiceServer) FavoriteCountMap(context.Context, *FavoriteMapRequest) (*FavoriteMapResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FavoriteCountMap not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -158,6 +174,24 @@ func _Service_FavoriteCount_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_FavoriteCountMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FavoriteMapRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).FavoriteCountMap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/dousheng.interaction.favorite.Service/FavoriteCountMap",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).FavoriteCountMap(ctx, req.(*FavoriteMapRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +210,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FavoriteCount",
 			Handler:    _Service_FavoriteCount_Handler,
+		},
+		{
+			MethodName: "FavoriteCountMap",
+			Handler:    _Service_FavoriteCountMap_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -64,8 +64,10 @@ func (f *favoriteServiceImpl) FavoriteList(ctx context.Context, req *favorite.Fa
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 
+	po := favorite.NewFavoritePo()
+	po.UserId = req.UserId
 	//	获取喜欢视频列表
-	pos, err := f.getFavoriteListPo(ctx, req)
+	pos, err := f.getFavoriteListPo(ctx, po)
 	if err != nil {
 		f.l.Errorf("interaction: FavoriteAction 参数校验失败！%s", err.Error())
 		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
@@ -105,6 +107,42 @@ func (f *favoriteServiceImpl) FavoriteCount(ctx context.Context, req *favorite.F
 	resp, err := f.getFavoriteCount(ctx, req)
 	if err != nil {
 		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
+	}
+
+	return resp, nil
+}
+
+func (s *favoriteServiceImpl) FavoriteCountMap(ctx context.Context, req *favorite.FavoriteMapRequest) (
+	*favorite.FavoriteMapResponse, error) {
+
+	// 1、参数校验
+	resp := favorite.NewFavoriteMapResponse()
+	if req.VideoIds == nil || len(req.VideoIds) <= 0 {
+		s.l.Errorf("user userList：你的参数可能有问题哟~")
+		return resp, nil
+	}
+
+	// 2、获取每个视频的点赞数+是否关注
+	resp.FavoriteMap = make(map[int64]*favorite.FavoriteMap, 10)
+	for _, v := range req.VideoIds {
+		// 获取点赞数
+		favoriteReq := favorite.NewFavoriteCountRequest()
+		favoriteReq.VideoIds = []int64{v}
+		favoriteResp, err := s.getFavoriteCount(ctx, favoriteReq)
+		if err != nil {
+			return resp, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
+		}
+
+		// 查询是否点赞
+		po := favorite.NewFavoritePo()
+		po.UserId = req.UserId
+		po.VideoId = v
+		isFavorite, err := s.isFavorite(ctx, po)
+		if err != nil {
+			return resp, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
+		}
+
+		resp.FavoriteMap[v] = favorite.NewFavoriteMap(favoriteResp.AcquireFavoriteCount, isFavorite)
 	}
 
 	return resp, nil

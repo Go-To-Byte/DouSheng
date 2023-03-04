@@ -14,6 +14,9 @@ service Service {
   rpc GetCommentList(GetCommentListRequest) returns (GetCommentListResponse);
   //通过视频Id获取评论总数
   rpc GetCommentCountById(GetCommentCountByIdRequest) returns(GetCommentCountByIdResponse);
+  
+  // 获取视频评论数量 map[videoId] = comment_count
+  rpc CommentCountMap(CommentMapRequest) returns(CommentMapResponse);
 }
 
 //评论实体
@@ -72,9 +75,29 @@ message CommentActionResponse{
 message GetCommentListResponse{
   repeated Comment comment_list = 3;
 }
+
 message GetCommentCountByIdRequest{
+  // 视频ID
+  // @gotags: json:"video_id"
   int64 video_id = 1;
 }
+
 message GetCommentCountByIdResponse{
+  // 评论数量
+  // @gotags: json:"comment_count"
   int64 comment_count = 1;
+}
+
+// 视频评论 IDs
+message CommentMapRequest {
+  // 视频ID 列表
+  // @gotags: json:"video_ids"
+  repeated int64 video_ids = 1;
+}
+
+// 视频评论列表：map[userId] = comment_count_map
+message CommentMapResponse {
+  // 用户列表：map[videoId] = comment_count_map
+  // @gotags: json:"comment_count_map"
+  map<int64, int64> comment_count_map = 1;
 }

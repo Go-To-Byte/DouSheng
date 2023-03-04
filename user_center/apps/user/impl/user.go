@@ -103,9 +103,8 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 
 	// 将Token放入Ctx
 	tkCtx := context.WithValue(ctx, constant.REQUEST_TOKEN, req.Token)
-	err = s.composeInfo(tkCtx, response.User)
 
-	return response, err
+	return response, s.composeInfo(tkCtx, response.User)
 }
 
 func (s *userServiceImpl) UserMap(ctx context.Context, req *user.UserMapRequest) (*user.UserMapResponse, error) {
@@ -152,23 +151,24 @@ func (s *userServiceImpl) composeInfo(ctx context.Context, uResp *user.User) err
 	// 组合 followListCount、followerListCount、isFollow
 	go func() {
 		defer wait.Done()
-		relationErrs := s.composeRelation(ctx, uResp)
-		errs = append(errs, relationErrs...)
+
+		errs = append(errs, s.composeRelation(ctx, uResp)...)
 	}()
 
 	// 组合 publishCount
 	go func() {
 		defer wait.Done()
-		videoErrs := s.composeVideo(ctx, uResp)
-		errs = append(errs, videoErrs...)
+
+		errs = append(errs, s.composeVideo(ctx, uResp)...)
 	}()
 
 	// 组合 favoriteCount
 	go func() {
 		defer wait.Done()
-		favoriteErrs := s.composeFavorite(ctx, uResp)
-		errs = append(errs, favoriteErrs...)
+
+		errs = append(errs, s.composeFavorite(ctx, uResp)...)
 	}()
+
 	wait.Wait()
 
 	// 查看后台调用时，是否有错误产生

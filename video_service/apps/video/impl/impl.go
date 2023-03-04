@@ -11,6 +11,7 @@ import (
 	apiRpc "github.com/Go-To-Byte/DouSheng/api_rooter/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
+	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/comment"
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
 	interactionRpc "github.com/Go-To-Byte/DouSheng/interaction_service/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/user_center/apps/user"
@@ -37,6 +38,9 @@ type videoServiceImpl struct {
 
 	// 依赖 Favorite 的客户端
 	favoriteService favorite.ServiceClient
+
+	// 依赖 Comment 的客户端
+	commentService comment.ServiceClient
 }
 
 func (s *videoServiceImpl) Init() error {
@@ -71,6 +75,7 @@ func (s *videoServiceImpl) Init() error {
 	}
 
 	s.favoriteService = favoriteCenter.FavoriteService()
+	s.commentService = favoriteCenter.CommentService()
 
 	return nil
 }

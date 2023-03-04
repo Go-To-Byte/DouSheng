@@ -15,6 +15,9 @@ service Service{
   rpc FavoriteList(FavoriteListRequest) returns (FavoriteListResponse);
   // 获取 1、用户喜欢列表的数目 2、获取视频点赞数
   rpc FavoriteCount(FavoriteCountRequest) returns (FavoriteCountResponse);
+
+  // 获取视频点赞数量 map[videoId] = favorite_count + isFavorite
+  rpc FavoriteCountMap(FavoriteMapRequest) returns(FavoriteMapResponse);
 }
 
 // 点赞信息Module TODO：调整为联合主键
@@ -84,4 +87,31 @@ message FavoriteCountResponse {
   // 获得的点赞数量
   // @gotags: json:"acquire_favorite_count"
   int64 acquire_favorite_count = 2;
+}
+
+// 视频点赞 IDs
+message FavoriteMapRequest {
+  // 视频ID 列表
+  // @gotags: json:"video_ids"
+  repeated int64 video_ids = 1;
+  // 用户 ID
+  // @gotags: json:"user_id"
+  int64 user_id = 2;
+}
+
+// 视频点赞列表：map[userId] = favorite_count
+message FavoriteMapResponse {
+  // 用户列表：map[videoId] = FavoriteMap
+  // @gotags: json:"favorite_map"
+  map<int64, FavoriteMap> favorite_map = 1;
+}
+
+message FavoriteMap {
+  // 用户 ID
+  // @gotags: json:"favorite_count"
+  int64 favorite_count = 1;
+
+  // 是否点赞
+  // @gotags: json:"is_favorite"
+  bool is_favorite = 2;
 }

@@ -59,3 +59,18 @@ func NewFavoriteCountResponse() *FavoriteCountResponse {
 func NewFavoriteCountRequest() *FavoriteCountRequest {
 	return &FavoriteCountRequest{}
 }
+
+func NewFavoriteMapResponse() *FavoriteMapResponse {
+	return &FavoriteMapResponse{}
+}
+
+func NewFavoriteMapRequest() *FavoriteMapRequest {
+	return &FavoriteMapRequest{}
+}
+
+func NewFavoriteMap(count int64, isFavorite bool) *FavoriteMap {
+	return &FavoriteMap{
+		FavoriteCount: count,
+		IsFavorite:    isFavorite,
+	}
+}
