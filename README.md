@@ -9,9 +9,9 @@
 </div>
 
 
-| 主页 🏠                                           | 文档 📝                                          | 视频 ⏪️     |
-|---------------------------------------------------| ---------------------------------------------------- |-----------|
-| [website](https://github.com/Go-To-Byte/DouSheng) | [docs](https://go-to-byte.github.io/Docs-DouSheng/) | [video](https://github.com/Go-To-Byte/DouSheng/blob/main/dou_kit/docs/static/SVID_20230304_104537_1_x264.mp4) |
+| 主页 🏠                                           | 文档 📝                                          | 视频 ⏪️                                                                                                             |
+|---------------------------------------------------| ---------------------------------------------------- |-------------------------------------------------------------------------------------------------------------------|
+| [website](https://github.com/Go-To-Byte/DouSheng) | [docs](https://go-to-byte.github.io/Docs-DouSheng/) | [video(待剪)](https://github.com/Go-To-Byte/DouSheng/blob/main/dou_kit/docs/static/SVID_20230304_104537_1_x264.mp4) |
 
 # ✨ 特性
 
