@@ -13,6 +13,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
 )
 
+// 常量代替硬编码
 const (
 	// 点赞操作
 	FAVORITE_ACTION = 1

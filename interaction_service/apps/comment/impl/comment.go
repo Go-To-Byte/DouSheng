@@ -12,6 +12,11 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+const (
+	CREATE_COMMENT = 1
+	DELETE_COMMENT = 2
+)
+
 // CommentAction 实现评论操作功能
 func (c *commentServiceImpl) CommentAction(ctx context.Context, req *comment.CommentActionRequest) (*comment.CommentActionResponse, error) {
 	//	参数校验
@@ -21,7 +26,7 @@ func (c *commentServiceImpl) CommentAction(ctx context.Context, req *comment.Com
 	}
 	//发表评论
 	switch req.ActionType {
-	case 1:
+	case CREATE_COMMENT:
 		//发布评论
 		po, err := c.InsertCommentRecord(ctx, req)
 		if err != nil {
@@ -45,7 +50,7 @@ func (c *commentServiceImpl) CommentAction(ctx context.Context, req *comment.Com
 			return nil, err
 		}
 		return resp, nil
-	case 2:
+	case DELETE_COMMENT:
 		po, err := c.DeleteCommentById(ctx, req)
 		if err != nil {
 			c.l.Errorf("删除视频评论失败：%s", err.Error())
