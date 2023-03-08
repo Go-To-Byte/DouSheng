@@ -13,6 +13,13 @@ import (
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
 )
 
+const (
+	// 点赞操作
+	FAVORITE_ACTION = 1
+	// 取消点赞
+	FAVORITE_CANCEL_ACTION = 2
+)
+
 // FavoriteAction 视频点赞接口实现:成功返回nil,失败返回错误信息
 func (f *favoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.FavoriteActionRequest) (
 	*favorite.FavoriteActionResponse, error) {
@@ -24,7 +31,7 @@ func (f *favoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.
 	}
 	switch req.ActionType {
 	//点赞操作
-	case 1:
+	case FAVORITE_ACTION:
 		_, err := f.InsertFavoriteRecord(ctx, req)
 		//点赞失败处理
 		if err != nil {
@@ -35,7 +42,7 @@ func (f *favoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.
 		//点赞成功处理
 		return favorite.NewFavoriteActionResponse(), err
 	//取消点赞操作
-	case 2:
+	case FAVORITE_CANCEL_ACTION:
 		_, err := f.DeleteFavoriteRecord(ctx, req)
 		//取消点赞失败
 		if err != nil {
