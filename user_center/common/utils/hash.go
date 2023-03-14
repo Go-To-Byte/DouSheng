@@ -52,6 +52,7 @@ func Md5Hash(data any) string {
 	_, err = hash.Write(dataMarshal)
 
 	if err != nil {
+		// TODO：快哈希 没必要 panic
 		panic(err)
 	}
 
