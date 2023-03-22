@@ -3,13 +3,14 @@
 package api
 
 import (
-	"fmt"
+	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+	"net/http"
+
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception/custom"
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/comment"
-	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type commentActionResponse struct {
@@ -23,24 +24,22 @@ type getCommentListResponse struct {
 	*comment.GetCommentListResponse
 }
 
-func (h *Handler) CommentAction(c *gin.Context) error {
+func (h *Handler) CommentAction(c context.Context, ctx *app.RequestContext) error {
 
 	req := comment.NewCommentActionRequest()
 	// 1、接收参数
-	if err := c.Bind(req); err != nil {
-		fmt.Println(err.Error())
+	if err := ctx.BindAndValidate(req); err != nil {
+		h.log.Error(err)
 		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
 
 	// 2、进行接口调用
-	// ctx := context.WithValue(c.Request.Context(),"token",)
-
-	resp, err := h.commentService.CommentAction(c.Request.Context(), req)
+	resp, err := h.commentService.CommentAction(c, req)
 	if err != nil {
 		return exception.GrpcErrWrapper(err)
 	}
 
-	c.JSON(http.StatusOK,
+	ctx.JSON(http.StatusOK,
 		commentActionResponse{
 			CodeMsg:               custom.NewWithCode(constant.OPERATE_OK),
 			CommentActionResponse: resp,
@@ -48,21 +47,21 @@ func (h *Handler) CommentAction(c *gin.Context) error {
 	return nil
 }
 
-func (h *Handler) GetCommentList(c *gin.Context) error {
+func (h *Handler) GetCommentList(c context.Context, ctx *app.RequestContext) error {
 
 	req := comment.NewDefaultGetCommentListRequest()
 	// 1、接收参数
-	if err := c.Bind(req); err != nil {
+	if err := ctx.BindAndValidate(req); err != nil {
+		h.log.Error(err)
 		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
-	fmt.Println(req.Token)
 	// 2、进行接口调用
-	resp, err := h.commentService.GetCommentList(c.Request.Context(), req)
+	resp, err := h.commentService.GetCommentList(c, req)
 	if err != nil {
 		return exception.GrpcErrWrapper(err)
 	}
 
-	c.JSON(http.StatusOK,
+	ctx.JSON(http.StatusOK,
 		getCommentListResponse{
 			CodeMsg:                custom.NewWithCode(constant.OPERATE_OK),
 			GetCommentListResponse: resp,

@@ -3,12 +3,14 @@
 package api
 
 import (
+	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+	"net/http"
+
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception/custom"
 	"github.com/Go-To-Byte/DouSheng/interaction_service/apps/favorite"
-	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // loginAndRegisterResp 登录和注册的响应对象
@@ -22,43 +24,45 @@ type getFavoriteListResponse struct {
 	*favorite.FavoriteListResponse
 }
 
-func (h *Handler) FavoriteAction(c *gin.Context) error {
+func (h *Handler) FavoriteAction(c context.Context, ctx *app.RequestContext) error {
 
 	req := favorite.NewFavoriteActionRequest()
 	// 1、接收参数
-	if err := c.Bind(req); err != nil {
+	if err := ctx.BindAndValidate(req); err != nil {
+		h.log.Error(err)
 		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
 
 	// 2、进行接口调用
-	_, err := h.favoriteService.FavoriteAction(c.Request.Context(), req)
+	_, err := h.favoriteService.FavoriteAction(c, req)
 	if err != nil {
 		return exception.GrpcErrWrapper(err)
 	}
 
-	c.JSON(http.StatusOK,
+	ctx.JSON(http.StatusOK,
 		favoriteActionResponse{
 			CodeMsg: custom.NewWithCode(constant.OPERATE_OK),
 		})
 	return nil
 }
 
-func (h *Handler) GetFavoriteList(c *gin.Context) error {
+func (h *Handler) GetFavoriteList(c context.Context, ctx *app.RequestContext) error {
 
 	req := favorite.NewFavoriteListRequest()
 
 	// 1、接收参数
-	if err := c.ShouldBind(req); err != nil {
+	if err := ctx.BindAndValidate(req); err != nil {
+		h.log.Error(err)
 		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
 
 	// 2、进行接口调用
-	resp, err := h.favoriteService.FavoriteList(c.Request.Context(), req)
+	resp, err := h.favoriteService.FavoriteList(c, req)
 	if err != nil {
 		return exception.GrpcErrWrapper(err)
 	}
 
-	c.JSON(http.StatusOK,
+	ctx.JSON(http.StatusOK,
 		getFavoriteListResponse{
 			CodeMsg:              custom.NewWithCode(constant.OPERATE_OK),
 			FavoriteListResponse: resp,

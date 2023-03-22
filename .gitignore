@@ -29,3 +29,5 @@ go.work.sum
 
 guidance/node_modules
 guidance/docs/.vuepress/dist
+
+*/logs

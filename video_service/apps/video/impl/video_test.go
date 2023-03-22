@@ -37,7 +37,7 @@ func TestFeedVideos(t *testing.T) {
 	should := assert.New(t)
 
 	request := video.NewFeedVideosRequest()
-	request.Token = utils.V2P("P9cnDtk2HnBEPxg7ksxlrxkj")
+	request.Token = utils.V2P("GMzKQlFAuOT9llBJKUohzhZr")
 
 	set, err := service.FeedVideos(context.Background(), request)
 
@@ -77,7 +77,8 @@ func TestGetVideo(t *testing.T) {
 	should := assert.New(t)
 
 	request := video.NewGetVideoRequest()
-	request.VideoId = 18
+	request.VideoId = 30
+	request.Token = "6OpCb7MqyZf3UtmMjd7hbIhV"
 
 	videoRes, err := service.GetVideo(context.Background(), request)
 

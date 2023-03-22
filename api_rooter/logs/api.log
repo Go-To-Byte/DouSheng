@@ -29,3 +29,196 @@
 2023-03-08 21:45:37	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
 2023-03-08 21:45:37	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
 2023-03-08 21:45:37	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 10:57:45	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 10:57:45	INFO	[CLI]	cmd/start.go:85	已加载的 [Internal] 服务: []
+2023-03-20 10:57:45	INFO	[CLI]	cmd/start.go:86	已加载的 [GRPC] 服务: [token]
+2023-03-20 10:57:45	INFO	[CLI]	cmd/start.go:87	已加载的 [HTTP] 服务: []
+2023-03-20 10:57:45	INFO	[GRPC Service]	protocol/grpc.go:55	[GRPC] 服务监听地址：192.168.31.122:8505
+2023-03-20 10:57:45	ERROR	[GRPC Service]	protocol/grpc.go:57	启动GRPC服务错误：listen tcp 192.168.31.122:8505: bind: The requested address is not valid in its context.
+2023-03-20 11:00:42	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 11:00:42	INFO	[CLI]	cmd/start.go:85	已加载的 [Internal] 服务: []
+2023-03-20 11:00:42	INFO	[CLI]	cmd/start.go:86	已加载的 [GRPC] 服务: [token]
+2023-03-20 11:00:42	INFO	[CLI]	cmd/start.go:87	已加载的 [HTTP] 服务: []
+2023-03-20 11:00:42	INFO	[GRPC Service]	protocol/grpc.go:55	[GRPC] 服务监听地址：192.168.3.101:8505
+2023-03-20 11:00:42	INFO	[Http Service]	protocol/http.go:58	[HTTP] 服务监听地址：192.168.3.101:8080
+2023-03-20 11:00:43	INFO	[GRPC Service]	protocol/grpc.go:121	成功注册GRPC服务[api_rooter]到consul
+2023-03-20 11:04:10	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:04:10	ERROR	[Token_Server]	protocol/http.go:50	Token认证失败：rpc error: code = Unknown desc = Token校验失败
+2023-03-20 11:04:10	ERROR	[HertzErrWrapper]	exception/exception_handler_hertz.go:35	拦截到异常：custom error: code = 40005 desc = Token校验失败
+2023-03-20 11:06:18	INFO	[CLI]	cmd/start.go:113	接受到信号：interrupt
+2023-03-20 11:06:18	INFO	[Http Service]	protocol/http.go:65	服务开始 stop
+2023-03-20 11:06:18	WARN	[Http Service]	protocol/http.go:70	关闭服务异常：engine is not running
+2023-03-20 11:06:18	ERROR	[CLI]	cmd/start.go:117	优雅关闭 [HTTP] 服务出错：engine is not running
+2023-03-20 11:06:18	INFO	[GRPC Service]	protocol/grpc.go:85	优雅关闭 [GRPC] 服务
+2023-03-20 11:06:18	INFO	[GRPC Service]	protocol/grpc.go:131	服务[api_rooter]注销成功
+2023-03-20 11:06:31	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 11:06:31	INFO	[CLI]	cmd/start.go:85	已加载的 [Internal] 服务: []
+2023-03-20 11:06:31	INFO	[CLI]	cmd/start.go:86	已加载的 [GRPC] 服务: [token]
+2023-03-20 11:06:31	INFO	[CLI]	cmd/start.go:87	已加载的 [HTTP] 服务: []
+2023-03-20 11:06:31	INFO	[GRPC Service]	protocol/grpc.go:55	[GRPC] 服务监听地址：192.168.3.101:8505
+2023-03-20 11:06:31	INFO	[Http Service]	protocol/http.go:58	[HTTP] 服务监听地址：192.168.3.101:8080
+2023-03-20 11:06:32	INFO	[GRPC Service]	protocol/grpc.go:121	成功注册GRPC服务[api_rooter]到consul
+2023-03-20 11:42:10	INFO	[CLI]	cmd/start.go:113	接受到信号：interrupt
+2023-03-20 11:42:10	INFO	[Http Service]	protocol/http.go:65	服务开始 stop
+2023-03-20 11:42:24	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 11:42:40	INFO	[GRPC Service]	protocol/grpc.go:85	优雅关闭 [GRPC] 服务
+2023-03-20 11:42:40	INFO	[GRPC Service]	protocol/grpc.go:131	服务[api_rooter]注销成功
+2023-03-20 11:47:18	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 11:49:19	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:19	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:19	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:19	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:19	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:20	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:20	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:49	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:49	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:53	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:53	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:53	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:53	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:53	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:53	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:53	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:49:53	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-20 11:57:59	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 12:05:04	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 12:08:10	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 12:09:05	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 12:19:40	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 12:19:58	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 12:20:43	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 13:19:42	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 13:30:59	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 13:34:26	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 13:40:28	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 13:43:15	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-20 13:45:28	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 07:57:53	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 07:58:40	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 08:00:59	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 08:07:06	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 08:20:50	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 08:43:58	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 08:45:38	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 08:45:38	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 08:45:38	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 08:45:38	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 08:50:57	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 08:56:33	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 09:12:19	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 09:13:31	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:13:31	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:13:31	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:13:31	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:02	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:36	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:36	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:36	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:36	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:38	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:38	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:38	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:38	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:40	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:40	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:40	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:14:40	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:16:10	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:16:10	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:16:10	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:16:10	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:20:15	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:00	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:00	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:00	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:00	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:00	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:00	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:00	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:03	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:03	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:06	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:06	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:06	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:06	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:07	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:07	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:07	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:23:07	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:25:06	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 09:27:06	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:27:06	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:27:06	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:27:06	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:30:03	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:30:03	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:30:03	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:30:03	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 09:56:13	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-21 10:00:16	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:16	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:16	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:16	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:24	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:24	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:24	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:24	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:46	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:46	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:46	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:46	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:46	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:46	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:46	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:00:46	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:02:17	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:02:17	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:02:17	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:02:17	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:05:47	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:05:47	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:05:47	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:05:47	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:05:57	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:05:57	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:05:57	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:05:57	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:47	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:47	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:47	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:47	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:50	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:50	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:50	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:50	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:52	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:52	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:52	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:06:52	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:07:10	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:07:10	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:07:10	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-21 10:07:10	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:21:34	INFO	[INIT]	conf/load.go:99	log level: debug
+2023-03-22 08:31:01	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:01	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:01	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:01	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:39	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:39	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:39	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:39	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:39	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:39	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:39	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:31:39	ERROR	[token]	impl/token.go:33	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:34:25	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:34:25	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:34:25	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:34:25	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:49:01	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:49:01	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:49:01	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:49:01	ERROR	[token]	impl/token.go:63	token: ValidateToken出现错误：不存在Token
+2023-03-22 08:53:31	INFO	[INIT]	conf/load.go:99	log level: debug

@@ -45,8 +45,8 @@ func TestFavoriteServiceImpl_Delete(t *testing.T) {
 func TestFavoriteServiceImpl_FavoriteList(t *testing.T) {
 	should := assert.New(t)
 	newReq := favorite.NewFavoriteListRequest()
-	newReq.UserId = 17
-	newReq.Token = "bpnAkzIpL6mUFNcn148JTdUF"
+	newReq.UserId = 21
+	newReq.Token = "6OpCb7MqyZf3UtmMjd7hbIhV"
 	res, err := service.FavoriteList(context.Background(), newReq)
 	fmt.Println(err)
 	if should.NoError(err) {
@@ -70,7 +70,7 @@ func TestFavoriteServiceImpl_FavoriteCount(t *testing.T) {
 func TestFavoriteServiceImpl_FavoriteCountMap(t *testing.T) {
 	should := assert.New(t)
 	newReq := favorite.NewFavoriteMapRequest()
-	newReq.VideoIds = []int64{23, 16, 24, 25}
+	newReq.VideoIds = []int64{23, 16, 24, 25, 21, 22, 15}
 	newReq.UserId = 17
 
 	res, err := service.FavoriteCountMap(context.Background(), newReq)
@@ -78,7 +78,7 @@ func TestFavoriteServiceImpl_FavoriteCountMap(t *testing.T) {
 		fmt.Println("获取点赞总数成功")
 		for k, v := range res.FavoriteMap {
 			t.Log(k, v)
-			t.Log(k, v.FavoriteCount, v.IsFavorite)
+			t.Log(k, v.IsFavorite)
 		}
 	}
 }

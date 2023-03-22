@@ -3,11 +3,9 @@ package protocol
 
 import (
 	"context"
-	"fmt"
-	"github.com/gin-gonic/gin"
+	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
-	"net/http"
 	"time"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
@@ -18,10 +16,9 @@ import (
 // =====
 
 type HttpService struct {
-	server *http.Server
+	Server *server.Hertz
 	L      logger.Logger // 用于打印日志
-	R      gin.IRouter
-	C      *conf.Config // 用于获取项目名称
+	C      *conf.Config  // 用于获取项目名称
 
 	before StartFuncAop // 执行start前的逻辑
 }
@@ -34,20 +31,21 @@ func NewHttpService(f StartFuncAop) *HttpService {
 		before: f,
 	}
 
-	// New了一个Gin 的Router 实例， 并未加载路由
-	r := gin.Default()
-	service.R = r
-
 	// HTTP服务对象
-	service.server = &http.Server{
-		ReadHeaderTimeout: 60 * time.Second,
-		ReadTimeout:       60 * time.Second,
-		WriteTimeout:      60 * time.Second,
-		IdleTimeout:       60 * time.Second,
-		MaxHeaderBytes:    1 << 20,                   // 1M
-		Addr:              service.C.App.HTTP.Addr(), // 获取IP和端口
-		Handler:           r,
-	}
+
+	r := server.Default(
+		server.WithHostPorts(service.C.App.HTTP.Addr()),
+		server.WithReadTimeout(60*time.Second),
+		server.WithWriteTimeout(60*time.Second),
+		server.WithIdleTimeout(60*time.Second),
+		server.WithMaxRequestBodySize(1<<20),
+		// 配置地址：https://www.cloudwego.io/zh/docs/hertz/reference/config/
+
+	)
+	// 添加日志中间件
+	r.Use(AccessLog())
+
+	service.Server = r
 
 	return service
 }
@@ -62,15 +60,7 @@ func (s *HttpService) Start() error {
 	}
 
 	s.L.Infof("[HTTP] 服务监听地址：%s", s.C.App.HTTP.Addr())
-	if err := s.server.ListenAndServe(); err != nil {
-		// 如果错误是正常关闭，则不报错
-		if err == http.ErrServerClosed {
-			s.L.Infof("服务 stop 成功")
-			return nil
-		}
-		return fmt.Errorf("开启 [HTTP] 服务异常：%s", err.Error())
-	}
-
+	s.Server.Spin()
 	return nil
 }
 
@@ -80,7 +70,7 @@ func (s *HttpService) Stop() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	if err := s.server.Shutdown(ctx); err != nil {
+	if err := s.Server.Shutdown(ctx); err != nil {
 		s.L.Warnf("关闭服务异常：%s", err)
 		return err
 	}

@@ -433,11 +433,11 @@ type FollowListRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户ID
-	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
+	// @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"`
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
+	// @gotags: json:"token" query:"token" vd:"len($) > 0"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" query:"token" vd:"len($) > 0"`
 }
 
 func (x *FollowListRequest) Reset() {
@@ -543,11 +543,11 @@ type FollowerListRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户ID
-	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
+	// @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"`
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
+	// @gotags: json:"token" query:"token" vd:"len($) > 0"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" query:"token" vd:"len($) > 0"`
 }
 
 func (x *FollowerListRequest) Reset() {
@@ -653,11 +653,11 @@ type FriendListRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户ID
-	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
+	// @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"`
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
+	// @gotags: json:"token" query:"token" vd:"len($) > 0"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" query:"token" vd:"len($) > 0"`
 }
 
 func (x *FriendListRequest) Reset() {
@@ -763,14 +763,14 @@ type FollowActionRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 被关注或被取关的用户ID
-	// @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
-	ToUserId int64 `protobuf:"varint,1,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"`
+	// @gotags: json:"to_user_id" query:"to_user_id" validate:"required" vd:"$ > 0"
+	ToUserId int64 `protobuf:"varint,1,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" query:"to_user_id" validate:"required" vd:"$ > 0"`
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
+	// @gotags: json:"token" query:"token" vd:"len($) > 0"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" query:"token" vd:"len($) > 0"`
 	// 操作类型
-	// @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
-	ActionType ActionType `protobuf:"varint,4,opt,name=action_type,json=actionType,proto3,enum=dousheng.relation.ActionType" json:"action_type" form:"action_type" validate:"required" binding:"required"`
+	// @gotags: json:"action_type" query:"action_type" validate:"required" vd:"$ > 0"
+	ActionType ActionType `protobuf:"varint,4,opt,name=action_type,json=actionType,proto3,enum=dousheng.relation.ActionType" json:"action_type" query:"action_type" validate:"required" vd:"$ > 0"`
 }
 
 func (x *FollowActionRequest) Reset() {

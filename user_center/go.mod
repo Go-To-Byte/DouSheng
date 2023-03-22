@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/gin-gonic/gin v1.8.2
-	github.com/go-playground/validator/v10 v10.11.2
+	github.com/go-playground/validator/v10 v10.11.2 // indirect
 	github.com/infraboard/mcube v1.9.7
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/crypto v0.5.0
@@ -19,11 +19,14 @@ require (
 	github.com/Go-To-Byte/DouSheng/interaction_service v0.0.0-20230304044904-09aa5bc18d4c
 	github.com/Go-To-Byte/DouSheng/relation_service v0.0.0-20230304044904-09aa5bc18d4c
 	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230304044904-09aa5bc18d4c
+	github.com/bytedance/go-tagexpr/v2 v2.9.7
 )
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible // indirect
+	github.com/andeya/ameda v1.5.3 // indirect
+	github.com/andeya/goutil v1.0.1 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/caarlos0/env v3.5.0+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -58,6 +61,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
+	github.com/nyaruka/phonenumbers v1.0.55 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

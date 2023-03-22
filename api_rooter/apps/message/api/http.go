@@ -2,26 +2,25 @@
 package api
 
 import (
-	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
-	"github.com/Go-To-Byte/DouSheng/message_service/client/rpc"
-	"github.com/gin-gonic/gin"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/cloudwego/hertz/pkg/route"
+	"go.uber.org/zap"
 
+	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 	"github.com/Go-To-Byte/DouSheng/message_service/apps/message"
+	"github.com/Go-To-Byte/DouSheng/message_service/client/rpc"
 )
 
 type Handler struct {
 	service message.ServiceClient
-	l       logger.Logger
+	log     *zap.SugaredLogger
 
 	// 提供一个空结构体，用于默认实现方法
-	ioc.GinDefault
+	ioc.HertzDefault
 }
 
 func (h *Handler) Init() error {
-	h.l = zap.L().Named(message.AppName)
+	h.log = zap.S().Named("MESSAGE HTTP")
 
 	client, err := rpc.NewMessageServiceClientFromCfg()
 	if err != nil {
@@ -40,11 +39,11 @@ func (h *Handler) Version() string {
 	return ""
 }
 
-func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
-	r.GET("/chat/", exception.GinErrWrapper(h.chatMessageList))
-	r.POST("/action/", exception.GinErrWrapper(h.chatMessageAction))
+func (h *Handler) RegistryWithMiddle(r route.IRoutes) {
+	r.GET("/chat/", exception.HertzErrWrapper(h.chatMessageList))
+	r.POST("/action/", exception.HertzErrWrapper(h.chatMessageAction))
 }
 
 func init() {
-	ioc.GinDI(&Handler{})
+	ioc.HertzDI(&Handler{})
 }

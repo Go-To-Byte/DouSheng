@@ -27,5 +27,13 @@ func InitAllDependencies() error {
 			return err
 		}
 	}
+
+	// 初始化Hertz HTTP服务依赖
+	for _, v := range hertzContainer {
+		if err := v.Init(); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

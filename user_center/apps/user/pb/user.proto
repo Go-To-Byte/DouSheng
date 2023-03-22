@@ -20,10 +20,10 @@ service Service {
 // 用户注册 & 登录 的接口请求 model
 message LoginAndRegisterRequest {
   // 用户名【注册的话，最长32个字符】
-  // @gotags: json:"username" form:"username" binding:"required,max=32,min=6" validate:"required,max=32,min=6"
+  // @gotags: json:"username" form:"username" query:"username" vd:"len($) <= 30 && len($) > 0" validate:"required,max=32"
   string username = 1;
   // 密码
-  // @gotags: json:"password" form:"password" binding:"required,max=32,min=6" validate:"required,max=32,min=6"
+  // @gotags: json:"password" form:"password" query:"password" vd:"len($) <= 30 && len($) >= 6" validate:"required,max=32,min=6"
   string password = 2;
 }
 
@@ -40,10 +40,10 @@ message TokenResponse {
 // 获取用户信息 的接口请求 model
 message UserInfoRequest {
   // 用户ID
-  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+  // @gotags: json:"user_id" query:"user_id" vd:"$ > 0" validate:"required"
   int64 user_id = 1;
   // 用户鉴权Token [注：这里用 validate，是因为内部方法也必须要用到 Token，并不是所有 token 都 validate]
-  // @gotags: json:"token" form:"token" binding:"required" validate:"required"
+  // @gotags: json:"token" query:"token" vd:"len($) > 0" validate:"required"
   string token = 2;
 }
 

@@ -84,6 +84,10 @@ func (s *videoServiceImpl) GetVideo(ctx context.Context, req *video.GetVideoRequ
 	po := video.NewVideoPo()
 	s.db.WithContext(ctx).Where("id = ?", req.VideoId).Find(&po)
 
+	if s.db.Error != nil {
+		return nil, status.Errorf(codes.Unavailable, constant.Code2Msg(constant.ERROR_ACQUIRE))
+	}
+
 	// 1、获取Tk + loginID
 	tkReq := token.NewValidateTokenRequest(req.Token)
 	uidFromTk, err := s.tokenService.GetUIDFromTk(ctx, tkReq)

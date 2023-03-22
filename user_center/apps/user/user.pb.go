@@ -27,11 +27,11 @@ type LoginAndRegisterRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户名【注册的话，最长32个字符】
-	// @gotags: json:"username" form:"username" binding:"required,max=32" validate:"required,max=32"
-	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username" form:"username" binding:"required,max=32" validate:"required,max=32"`
+	// @gotags: json:"username" form:"username" query:"username" vd:"len($) <= 30 && len($) > 0" validate:"required,max=32"
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username" form:"username" query:"username" vd:"len($) <= 30 && len($) > 0" validate:"required,max=32"`
 	// 密码
-	// @gotags: json:"password" form:"password" binding:"required,max=32" validate:"required,max=32"
-	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password" form:"password" binding:"required,max=32" validate:"required,max=32"`
+	// @gotags: json:"password" form:"password" query:"password" vd:"len($) <= 30 && len($) >= 6" validate:"required,max=32,min=6"
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password" form:"password" query:"password" vd:"len($) <= 30 && len($) >= 6" validate:"required,max=32,min=6"`
 }
 
 func (x *LoginAndRegisterRequest) Reset() {
@@ -147,11 +147,11 @@ type UserInfoRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户ID
-	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
+	// @gotags: json:"user_id" query:"user_id" vd:"$ > 0" validate:"required"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" query:"user_id" vd:"$ > 0" validate:"required"`
 	// 用户鉴权Token [注：这里用 validate，是因为内部方法也必须要用到 Token，并不是所有 token 都 validate]
-	// @gotags: json:"token" form:"token" binding:"required" validate:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" binding:"required" validate:"required"`
+	// @gotags: json:"token" query:"token" vd:"len($) > 0" validate:"required"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" query:"token" vd:"len($) > 0" validate:"required"`
 }
 
 func (x *UserInfoRequest) Reset() {

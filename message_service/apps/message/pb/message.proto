@@ -16,13 +16,13 @@ service Service {
 // 获取聊天记录消息列表 的接口请求 model
 message ChatMessageListRequest {
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
+  // @gotags: json:"token" query:"token" validate:"required" vd:"len($) > 0"
   string token = 1;
   // 对方用户ID
-  // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
+  // @gotags: json:"to_user_id" query:"to_user_id" validate:"required" vd:"$ > 0"
   int64 to_user_id = 2;
   // 上次最新消息的时间
-  // @gotags: json:"pre_msg_time" form:"pre_msg_time"
+  // @gotags: json:"pre_msg_time" query:"pre_msg_time"
   int64 pre_msg_time=3;
 }
 
@@ -36,16 +36,16 @@ message ChatMessageListResponse {
 // 发送消息 的接口请求 model
 message ChatMessageActionRequest {
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
+  // @gotags: json:"token" query:"token" validate:"required" vd:"len($) > 0"
   string token = 1;
   // 对方用户ID
-  // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
+  // @gotags: json:"to_user_id" query:"to_user_id" validate:"required" vd:"$ > 0"
   int64 to_user_id = 2;
   // 1-发送消息
-  // @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
+  // @gotags: json:"action_type" query:"action_type" validate:"required" vd:"$ > 0"
   int32 action_type = 3;
   // 消息内容
-  // @gotags: json:"content" form:"content" validate:"required" binding:"required"
+  // @gotags: json:"content" query:"content" validate:"required" vd:"len($) > 0"
   string content = 4;
 }
 

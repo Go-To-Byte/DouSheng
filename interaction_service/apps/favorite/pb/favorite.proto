@@ -36,13 +36,13 @@ message FavoritePo {
 //定义 点赞/取消点赞 请求体 POST
 message FavoriteActionRequest {
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" query:"token" vd:"len($) > 0"
   string token = 1 ;
   // 视频id
-  // @gotags: json:"video_id" form:"video_id" binding:"required" validate:"required"
+  // @gotags: json:"video_id" query:"video_id" vd:"$ > 0" validate:"required"
   int64 video_id = 2;
   //1-点赞 2-取消点赞
-  // @gotags: json:"action_type" form:"action_type" binding:"required" validate:"required"
+  // @gotags: json:"action_type" query:"action_type" vd:"$ > 0" validate:"required"
   int64 action_type = 3;
 }
 
@@ -56,10 +56,10 @@ message FavoriteActionResponse{
 // 获取喜欢列表请求体
 message FavoriteListRequest{
   // 用户id
-  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+  // @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
   int64 user_id = 1 ;
   // 用户鉴权token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" query:"token" vd:"len($) > 0"
   string token = 2 ;
 }
 

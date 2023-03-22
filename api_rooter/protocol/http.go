@@ -2,12 +2,13 @@
 package protocol
 
 import (
+	"context"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/cmd"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/ioc"
 	"github.com/Go-To-Byte/DouSheng/dou_kit/protocol"
-	"github.com/gin-gonic/gin"
+	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -35,16 +36,15 @@ func NewAuther() *Auther {
 	}
 }
 
-// GinAuthHandlerFunc HTTP auth中间件
-func (a *Auther) GinAuthHandlerFunc() exception.AppHandler {
-	return func(ctx *gin.Context) error {
-
+// HertzAuthHandlerFunc HTTP auth中间件
+func (a *Auther) HertzAuthHandlerFunc() exception.HertzHandler {
+	return func(c context.Context, ctx *app.RequestContext) error {
 		// 从请求中解析出Token
 		ak := utils.GetToken(ctx)
 
 		// 验证Token
 		req := token.NewValidateTokenRequest(ak)
-		tk, err := a.t.ValidateToken(ctx.Request.Context(), req)
+		tk, err := a.t.ValidateToken(c, req)
 
 		if err != nil {
 			a.l.Errorf("Token认证失败：%s", err.Error())
@@ -58,17 +58,17 @@ func (a *Auther) GinAuthHandlerFunc() exception.AppHandler {
 		// 把Token传递给下一个链路
 		ctx.Set(constant.REQUEST_TOKEN, tk)
 		// 把请求传递下去
-		ctx.Next()
+		ctx.Next(c)
 
 		return nil
 	}
 }
 
 // 获取路由中间件
-func getMiddle() ([]gin.HandlerFunc, error) {
+func getMiddle() ([]app.HandlerFunc, error) {
 	server := NewAuther()
 	// 添加Token认证中间件
-	middles := []gin.HandlerFunc{exception.GinErrWrapper(server.GinAuthHandlerFunc())}
+	middles := []app.HandlerFunc{exception.HertzErrWrapper(server.HertzAuthHandlerFunc())}
 	return middles, nil
 }
 
@@ -80,11 +80,11 @@ func init() {
 		if err != nil {
 			return err
 		}
-		// 2、将所有的Gin服务对象注册到IOC中
-		option := ioc.NewGinOption(s.R, "/"+s.C.App.Name, mids...)
+		// 2、将所有 Hertz 服务对象注册到IOC中
+		option := ioc.NewHertzOption(s.Server, "/"+s.C.App.Name, mids...)
 		option.NotVersion = true
 		option.NotName = true
-		ioc.RegistryGin(option)
+		ioc.RegistryHertz(option)
 		return nil
 	}
 }

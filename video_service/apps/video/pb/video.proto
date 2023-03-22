@@ -84,45 +84,45 @@ message FeedVideosRequest {
   // @gotags: json:"page"
   PageRequest page = 1;
   // 可选参数，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
-  // @gotags: json:"latest_time" form:"latest_time"
+  // @gotags: json:"latest_time" query:"latest_time"
   optional int64 latest_time = 2;
   // 可选参数，登录用户设置
-  // @gotags: json:"token" form:"token"
+  // @gotags: json:"token" query:"token"
   optional string token = 3;
 }
 
 message PublishVideoRequest {
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" form:"token" vd:"len($) > 0"
   string token = 1;
   // 视频标题
-  // @gotags: json:"title" form:"title" binding:"required" validate:"required"
+  // @gotags: json:"title" form:"title" vd:"len($) > 0" validate:"required"
   string title = 2;
   // 视频播放地址 [经过文件上传后设置]
-  // @gotags: json:"play_url" binding:"-" validate:"required"
+  // @gotags: json:"play_url" vd:"-" validate:"required"
   string play_url = 3;
   // 视频封面地址 [经过文件上传后设置]
-  // @gotags: json:"cover_url" binding:"-" validate:"required"
+  // @gotags: json:"cover_url" vd:"-" validate:"required"
   string cover_url = 4;
   // 用户ID [经过Token认证过后，在设置]
-  // @gotags: json:"user_id" binding:"-" validate:"required"
+  // @gotags: json:"user_id" vd:"-" validate:"required"
   int64 user_id = 5;
 }
 
 // 发布列表的 请求 model
 message PublishListRequest {
   // 用户ID
-  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+  // @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" query:"token" vd:"len($) > 0"
   string token = 2;
 }
 
 // 用户发布列表数量的请求 model
 message PublishListCountRequest {
   // 用户ID
-  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+  // @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
   int64 user_id = 1;
 }
 

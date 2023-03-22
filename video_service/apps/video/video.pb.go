@@ -317,11 +317,11 @@ type FeedVideosRequest struct {
 	// @gotags: json:"page"
 	Page *PageRequest `protobuf:"bytes,1,opt,name=page,proto3" json:"page"`
 	// 可选参数，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
-	// @gotags: json:"latest_time" form:"latest_time"
-	LatestTime *int64 `protobuf:"varint,2,opt,name=latest_time,json=latestTime,proto3,oneof" json:"latest_time" form:"latest_time"`
+	// @gotags: json:"latest_time" query:"latest_time"
+	LatestTime *int64 `protobuf:"varint,2,opt,name=latest_time,json=latestTime,proto3,oneof" json:"latest_time" query:"latest_time"`
 	// 可选参数，登录用户设置
-	// @gotags: json:"token" form:"token"
-	Token *string `protobuf:"bytes,3,opt,name=token,proto3,oneof" json:"token" form:"token"`
+	// @gotags: json:"token" query:"token"
+	Token *string `protobuf:"bytes,3,opt,name=token,proto3,oneof" json:"token" query:"token"`
 }
 
 func (x *FeedVideosRequest) Reset() {
@@ -383,20 +383,20 @@ type PublishVideoRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
+	// @gotags: json:"token" form:"token" vd:"len($) > 0"
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" form:"token" vd:"len($) > 0"`
 	// 视频标题
-	// @gotags: json:"title" form:"title" binding:"required" validate:"required"
-	Title string `protobuf:"bytes,2,opt,name=title,proto3" json:"title" form:"title" binding:"required" validate:"required"`
+	// @gotags: json:"title" form:"title" vd:"len($) > 0" validate:"required"
+	Title string `protobuf:"bytes,2,opt,name=title,proto3" json:"title" form:"title" vd:"len($) > 0" validate:"required"`
 	// 视频播放地址 [经过文件上传后设置]
-	// @gotags: json:"play_url" binding:"-" validate:"required"
-	PlayUrl string `protobuf:"bytes,3,opt,name=play_url,json=playUrl,proto3" json:"play_url" binding:"-" validate:"required"`
+	// @gotags: json:"play_url" vd:"-" validate:"required"
+	PlayUrl string `protobuf:"bytes,3,opt,name=play_url,json=playUrl,proto3" json:"play_url" vd:"-" validate:"required"`
 	// 视频封面地址 [经过文件上传后设置]
-	// @gotags: json:"cover_url" binding:"-" validate:"required"
-	CoverUrl string `protobuf:"bytes,4,opt,name=cover_url,json=coverUrl,proto3" json:"cover_url" binding:"-" validate:"required"`
+	// @gotags: json:"cover_url" vd:"-" validate:"required"
+	CoverUrl string `protobuf:"bytes,4,opt,name=cover_url,json=coverUrl,proto3" json:"cover_url" vd:"-" validate:"required"`
 	// 用户ID [经过Token认证过后，在设置]
-	// @gotags: json:"user_id" binding:"-" validate:"required"
-	UserId int64 `protobuf:"varint,5,opt,name=user_id,json=userId,proto3" json:"user_id" binding:"-" validate:"required"`
+	// @gotags: json:"user_id" vd:"-" validate:"required"
+	UserId int64 `protobuf:"varint,5,opt,name=user_id,json=userId,proto3" json:"user_id" vd:"-" validate:"required"`
 }
 
 func (x *PublishVideoRequest) Reset() {
@@ -473,11 +473,11 @@ type PublishListRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户ID
-	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
+	// @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"`
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
+	// @gotags: json:"token" query:"token" vd:"len($) > 0"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" query:"token" vd:"len($) > 0"`
 }
 
 func (x *PublishListRequest) Reset() {
@@ -533,8 +533,8 @@ type PublishListCountRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户ID
-	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
+	// @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"`
 }
 
 func (x *PublishListCountRequest) Reset() {

@@ -98,14 +98,14 @@ type FavoriteActionRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
+	// @gotags: json:"token" query:"token" vd:"len($) > 0"
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" query:"token" vd:"len($) > 0"`
 	// 视频id
-	// @gotags: json:"video_id" form:"video_id" binding:"required" validate:"required"
-	VideoId int64 `protobuf:"varint,2,opt,name=video_id,json=videoId,proto3" json:"video_id" form:"video_id" binding:"required" validate:"required"`
+	// @gotags: json:"video_id" query:"video_id" vd:"$ > 0" validate:"required"
+	VideoId int64 `protobuf:"varint,2,opt,name=video_id,json=videoId,proto3" json:"video_id" query:"video_id" vd:"$ > 0" validate:"required"`
 	// 1-点赞 2-取消点赞
-	// @gotags: json:"action_type" form:"action_type" binding:"required" validate:"required"
-	ActionType int64 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type" form:"action_type" binding:"required" validate:"required"`
+	// @gotags: json:"action_type" query:"action_type" vd:"$ > 0" validate:"required"
+	ActionType int64 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type" query:"action_type" vd:"$ > 0" validate:"required"`
 }
 
 func (x *FavoriteActionRequest) Reset() {
@@ -218,11 +218,11 @@ type FavoriteListRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户id
-	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
-	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
+	// @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
+	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"`
 	// 用户鉴权token
-	// @gotags: json:"token" form:"token" binding:"required"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" form:"token" binding:"required"`
+	// @gotags: json:"token" query:"token" vd:"len($) > 0"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" query:"token" vd:"len($) > 0"`
 }
 
 func (x *FavoriteListRequest) Reset() {

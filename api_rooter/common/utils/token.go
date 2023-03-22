@@ -2,7 +2,7 @@
 package utils
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/cloudwego/hertz/pkg/app"
 	"math/rand"
 	"strings"
 	"time"
@@ -25,7 +25,7 @@ func MakeBearer(length int) string {
 }
 
 // GetToken 从gin的Ctx种获取Token
-func GetToken(ctx *gin.Context) string {
+func GetToken(ctx *app.RequestContext) string {
 
 	// 1、从 header 中获取
 	// ...我们这里都是从参数中获取的

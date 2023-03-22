@@ -6,6 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible
 	github.com/caarlos0/env v3.5.0+incompatible
+	github.com/cloudwego/hertz v0.6.0
 	github.com/gin-gonic/gin v1.8.2
 	github.com/hashicorp/consul/api v1.18.0
 	github.com/infraboard/mcube v1.9.7

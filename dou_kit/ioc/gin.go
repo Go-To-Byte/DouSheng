@@ -97,26 +97,13 @@ func RegistryGin(opts *GinOptions) {
 	}
 }
 
-type AppName string
-
-const (
-	USER_API  = "user"
-	VIDEO_API = "video"
-	RELATION_API = "relation"
-)
-
 // GinOptions 注册IOC中Gin服务的路由时，可传入配置
 type GinOptions struct {
+	ApiOptions
 	// 路由
 	Router gin.IRouter `json:"router"`
-	// API 前缀
-	Prefix string `json:"prefix"`
 	// API 中间件
 	Middleware []gin.HandlerFunc `json:"middleware"`
-	// API 是否需要添加版本
-	NotVersion bool `json:"not_version"`
-	// API 是否需要添加服务名称
-	NotName bool `json:"not_name"`
 
 	// ...
 }
@@ -125,8 +112,10 @@ type GinOptions struct {
 func NewGinOption(r gin.IRouter, prefix string, middle ...gin.HandlerFunc) *GinOptions {
 	return &GinOptions{
 		Router:     r,
-		Prefix:     prefix,
 		Middleware: middle,
+		ApiOptions: ApiOptions{
+			Prefix: prefix,
+		},
 	}
 }
 

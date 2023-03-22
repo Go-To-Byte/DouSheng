@@ -73,8 +73,8 @@ func BenchmarkUserServiceImpl_UserInfo(b *testing.B) {
 func TestUserMap(t *testing.T) {
 	should := assert.New(t)
 	req := user.NewUserMapRequest()
-	req.Token = "kHdNO8b6zobfML4DF5WPuW7T"
-	req.UserIds = []int64{1, 2, 4, 16, 17, 18}
+	req.Token = "GMzKQlFAuOT9llBJKUohzhZr"
+	req.UserIds = []int64{1, 2, 4, 16, 17, 18, 25, 19, 20}
 	info, err := service.UserMap(context.Background(), req)
 
 	if should.NoError(err) {

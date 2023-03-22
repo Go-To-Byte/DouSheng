@@ -2,7 +2,8 @@
 package api
 
 import (
-	"github.com/gin-gonic/gin"
+	"context"
+	"github.com/cloudwego/hertz/pkg/app"
 	"net/http"
 
 	"github.com/Go-To-Byte/DouSheng/dou_kit/constant"
@@ -21,15 +22,16 @@ type chatMessageActionResp struct {
 	*message.ChatMessageActionResponse
 }
 
-func (h *Handler) chatMessageList(ctx *gin.Context) error {
+func (h *Handler) chatMessageList(c context.Context, ctx *app.RequestContext) error {
 	req := message.NewChatMessageListRequest()
 	// 1、接收参数
-	if err := ctx.ShouldBindQuery(req); err != nil {
+	if err := ctx.BindAndValidate(req); err != nil {
+		h.log.Error(err)
 		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
 
 	// 业务请求
-	resp, err := h.service.ChatMessageList(ctx, req)
+	resp, err := h.service.ChatMessageList(c, req)
 	if err != nil {
 		return exception.GrpcErrWrapper(err)
 	}
@@ -42,15 +44,16 @@ func (h *Handler) chatMessageList(ctx *gin.Context) error {
 	return nil
 }
 
-func (h *Handler) chatMessageAction(ctx *gin.Context) error {
+func (h *Handler) chatMessageAction(c context.Context, ctx *app.RequestContext) error {
 	req := message.NewChatMessageActionRequest()
 	// 1、接收参数
-	if err := ctx.Bind(req); err != nil {
+	if err := ctx.BindAndValidate(req); err != nil {
+		h.log.Error(err)
 		return exception.WithStatusCode(constant.ERROR_ARGS_VALIDATE)
 	}
 
 	// 业务请求
-	resp, err := h.service.ChatMessageAction(ctx, req)
+	resp, err := h.service.ChatMessageAction(c, req)
 	if err != nil {
 		return exception.GrpcErrWrapper(err)
 	}

@@ -28,14 +28,14 @@ type ChatMessageListRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" validate:"required" binding:"required"
-	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" form:"token" validate:"required" binding:"required"`
+	// @gotags: json:"token" query:"token" validate:"required" vd:"len($) > 0"
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" query:"token" validate:"required" vd:"len($) > 0"`
 	// 对方用户ID
-	// @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
-	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"`
+	// @gotags: json:"to_user_id" query:"to_user_id" validate:"required" vd:"$ > 0"
+	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" query:"to_user_id" validate:"required" vd:"$ > 0"`
 	// 上次最新消息的时间
-	// @gotags: json:"pre_msg_time" form:"pre_msg_time"
-	PreMsgTime int64 `protobuf:"varint,3,opt,name=pre_msg_time,json=preMsgTime,proto3" json:"pre_msg_time" form:"pre_msg_time"`
+	// @gotags: json:"pre_msg_time" query:"pre_msg_time"
+	PreMsgTime int64 `protobuf:"varint,3,opt,name=pre_msg_time,json=preMsgTime,proto3" json:"pre_msg_time" query:"pre_msg_time"`
 }
 
 func (x *ChatMessageListRequest) Reset() {
@@ -148,17 +148,17 @@ type ChatMessageActionRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 用户鉴权Token
-	// @gotags: json:"token" form:"token" validate:"required" binding:"required"
-	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" form:"token" validate:"required" binding:"required"`
+	// @gotags: json:"token" query:"token" validate:"required" vd:"len($) > 0"
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token" query:"token" validate:"required" vd:"len($) > 0"`
 	// 对方用户ID
-	// @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
-	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"`
+	// @gotags: json:"to_user_id" query:"to_user_id" validate:"required" vd:"$ > 0"
+	ToUserId int64 `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" query:"to_user_id" validate:"required" vd:"$ > 0"`
 	// 1-发送消息
-	// @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
-	ActionType int32 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type" form:"action_type" validate:"required" binding:"required"`
+	// @gotags: json:"action_type" query:"action_type" validate:"required" vd:"$ > 0"
+	ActionType int32 `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3" json:"action_type" query:"action_type" validate:"required" vd:"$ > 0"`
 	// 消息内容
-	// @gotags: json:"content" form:"content" validate:"required" binding:"required"
-	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content" form:"content" validate:"required" binding:"required"`
+	// @gotags: json:"content" query:"content" validate:"required" vd:"len($) > 0"
+	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content" query:"content" validate:"required" vd:"len($) > 0"`
 }
 
 func (x *ChatMessageActionRequest) Reset() {

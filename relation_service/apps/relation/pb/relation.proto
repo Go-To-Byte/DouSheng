@@ -84,10 +84,10 @@ message UserFriend {
 // 获取关系列表 的接口请求 model
 message FollowListRequest {
   // 用户ID
-  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+  // @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" query:"token" vd:"len($) > 0"
   string token = 2;
 }
 
@@ -101,10 +101,10 @@ message FollowListResponse {
 // 获取粉丝列表 的接口请求 model
 message FollowerListRequest {
   // 用户ID
-  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+  // @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" query:"token" vd:"len($) > 0"
   string token = 2;
 }
 
@@ -118,10 +118,10 @@ message FollowerListResponse {
 // 获取用户好友列表 的接口请求 model
 message FriendListRequest {
   // 用户ID
-  // @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
+  // @gotags: json:"user_id" query:"user_id" validate:"required" vd:"$ > 0"
   int64 user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" query:"token" vd:"len($) > 0"
   string token = 2;
 }
 
@@ -145,13 +145,13 @@ enum ActionType {
 // 关注操作 的接口请求 model
 message FollowActionRequest {
   // 被关注或被取关的用户ID
-  // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
+  // @gotags: json:"to_user_id" query:"to_user_id" validate:"required" vd:"$ > 0"
   int64 to_user_id = 1;
   // 用户鉴权Token
-  // @gotags: json:"token" form:"token" binding:"required"
+  // @gotags: json:"token" query:"token" vd:"len($) > 0"
   string token = 2;
   // 操作类型
-  // @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
+  // @gotags: json:"action_type" query:"action_type" validate:"required" vd:"$ > 0"
   ActionType action_type = 4;
 }
 
