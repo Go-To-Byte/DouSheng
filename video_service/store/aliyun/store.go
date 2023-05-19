@@ -4,32 +4,18 @@ package aliyun
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/rs/xid"
-	"mime/multipart"
-
-	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/Go-To-Byte/DouSheng/video_service/store"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"log"
 )
 
-func NewAliOssStore(isSaveCover bool) *AliOssStore {
-	a := conf.C().Aliyun
-	c, err := a.GetClient()
-	if err != nil {
-		panic(err)
+// NewAliOssStore 是否需要直接保存持久化封面
+func NewAliOssStore(client *oss.Client, coverPath, coverStyle string) *AliOssStore {
+	return &AliOssStore{
+		client:      client,
+		coverObjKey: coverPath,
+		coverStyle:  coverStyle,
 	}
-
-	ossStore := &AliOssStore{
-		client: c,
-	}
-
-	// 是否需要保存封面
-	if isSaveCover {
-		ossStore.coverStyle = a.CoverStyle
-		ossStore.coverObjKey = fmt.Sprintf("%s%s.jpg", a.ImageDir, xid.New().String())
-	}
-
-	return ossStore
 }
 
 type AliOssStore struct {
@@ -44,62 +30,26 @@ type AliOssStore struct {
 	// 可以扩展其他功能[如：上传进度条等]
 }
 
-// NewParamByPath 通过本地路径上传到 oss
-func NewParamByPath(bucketName, objDir, objName string, localPath string) *store.UploadParam {
-	param := newCommonParam(bucketName, objDir, objName)
-	// 本地文件路径
-	param.LocalPath = localPath
-	param.FromTo = store.FromLocalPath
-	return param
-}
-
-// NewParamByStream 通过文件流上传到 oss
-func NewParamByStream(bucketName, objDir, objName string, fileStream multipart.File) *store.UploadParam {
-	param := newCommonParam(bucketName, objDir, objName)
-	// 从文件流中获取
-	param.FileStream = fileStream
-	param.FromTo = store.FromStream
-	return param
-}
-
-func newCommonParam(bucketName, objDir, objName string) *store.UploadParam {
-	return &store.UploadParam{
-		BucketName:     bucketName,
-		ObjectDir:      objDir,
-		ObjectFileName: objName,
-	}
-}
-
 // Upload 上传文件到 阿里云的 OSS
 func (s *AliOssStore) Upload(param *store.UploadParam) (*store.UploadResult, error) {
-	if param == nil || param.FromTo == "" || param.BucketName == "" {
+	if param == nil || !param.Validate() {
 		return nil, fmt.Errorf("请正确使用上传参数")
 	}
 
+	// 获取对应 Bucket 资源抽象
 	bucket, err := s.client.Bucket(param.BucketName)
 	if err != nil {
 		return nil, err
 	}
 
-	objKey := param.ObjectKey()
-	switch param.FromTo {
-	case store.FromLocalPath:
-		if err = bucket.PutObjectFromFile(objKey, param.LocalPath); err != nil {
-			return nil, err
-		}
-	case store.FromStream:
-		if err = bucket.PutObject(objKey, param.FileStream); err != nil {
-			return nil, err
-		}
-	default:
-		return nil, fmt.Errorf("暂不支持此From：%s, 可以选择：[%s、%s]",
-			param.FromTo, store.FromLocalPath, store.FromStream)
+	// 将 file 文件上传到对应bucket，变成一个对象，名字为 param.FilePath,
+	if err = bucket.PutObject(param.FilePath, param.FileStream); err != nil {
+		return nil, err
 	}
 
 	result := store.NewUploadResult()
-	result.RelativeURI = objKey
-
-	// signedURL, err := bucket.SignURL(objKey, oss.HTTPGet, 600, oss.Process(s.coverStyle))
+	// 这个路径其实也可以不用给出去，
+	result.RelativeURI = param.FilePath
 
 	// 看看是否需要保存封面
 	if s.coverObjKey == "" {
@@ -107,7 +57,7 @@ func (s *AliOssStore) Upload(param *store.UploadParam) (*store.UploadResult, err
 	}
 
 	// 将封面持久化
-	if err = s.saveCover(bucket, objKey); err != nil {
+	if err = s.saveCover(bucket, param.FilePath); err != nil {
 		return nil, err
 	}
 	result.CoverRelativeURI = s.coverObjKey
@@ -127,4 +77,27 @@ func (s *AliOssStore) saveCover(bucket *oss.Bucket, oldObjKey string) error {
 	)
 	_, err := bucket.ProcessObject(oldObjKey, process)
 	return err
+}
+
+// Delete 删除 Object
+func (a *AliOssStore) Delete(bucketName string, filePaths ...string) error {
+	if bucketName == "" || filePaths == nil || len(filePaths) == 0 {
+		return fmt.Errorf("请正确使用上传参数")
+	}
+
+	// 获取Bucket
+	bucket, err := a.client.Bucket(bucketName)
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(filePaths); i++ {
+		// 挨个删除删除
+		if err := bucket.DeleteObject(filePaths[i]); err != nil {
+			// 这里之记录日志，别影响删除后面的 Object // TODO 日志
+			log.Printf("删除第[%d]个Object失败：%s", i+1, err)
+		}
+	}
+
+	return nil
 }

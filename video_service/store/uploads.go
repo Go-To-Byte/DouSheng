@@ -9,40 +9,33 @@ import (
 type Uploader interface {
 	// Upload 上传文件到云端
 	Upload(*UploadParam) (*UploadResult, error)
+	// Delete 删除云端的视频，也需要知道是删除哪里的资源，叫什么名字，可删除多个
+	Delete(bucketName string, filePaths ...string) error
 }
 
-// From 从哪里获取文件
-type From string
-
-const (
-	FromStream    = From("stream")
-	FromLocalPath = From("localPath")
-)
+// NewUploadParam 从文件流中上传
+func NewUploadParam(bucketName string, filePath string, file multipart.File) *UploadParam {
+	return &UploadParam{
+		BucketName: bucketName,
+		FilePath:   filePath,
+		FileStream: file,
+	}
+}
 
 // UploadParam 文件上传参数
 type UploadParam struct {
-	// 可用于云上操作
+	// 操作云上哪一个资源
 	BucketName string `json:"bucket_name"`
-
-	// 目标文件夹
-	ObjectDir string `json:"object_dir"`
-	// 目标文件名称
-	ObjectFileName string `json:"object_file_name"`
-
-	// 待上传文件的本地路径
-	LocalPath string `json:"local_path"`
+	// 上传的文件路径
+	FilePath string
 	// 待上传的文件流
 	FileStream multipart.File `json:"file_stream"`
-
-	// 从哪里加载文件
-	FromTo From `json:"from_to"`
-
 	// ...
 }
 
-// ObjectKey 获取 ObjectKey
-func (p *UploadParam) ObjectKey() string {
-	return p.ObjectDir + p.ObjectFileName
+// Validate 简单校验参数
+func (u *UploadParam) Validate() bool {
+	return u.BucketName != "" && u.FilePath != "" && u.FileStream != nil
 }
 
 func NewUploadResult() *UploadResult {
