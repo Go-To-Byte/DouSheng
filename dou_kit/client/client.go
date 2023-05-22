@@ -2,13 +2,13 @@
 package client
 
 import (
+	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
+	_ "github.com/mbobakov/grpc-consul-resolver"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
-
-	"github.com/Go-To-Byte/DouSheng/dou_kit/conf"
 )
 
 // ClientSet  客户端

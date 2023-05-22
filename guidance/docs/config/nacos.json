@@ -1,0 +1,70 @@
+{
+  "app": {
+    "name": "relation_srv",
+    "http": {
+      "host": "host",
+      "port": "8608"
+    },
+    "grpc": {
+      "host": "host",
+      "port": 8508
+    }
+  },
+  "mysql": {
+    "host": "host",
+    "port": "3306",
+    "username": "root",
+    "password": "root",
+    "database": "dou_sheng",
+    "max_open_conn": 0,
+    "max_idle_conn": 0,
+    "max_life_time": 0,
+    "max_idle_time": 0
+  },
+  "log": {
+    "level": "debug",
+    "dir": "logs",
+    "format": "text",
+    "to": "stdout"
+  },
+  "aliyun": {
+    "endpoint": "",
+    "access_key": "",
+    "access_secret": "",
+    "bucket": "",
+    "video_dir": "",
+    "image_dir": "",
+    "cover_style": ""
+  },
+  "mongodb": {
+    "hosts": [],
+    "username": "",
+    "password": "",
+    "database": ""
+  },
+  "consul": {
+    "register": {
+      "registry_name": "relation_service",
+      "host": "127.0.0.1",
+      "port": 8500,
+      "tags": [
+        "用户关系服务",
+        "relation_service"
+      ]
+    },
+    "discovers": [
+      {
+        "discover_name": "relation_service",
+        "addr": "127.0.0.1:8500"
+      },
+      {
+        "discover_name": "user_center",
+        "address": "192.168.60.1:8500"
+      },
+      {
+        "discover_name": "message_service",
+        "address": "192.168.60.1:8500"
+      }
+    ]
+  }
+}

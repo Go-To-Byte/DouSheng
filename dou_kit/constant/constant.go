@@ -5,6 +5,12 @@ import (
 	"fmt"
 )
 
+// 环境常量
+const (
+	DebugEnv = "config_debug.yml"
+	ProdEnv  = "config-prod.yml"
+)
+
 const (
 	REQUEST_TOKEN = "token"
 )
@@ -103,9 +109,9 @@ const (
 	BAD_UPLOAD_FILE StatusCode = 80002
 )
 
-// relation service 
+// relation service
 const (
-	FOLLOW_ACTION int32 = 1
+	FOLLOW_ACTION   int32 = 1
 	UNFOLLOW_ACTION int32 = 2
 )
 

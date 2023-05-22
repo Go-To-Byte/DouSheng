@@ -15,10 +15,10 @@ import (
 //=====
 
 type mongodb struct {
-	Hosts    []string `toml:"hosts" env:"MONGO_HOSTS"`
-	Username string   `toml:"username" env:"MONGO_USERNAME"`
-	Password string   `toml:"password" env:"MONGO_PASSWORD"`
-	Database string   `toml:"database" env:"MONGO_DATABASE"`
+	Hosts    []string `mapstructure:"hosts" json:"hosts" yaml:"hosts"`
+	Username string   `mapstructure:"username" json:"username" yaml:"username"`
+	Password string   `mapstructure:"password" json:"password" yaml:"password"`
+	Database string   `mapstructure:"database" json:"database" yaml:"database"`
 
 	lock sync.Mutex
 }

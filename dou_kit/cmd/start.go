@@ -28,7 +28,7 @@ var StartCmd = &cobra.Command{
 		// 1、加载配置文件&全局Logger对象
 		// ========
 
-		if err := conf.LoadConfigFromToml(configFile); err != nil {
+		if err := conf.LoadConfig(configFile); err != nil {
 			return err
 		}
 		if err := conf.LoadGlobalLogger(); err != nil {
@@ -146,6 +146,6 @@ func managerStartAndStop() error {
 func init() {
 	f := StartCmd.PersistentFlags()
 	f.StringVarP(&configFile, "config", "f",
-		"etc/config.toml", "用户中心的配置文件路径")
+		"etc/config_debug.yml", "用户中心的配置文件路径")
 	RootCmd.AddCommand(StartCmd)
 }

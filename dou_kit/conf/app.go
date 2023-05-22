@@ -8,21 +8,21 @@ import "fmt"
 //=====
 
 type app struct {
-	Name string `toml:"name" env:"APP_NAME"`
-	HTTP *http  `toml:"http" env:"HTTP"`
-	GRPC *grpc  `toml:"grpc" env:"GRPC"`
+	Name string `mapstructure:"name" json:"name" yaml:"name"`
+	HTTP *http  `mapstructure:"http" json:"http" yaml:"http"`
+	GRPC *grpc  `mapstructure:"grpc" json:"grpc" yaml:"grpc"`
 }
 
 // HTTP 服务配置
 type http struct {
-	Host string `toml:"host" env:"HTTP_HOST"`
-	Port string `toml:"port" env:"HTTP_PORT"`
+	Host string `mapstructure:"host" json:"host" yaml:"host"`
+	Port string `mapstructure:"port" json:"port" yaml:"port"`
 }
 
 // GRPC 服务配置
 type grpc struct {
-	Host string `toml:"host" env:"GRPC_HOST"`
-	Port int    `toml:"port" env:"GRPC_PORT"`
+	Host string `mapstructure:"host" json:"host" yaml:"host"`
+	Port int    `mapstructure:"port" json:"port" yaml:"port"`
 }
 
 func NewDefaultApp() *app {

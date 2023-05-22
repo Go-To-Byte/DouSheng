@@ -7,10 +7,10 @@ package conf
 
 // log 日志配置
 type log struct {
-	Level   string    `toml:"level" env:"LOG_LEVEL"`
-	PathDir string    `toml:"path_dir" env:"LOG_PATH_DIR"`
-	Format  LogFormat `toml:"format" env:"LOG_FORMAT"`
-	To      LogTo     `toml:"to" env:"LOG_TO"`
+	Level   string    `mapstructure:"level" json:"level" yaml:"level"`
+	PathDir string    `mapstructure:"path" json:"path" yaml:"path"`
+	Format  LogFormat `mapstructure:"format" json:"format" yaml:"format"`
+	To      LogTo     `mapstructure:"to" json:"to" yaml:"to"`
 }
 
 func NewDefaultLog() *log {

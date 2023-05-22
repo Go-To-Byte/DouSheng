@@ -14,23 +14,23 @@ import (
 //=====
 
 type consul struct {
-	Register  *register            `toml:"register" env:"CONSUL_REGISTER"`
-	Discovers map[string]*Discover `toml:"discovers" env:"CONSUL_DISCOVERS"`
+	Register  *register  `mapstructure:"register" json:"register" yaml:"register"`
+	Discovers []Discover `mapstructure:"discovers" json:"discovers" yaml:"discovers"`
 }
 
 func NewDefaultConsul() *consul {
 	return &consul{
 		Register:  NewDefaultRegister(),
-		Discovers: make(map[string]*Discover, 1),
+		Discovers: NewDefaultDiscover(),
 	}
 }
 
 // register Consul 用于服务注册
 type register struct {
-	RegistryName string   `toml:"registry_name" env:"CONSUL_REGISTRY_NAME"`
-	Host         string   `toml:"host" env:"CONSUL_HOST"`
-	Port         int      `toml:"port" env:"CONSUL_PORT"`
-	Tags         []string `toml:"tags" env:"CONSUL_TAGS"`
+	RegistryName string   `mapstructure:"registry_name" json:"registry_name" yaml:"registry_name"`
+	Host         string   `mapstructure:"host" json:"host" yaml:"host"`
+	Port         int      `mapstructure:"port" json:"port" yaml:"port"`
+	Tags         []string `mapstructure:"tags" json:"tags" yaml:"tags"`
 }
 
 func NewDefaultRegister() *register {
@@ -53,11 +53,8 @@ type Discover struct {
 	Addr         string `toml:"address" env:"CONSUL_ADDR"`
 }
 
-func NewDefaultDiscover() *Discover {
-	return &Discover{
-		DiscoverName: "发现名称",
-		Addr:         "127.0.0.1:8500",
-	}
+func NewDefaultDiscover() []Discover {
+	return []Discover{}
 }
 
 func (d *Discover) SetDiscoverName(name string) {
