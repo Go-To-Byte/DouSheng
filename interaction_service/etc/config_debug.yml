@@ -1,0 +1,8 @@
+# nacos:
+host: '127.0.0.1'
+port: 8848
+namespace: 'namespace'
+user: 'nacos'
+password: 'nacos'
+dataid: 'interaction_srv_dev.json'
+group: 'dev'

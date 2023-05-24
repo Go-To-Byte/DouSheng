@@ -2,11 +2,19 @@
 package conf
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/BurntSushi/toml"
+	envir "github.com/Go-To-Byte/DouSheng/dou_kit/constant"
 	"github.com/caarlos0/env"
+	"github.com/fsnotify/fsnotify"
+	"github.com/gin-gonic/gin"
 	"github.com/hashicorp/consul/api"
 	"github.com/infraboard/mcube/logger/zap"
+	"github.com/nacos-group/nacos-sdk-go/clients"
+	"github.com/nacos-group/nacos-sdk-go/common/constant"
+	"github.com/nacos-group/nacos-sdk-go/vo"
+	"github.com/spf13/viper"
+	"os"
 )
 
 //=====
@@ -14,13 +22,9 @@ import (
 //=====
 
 // LoadConfigFromToml 从Toml配置文件加载
-func LoadConfigFromToml(filePath string) error {
+func LoadConfig(filePath string) error {
 	// 初始化全局对象
-	cfg := NewDefaultConfig()
-	_, err := toml.DecodeFile(filePath, cfg)
-	if err != nil {
-		return fmt.Errorf("load config file error，path：%s，%s", filePath, err)
-	}
+	cfg := InitConfig(filePath)
 
 	return cfg.LoadGlobal()
 }
@@ -98,4 +102,87 @@ func LoadGlobalLogger() error {
 	}
 	zap.L().Named("INIT").Info(logInitMsg)
 	return nil
+}
+
+func InitConfig(flag string) *Config {
+	/* 配置文件选择 参数>flag解析>自定义常量>gin环境 */
+	var config string
+	if flag == "" {
+		if os.Getenv(envir.DebugEnv) == "" {
+			switch gin.Mode() {
+			case gin.DebugMode:
+				config = envir.DebugEnv
+			case gin.ReleaseMode:
+				config = envir.ProdEnv
+			}
+		} else {
+			config = envir.DebugEnv
+
+		}
+	} else {
+		config = flag
+	}
+	// viper配置
+	vip := viper.New()
+	vip.SetConfigFile(config)
+	vip.SetConfigType("yaml")
+	// 读
+	err := vip.ReadInConfig()
+	if err != nil {
+		zap.L().Fatal(err.Error())
+	}
+	// 监控
+	vip.WatchConfig()
+	// 开启监控
+	vip.OnConfigChange(func(in fsnotify.Event) {
+		change := in.Name
+		fmt.Printf("%s changed\n", change)
+		// 绑定nacos
+		if err = vip.Unmarshal(&Nacos); err != nil {
+			panic(err.Error())
+		}
+	})
+	// 绑定 nacos
+	if err = vip.Unmarshal(&Nacos); err != nil {
+		panic(err.Error())
+	}
+
+	/*                  从ncos读取配置                              */
+	sc := []constant.ServerConfig{
+		{
+			IpAddr: Nacos.Host,
+			Port:   Nacos.Port,
+		},
+	}
+
+	cc := constant.ClientConfig{
+		NamespaceId:         Nacos.Namespace, // 如果需要支持多namespace，可以场景有多个client,它们有不同的NamespaceId
+		TimeoutMs:           5000,
+		NotLoadCacheAtStart: true,
+		LogDir:              "tmp/nacos/log",
+		CacheDir:            "tmp/nacos/cache",
+		LogLevel:            "debug",
+	}
+
+	configClient, err := clients.CreateConfigClient(map[string]interface{}{
+		"serverConfigs": sc,
+		"clientConfig":  cc,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	content, err := configClient.GetConfig(vo.ConfigParam{
+		DataId: Nacos.DataId,
+		Group:  Nacos.Group})
+
+	if err != nil {
+		zap.L().Fatal(err.Error())
+	}
+
+	err = json.Unmarshal([]byte(content), &global)
+	if err != nil {
+		zap.L().Fatal(err.Error())
+	}
+	return global
 }

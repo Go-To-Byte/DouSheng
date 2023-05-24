@@ -11,15 +11,15 @@ import (
 //=====
 
 type aliyun struct {
-	Endpoint     string `toml:"endpoint" env:"ALIYUN_ENDPOINT"`
-	AccessKey    string `toml:"access_key" env:"ALIYUN_ACCESS_KEY"`
-	AccessSecret string `toml:"access_secret" env:"ALIYUN_ACCESS_SECRET"`
-	Bucket       string `toml:"bucket" env:"BUCKET"`
-	VideoDir     string `toml:"video_dir" env:"VIDEO_DIR"`
-	ImageDir     string `toml:"image_dir" env:"IMAGE_DIR"`
+	Endpoint     string `mapstructure:"endpoint" json:"endpoint" yaml:"endpoint"`
+	AccessKey    string `mapstructure:"access_key" json:"access_key" yaml:"access_key"`
+	AccessSecret string `mapstructure:"access_secret" json:"access_secret" yaml:"access_secret"`
+	Bucket       string `mapstructure:"bucket" json:"bucket" yaml:"buck"`
+	VideoDir     string `mapstructure:"video_dir" json:"video_dir" yaml:"video_dir"`
+	ImageDir     string `mapstructure:"image_dir" json:"image_dir" yaml:"image_dir"`
 
 	// 用于截取封面
-	CoverStyle string `toml:"cover_style" env:"COVER_STYLE"`
+	CoverStyle string `mapstructure:"cover_style" json:"cover_style" yaml:"cover_style"`
 
 	lock sync.Mutex
 }

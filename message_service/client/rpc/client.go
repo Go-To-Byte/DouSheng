@@ -25,18 +25,16 @@ type MessageServiceClient struct {
 	l logger.Logger
 }
 
-// 从配置文件读取注册中心配置
+// NewMessageServiceClientFromCfg 从配置读取注册中心配置
 func NewMessageServiceClientFromCfg() (*MessageServiceClient, error) {
-	// 注册中心配置 [从配置文件中读取]
-	cfg := conf.C().Consul.Discovers[discoverName]
+	// 注册中心配置
+	cfg := conf.C().Consul.Discovers[0]
 
-	// 去发现 message_service 服务
-	// 根据注册中心的配置，获取消息服务的客户端
-	clientSet, err := client.NewClientSet(cfg)
-
+	// 根据注册中心的配置，获取Api路由的客户端
+	clientSet, err := client.NewClientSet(&cfg)
 	if err != nil {
 		return nil,
-			exception.WithStatusMsgf("获取服务[%s]失败：%s", cfg.DiscoverName, err.Error())
+			exception.WithStatusMsgf("获取服务[%s]失败：%s", cfg, err.Error())
 	}
 	return newDefault(clientSet), nil
 }

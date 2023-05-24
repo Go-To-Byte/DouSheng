@@ -25,18 +25,16 @@ type VideoServiceClient struct {
 	l logger.Logger
 }
 
-// NewVideoServiceClientFromCfg 从配置文件读取注册中心配置
+// NewVideoServiceClientFromCfg 从配置读取注册中心配置
 func NewVideoServiceClientFromCfg() (*VideoServiceClient, error) {
-	// 注册中心配置 [从配置文件中读取]
-	cfg := conf.C().Consul.Discovers[discoverName]
+	// 注册中心配置
+	cfg := conf.C().Consul.Discovers[0]
 
-	// 去发现 video_service 服务
-	// 根据注册中心的配置，获取用户中心的客户端
-	clientSet, err := client.NewClientSet(cfg)
-
+	// 根据注册中心的配置，获取Api路由的客户端
+	clientSet, err := client.NewClientSet(&cfg)
 	if err != nil {
 		return nil,
-			exception.WithStatusMsgf("获取服务[%s]失败：%s", cfg.DiscoverName, err.Error())
+			exception.WithStatusMsgf("获取服务[%s]失败：%s", cfg, err.Error())
 	}
 	return newDefault(clientSet), nil
 }

@@ -32,14 +32,16 @@ func newDefault(clientSet *client.ClientSet) *InteractionServiceClient {
 	}
 }
 
-// NewInteractionServiceClientFromConfig 从配置文件读取视频互动RPC服务配置，构建客户端
+// NewInteractionServiceClientFromConfig 从配置读取视频互动RPC服务配置，构建客户端
 func NewInteractionServiceClientFromConfig() (*InteractionServiceClient, error) {
-	//注册中心配置读取
-	cfg := conf.C().Consul.Discovers[discoverName]
+	// 注册中心配置
+	cfg := conf.C().Consul.Discovers[0]
 
-	clientSet, err := client.NewClientSet(cfg)
+	// 根据注册中心的配置，获取Api路由的客户端
+	clientSet, err := client.NewClientSet(&cfg)
 	if err != nil {
-		return nil, exception.WithStatusMsgf("获取视频互动服务[%s]失败：%s", cfg.DiscoverName, err.Error())
+		return nil,
+			exception.WithStatusMsgf("获取服务[%s]失败：%s", cfg, err.Error())
 	}
 	return newDefault(clientSet), nil
 }

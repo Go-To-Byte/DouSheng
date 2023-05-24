@@ -7,15 +7,15 @@ package conf
 
 // Config 将配置文件抽成一个对象
 type Config struct {
-	App     *app     `toml:"app"`
-	Log     *log     `toml:"log"`
-	MySQL   *mySQL   `toml:"mysql"`
-	Mongodb *mongodb `toml:"mongodb"`
+	App     *app     `mapstructure:"app" json:"app" yaml:"app"`
+	Log     *log     `mapstructure:"log" json:"log" yaml:"log"`
+	MySQL   *mySQL   `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
+	Mongodb *mongodb `mapstructure:"mongodb" json:"mongodb" yaml:"mongodb"`
 
 	// Consul 注册中心
-	Consul *consul `toml:"consul"`
+	Consul *consul `mapstructure:"consul" json:"consul" yaml:"consul"`
 	// aliyun oss 服务
-	Aliyun *aliyun `toml:"aliyun"`
+	Aliyun *aliyun `mapstruct:"aliyun" json:"aliyun" yaml:"aliyun"`
 }
 
 func NewDefaultConfig() *Config {

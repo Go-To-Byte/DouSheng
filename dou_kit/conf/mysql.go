@@ -17,21 +17,21 @@ import (
 
 // mySQL mysql配置
 type mySQL struct {
-	Host     string `toml:"host" env:"MYSQL_HOST"`
-	Port     string `toml:"port" env:"MYSQL_PORT"`
-	UserName string `toml:"username" env:"MYSQL_USERNAME"`
-	Password string `toml:"password" env:"MYSQL_PASSWORD"`
-	Database string `toml:"database" env:"MYSQL_DATABASE"`
+	Host     string `mapstructure:"host" json:"host" yaml:"host"`
+	Port     string `mapstructure:"port" json:"port" yaml:"port"`
+	UserName string `mapstructure:"user" json:"user" yaml:"user"`
+	Password string `mapstructure:"password" json:"password" yaml:"password"`
+	Database string `mapstructure:"database" json:"database" yaml:"database"`
 	// 因为使用的是 Mysql的连接池，需要对连接池做一些规划配置
 	// 控制当前程序的 Mysql打开的连接数
-	MaxOpenConn int `toml:"max_open_conn" env:"MYSQL_MAX_OPEN_CONN"`
+	MaxOpenConn int `mapstructure:"max_open_conn" json:"max_open_conn" yaml:"max_open_conn"`
 	// 控制 Mysql复用，比如 5， 最多运行5个复用
-	MaxIdleConn int `toml:"max_idle_conn" env:"MYSQL_MAX_IDLE_CONN"`
+	MaxIdleConn int `mapstructure:"max_idle_conn" json:"max_idle_conn" yaml:"max_idle_conn"`
 	// 一个连接的生命周期，这个和 Mysql Server配置有关系，必须小于 Server 配置
 	// 比如一个链接用 12 h 换一个 conn，保证一点的可用性
-	MaxLifeTime int `toml:"max_life_time" env:"MYSQL_MAX_LIFE_TIME"`
+	MaxLifeTime int `mapstructure:"max_life_time" json:"max_life_time" yaml:"max_life_time"`
 	// Idle 连接 最多允许存货多久
-	MaxIdleTime int `toml:"max_idle_time" env:"MYSQL_MAX_idle_TIME"`
+	MaxIdleTime int `mapstructure:"max_idle_time" json:"max_idle_time" yaml:"max_idle_time"`
 	// 作为私有变量，用于控制DetDB
 	lock sync.Mutex
 }
