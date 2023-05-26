@@ -7,14 +7,9 @@ import (
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 
-	"github.com/Go-To-Byte/DouSheng/api-rooter/apps/token"
-	"github.com/Go-To-Byte/DouSheng/api-rooter/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/ioc"
-	"github.com/Go-To-Byte/DouSheng/user-service/apps/user"
-	userRpc "github.com/Go-To-Byte/DouSheng/user-service/client/rpc"
-
-	"github.com/Go-To-Byte/DouSheng/message-service/apps/message"
+	"github.com/Go-To-Byte/DouSheng/interaction-service/apps/message"
 )
 
 var (
@@ -26,37 +21,17 @@ type messageServiceImpl struct {
 	l  logger.Logger
 
 	message.UnimplementedServiceServer
-
-	// 依赖Token的客户端
-	tokenService token.ServiceClient
-
-	// 依赖User 的客户端
-	userServer user.ServiceClient
 }
 
 func (s *messageServiceImpl) Init() error {
+	s.l = zap.L().Named(message.AppName)
 
 	db, err := conf.C().MySQL.GetDB()
 	if err != nil {
 		return err
 	}
+
 	s.db = db
-	s.l = zap.L().Named(message.AppName)
-
-	// 获取API网关客户端[GRPC调用]
-	apiRooter, err := rpc.NewApiRooterClientFromCfg()
-	if err != nil {
-		s.l.Errorf("message: 获取API rooter 出现错误：%s", err.Error())
-		return err
-	}
-	s.tokenService = apiRooter.TokenService()
-
-	// 获取用户中心的客户端[GRPC调用]
-	userCenter, err := userRpc.NewUserCenterClientFromCfg()
-	if err != nil {
-		return err
-	}
-	s.userServer = userCenter.UserService()
 
 	return nil
 }

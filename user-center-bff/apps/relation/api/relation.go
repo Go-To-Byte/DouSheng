@@ -84,7 +84,6 @@ func (h *Handler) followAction(ctx *gin.Context) error {
 	// 业务请求
 	resp, err := h.service.FollowAction(ctx, req)
 	if err != nil {
-		h.l.Errorf("relation: Token：%s \n", req.Token)
 		return exception.GrpcErrWrapper(err)
 	}
 

@@ -5,5 +5,5 @@ package all
 
 import (
 	_ "github.com/Go-To-Byte/DouSheng/interaction-service/apps/comment/impl"
-	_ "github.com/Go-To-Byte/DouSheng/interaction-service/apps/favorite/impl"
+	_ "github.com/Go-To-Byte/DouSheng/interaction-service/apps/message/impl"
 )

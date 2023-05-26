@@ -9,7 +9,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou-kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception/custom"
-	"github.com/Go-To-Byte/DouSheng/interaction-service/apps/favorite"
+	"github.com/Go-To-Byte/DouSheng/video-service/apps/favorite"
 )
 
 // loginAndRegisterResp 登录和注册的响应对象

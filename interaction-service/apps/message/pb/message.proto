@@ -1,9 +1,8 @@
 syntax = "proto3";
 
 package dousheng.message;
-option go_package="github.com/Go-To-Byte/DouSheng/message-service/apps/message";
+option go_package="github.com/Go-To-Byte/DouSheng/interaction-service/apps/message";
 
-import "github.com/Go-To-Byte/DouSheng/user-service/apps/user/pb/user.proto";
 
 // 定义 message 模块的接口
 service Service {
@@ -15,14 +14,14 @@ service Service {
 
 // 获取聊天记录消息列表 的接口请求 model
 message ChatMessageListRequest {
-  // 用户鉴权Token
-  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
-  string token = 1;
+  // 登录用户ID
+  // @gotags: json:"from_user_id" validate:"required"
+  int64 from_user_id = 1;
   // 对方用户ID
-  // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
+  // @gotags: json:"to_user_id" validate:"required"
   int64 to_user_id = 2;
   // 上次最新消息的时间
-  // @gotags: json:"pre_msg_time" form:"pre_msg_time"
+  // @gotags: json:"pre_msg_time"
   int64 pre_msg_time=3;
 }
 
@@ -35,17 +34,17 @@ message ChatMessageListResponse {
 
 // 发送消息 的接口请求 model
 message ChatMessageActionRequest {
-  // 用户鉴权Token
-  // @gotags: json:"token" form:"token" validate:"required" binding:"required"
-  string token = 1;
+  // 登录用户ID
+  // @gotags: json:"from_user_id" validate:"required"
+  int64 from_user_id = 1;
   // 对方用户ID
-  // @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
+  // @gotags: json:"to_user_id" validate:"required"
   int64 to_user_id = 2;
   // 1-发送消息
-  // @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
+  // @gotags: json:"action_type" validate:"required"
   int32 action_type = 3;
   // 消息内容
-  // @gotags: json:"content" form:"content" validate:"required" binding:"required"
+  // @gotags: json:"content" validate:"required"
   string content = 4;
 }
 

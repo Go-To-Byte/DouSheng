@@ -23,7 +23,6 @@ func NewMessagePo(req *ChatMessageActionRequest) *MessagePo {
 	}
 }
 
-// 获取聊天消息列表 相关
 func (r *ChatMessageListRequest) Validate() error {
 	return validate.Struct(r)
 }

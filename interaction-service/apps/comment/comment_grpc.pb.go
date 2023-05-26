@@ -26,10 +26,6 @@ type ServiceClient interface {
 	CommentAction(ctx context.Context, in *CommentActionRequest, opts ...grpc.CallOption) (*CommentActionResponse, error)
 	// 获取评论
 	GetCommentList(ctx context.Context, in *GetCommentListRequest, opts ...grpc.CallOption) (*GetCommentListResponse, error)
-	// 通过视频Id获取评论总数
-	GetCommentCountById(ctx context.Context, in *GetCommentCountByIdRequest, opts ...grpc.CallOption) (*GetCommentCountByIdResponse, error)
-	// 获取视频评论数量 map[videoId] = comment_count
-	CommentCountMap(ctx context.Context, in *CommentMapRequest, opts ...grpc.CallOption) (*CommentMapResponse, error)
 }
 
 type serviceClient struct {
@@ -58,24 +54,6 @@ func (c *serviceClient) GetCommentList(ctx context.Context, in *GetCommentListRe
 	return out, nil
 }
 
-func (c *serviceClient) GetCommentCountById(ctx context.Context, in *GetCommentCountByIdRequest, opts ...grpc.CallOption) (*GetCommentCountByIdResponse, error) {
-	out := new(GetCommentCountByIdResponse)
-	err := c.cc.Invoke(ctx, "/dousheng.interaction.comment.Service/GetCommentCountById", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) CommentCountMap(ctx context.Context, in *CommentMapRequest, opts ...grpc.CallOption) (*CommentMapResponse, error) {
-	out := new(CommentMapResponse)
-	err := c.cc.Invoke(ctx, "/dousheng.interaction.comment.Service/CommentCountMap", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
@@ -84,10 +62,6 @@ type ServiceServer interface {
 	CommentAction(context.Context, *CommentActionRequest) (*CommentActionResponse, error)
 	// 获取评论
 	GetCommentList(context.Context, *GetCommentListRequest) (*GetCommentListResponse, error)
-	// 通过视频Id获取评论总数
-	GetCommentCountById(context.Context, *GetCommentCountByIdRequest) (*GetCommentCountByIdResponse, error)
-	// 获取视频评论数量 map[videoId] = comment_count
-	CommentCountMap(context.Context, *CommentMapRequest) (*CommentMapResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -100,12 +74,6 @@ func (UnimplementedServiceServer) CommentAction(context.Context, *CommentActionR
 }
 func (UnimplementedServiceServer) GetCommentList(context.Context, *GetCommentListRequest) (*GetCommentListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommentList not implemented")
-}
-func (UnimplementedServiceServer) GetCommentCountById(context.Context, *GetCommentCountByIdRequest) (*GetCommentCountByIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCommentCountById not implemented")
-}
-func (UnimplementedServiceServer) CommentCountMap(context.Context, *CommentMapRequest) (*CommentMapResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CommentCountMap not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -156,42 +124,6 @@ func _Service_GetCommentList_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_GetCommentCountById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCommentCountByIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).GetCommentCountById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/dousheng.interaction.comment.Service/GetCommentCountById",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).GetCommentCountById(ctx, req.(*GetCommentCountByIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_CommentCountMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CommentMapRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).CommentCountMap(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/dousheng.interaction.comment.Service/CommentCountMap",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).CommentCountMap(ctx, req.(*CommentMapRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -206,14 +138,6 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCommentList",
 			Handler:    _Service_GetCommentList_Handler,
-		},
-		{
-			MethodName: "GetCommentCountById",
-			Handler:    _Service_GetCommentCountById_Handler,
-		},
-		{
-			MethodName: "CommentCountMap",
-			Handler:    _Service_CommentCountMap_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

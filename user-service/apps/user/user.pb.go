@@ -140,8 +140,8 @@ type UserInfoRequest struct {
 	// @gotags: json:"user_id" validate:"required"
 	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" validate:"required"`
 	// 登录用户ID
-	// @gotags: json:"user_center_bff" validate:"required"
-	LoginUserId int64 `protobuf:"varint,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user_center_bff" validate:"required"`
+	// @gotags: json:"user-center-bff" validate:"required"
+	LoginUserId int64 `protobuf:"varint,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user-center-bff" validate:"required"`
 }
 
 func (x *UserInfoRequest) Reset() {
@@ -405,8 +405,8 @@ type UserMapRequest struct {
 	// @gotags: json:"user_ids"
 	UserIds []int64 `protobuf:"varint,1,rep,packed,name=user_ids,json=userIds,proto3" json:"user_ids"`
 	// 登录用户ID
-	// @gotags: json:"user_center_bff" validate:"required"
-	LoginUserId string `protobuf:"bytes,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user_center_bff" validate:"required"`
+	// @gotags: json:"user-center-bff" validate:"required"
+	LoginUserId string `protobuf:"bytes,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user-center-bff" validate:"required"`
 }
 
 func (x *UserMapRequest) Reset() {

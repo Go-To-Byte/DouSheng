@@ -1,5 +1,4 @@
-// Created by yczbest at 2023/02/23 10:33
-
+// Package api @Author: Ciusyan 2023/1/24
 package api
 
 import (
@@ -7,8 +6,8 @@ import (
 
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/ioc"
-	"github.com/Go-To-Byte/DouSheng/interaction-service/client/rpc"
-	"github.com/Go-To-Byte/DouSheng/video-service/apps/favorite"
+	"github.com/Go-To-Byte/DouSheng/user-service/apps/user"
+	"github.com/Go-To-Byte/DouSheng/user-service/client/rpc"
 )
 
 // 用于注入IOC中
@@ -16,30 +15,36 @@ var handler = &Handler{}
 
 // Handler 通过一个实体类，把内部接口用HTTP暴露出去【控制层Controller】
 type Handler struct {
-	favoriteService favorite.ServiceClient
+	service user.ServiceClient
+
 	// 提供一个空结构体，用于默认实现方法
 	ioc.GinDefault
 }
 
+// Registry 用于注册Handler所需要暴露的路由
+func (h *Handler) Registry(r gin.IRoutes) {
+	r.POST("/register/", exception.GinErrWrapper(h.Register))
+	r.POST("/login/", exception.GinErrWrapper(h.Login))
+}
+
 func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
-	r.POST("/action/", exception.GinErrWrapper(h.FavoriteAction))
-	r.GET("/list/", exception.GinErrWrapper(h.GetFavoriteList))
+	r.GET("/", exception.GinErrWrapper(h.GetUserInfo))
 }
 
 // Init 初始化Handler对象
 func (h *Handler) Init() error {
-	// 从favorite_service拿到它对外提供的client，用这个Client去GRPC的调用用户中心的SDK
-	client, err := rpc.NewInteractionServiceClientFromConfig()
+	// 从user_center拿到它对外提供的client，用这个Client去GRPC的调用用户中心的SDK
+	client, err := rpc.NewUserCenterClientFromCfg()
 
 	if err != nil {
 		return err
 	}
-	h.favoriteService = client.FavoriteService()
+	h.service = client.UserService()
 	return nil
 }
 
 func (h *Handler) Name() string {
-	return favorite.AppName
+	return user.AppName
 }
 
 func init() {

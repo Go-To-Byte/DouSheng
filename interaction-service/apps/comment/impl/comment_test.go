@@ -17,11 +17,12 @@ import (
 
 var service comment.ServiceServer
 
+// TODO：完善测试案例
+
 // 发送评论
 func TestCommentServiceImpl_CommentAction(t *testing.T) {
 	should := assert.New(t)
 	newComment := comment.NewCommentActionRequest()
-	newComment.Token = "sPDgHB87RaWwMCP1vJlDrIdG" //15
 	newComment.VideoId = 2
 	newComment.ActionType = 1
 	newComment.CommentText = "测试数据"
@@ -34,7 +35,6 @@ func TestCommentServiceImpl_CommentAction(t *testing.T) {
 func TestCommentServiceImpl_DeleteCommentById(t *testing.T) {
 	should := assert.New(t)
 	newComment := comment.NewCommentActionRequest()
-	newComment.Token = "sPDgHB87RaWwMCP1vJlDrIdG"
 	newComment.VideoId = 2
 	newComment.ActionType = 2
 	newComment.CommentId = 1677196402757710700
@@ -48,25 +48,12 @@ func TestCommentServiceImpl_DeleteCommentById(t *testing.T) {
 func TestCommentServiceImpl_GetCommentList(t *testing.T) {
 	should := assert.New(t)
 	newComment := comment.NewDefaultGetCommentListRequest()
-	newComment.Token = "sPDgHB87RaWwMCP1vJlDrIdG"
 	newComment.VideoId = 2
 
 	rsp, err := service.GetCommentList(context.Background(), newComment)
 	if should.NoError(err) {
 		fmt.Println("获取评论列表成功！")
 		fmt.Println(rsp.CommentList)
-	}
-}
-
-func TestCommentServiceImpl_GetCommentCountById(t *testing.T) {
-	should := assert.New(t)
-	newComment := comment.NewDefaultGetCommentCountByIdRequest()
-	newComment.VideoId = 2
-
-	rsp, err := service.GetCommentCountById(context.Background(), newComment)
-	if should.NoError(err) {
-		fmt.Println("获取评论总数成功！")
-		fmt.Println(rsp.CommentCount)
 	}
 }
 

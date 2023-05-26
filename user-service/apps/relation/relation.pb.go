@@ -382,8 +382,8 @@ type FollowListRequest struct {
 	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
 	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
 	// 登录用户ID
-	// @gotags: json:"user_center_bff" validate:"required"
-	LoginUserId string `protobuf:"bytes,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user_center_bff" validate:"required"`
+	// @gotags: json:"user-center-bff" validate:"required"
+	LoginUserId string `protobuf:"bytes,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user-center-bff" validate:"required"`
 }
 
 func (x *FollowListRequest) Reset() {
@@ -492,8 +492,8 @@ type FollowerListRequest struct {
 	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
 	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
 	// 登录用户ID
-	// @gotags: json:"user_center_bff" validate:"required"
-	LoginUserId string `protobuf:"bytes,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user_center_bff" validate:"required"`
+	// @gotags: json:"user-center-bff" validate:"required"
+	LoginUserId string `protobuf:"bytes,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user-center-bff" validate:"required"`
 }
 
 func (x *FollowerListRequest) Reset() {
@@ -602,8 +602,8 @@ type FriendListRequest struct {
 	// @gotags: json:"user_id" form:"user_id" validate:"required" binding:"required"
 	UserId int64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id" form:"user_id" validate:"required" binding:"required"`
 	// 登录用户ID
-	// @gotags: json:"user_center_bff" validate:"required"
-	LoginUserId int64 `protobuf:"varint,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user_center_bff" validate:"required"`
+	// @gotags: json:"user-center-bff" validate:"required"
+	LoginUserId int64 `protobuf:"varint,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user-center-bff" validate:"required"`
 }
 
 func (x *FriendListRequest) Reset() {
@@ -712,8 +712,8 @@ type FollowActionRequest struct {
 	// @gotags: json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"
 	ToUserId int64 `protobuf:"varint,1,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id" form:"to_user_id" validate:"required" binding:"required"`
 	// 登录用户ID
-	// @gotags: json:"user_center_bff" validate:"required"
-	LoginUserId int64 `protobuf:"varint,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user_center_bff" validate:"required"`
+	// @gotags: json:"user-center-bff" validate:"required"
+	LoginUserId int64 `protobuf:"varint,2,opt,name=login_user_id,json=loginUserId,proto3" json:"user-center-bff" validate:"required"`
 	// 操作类型
 	// @gotags: json:"action_type" form:"action_type" validate:"required" binding:"required"
 	ActionType ActionType `protobuf:"varint,3,opt,name=action_type,json=actionType,proto3,enum=dousheng.relation.ActionType" json:"action_type" form:"action_type" validate:"required" binding:"required"`

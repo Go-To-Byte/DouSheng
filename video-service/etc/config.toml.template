@@ -21,18 +21,3 @@ registry_name = "video-service"
 host = "127.0.0.1"
 port = 8500
 tags = ["视频服务", "video-service"]
-
-# 用于发现ApiRooter服务
-[consul.discovers.api-rooter]
-discover_name = "api-rooter"
-address = "127.0.0.1:8500"
-
-# 用于发现用户中心服务
-[consul.discovers.user-service]
-discover_name = "user-service"
-address = "127.0.0.1:8500"
-
-# 去发现互动服务
-[consul.discovers.interaction-service]
-discover_name = "interaction-service"
-address = "127.0.0.1:8500"

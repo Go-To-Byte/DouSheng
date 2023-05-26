@@ -7,10 +7,11 @@ CREATE TABLE IF NOT EXISTS `comment`  (
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `favorite`  (
-     `id` bigint NOT NULL COMMENT '喜欢ID',
-     `user_id` bigint NOT NULL COMMENT '用户ID',
-     `video_id` bigint NOT NULL COMMENT '视频ID',
-     PRIMARY KEY (`id`)
-);
-
+CREATE TABLE IF NOT EXISTS `message` (
+    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+    `to_user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+    `from_user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+    `content` text NOT NULL DEFAULT '',
+    `created_at` bigint(20) unsigned NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;

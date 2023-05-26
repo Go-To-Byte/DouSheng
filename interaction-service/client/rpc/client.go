@@ -3,6 +3,7 @@
 package rpc
 
 import (
+	"github.com/Go-To-Byte/DouSheng/interaction-service/apps/message"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"os"
@@ -12,25 +13,33 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
 
 	"github.com/Go-To-Byte/DouSheng/interaction-service/apps/comment"
-	"github.com/Go-To-Byte/DouSheng/interaction-service/apps/favorite"
 )
 
 // 视频互动服务
-var discoverName = "interaction-service"
+var (
+	discoverName = conf.C().Consul.Register.RegistryName
+)
 
+// InteractionServiceClient 互动服务SDK
 type InteractionServiceClient struct {
-	favoriteService favorite.ServiceClient
-	l               logger.Logger
-	commentService  comment.ServiceClient
+	l logger.Logger
+
+	// 评论服务
+	commentService comment.ServiceClient
+	// 消息服务
+	messageService message.ServiceClient
 }
 
 // 构建初始视频互动RPC服务客户端
 func newDefault(clientSet *client.ClientSet) *InteractionServiceClient {
 	conn := clientSet.Conn()
 	return &InteractionServiceClient{
-		l:               zap.L().Named("Interaction_Service_RPC"),
-		favoriteService: favorite.NewServiceClient(conn),
-		commentService:  comment.NewServiceClient(conn),
+		l: zap.L().Named("Interaction_Service_RPC"),
+
+		// 评论服务
+		commentService: comment.NewServiceClient(conn),
+		// Message 服务
+		messageService: message.NewServiceClient(conn),
 	}
 }
 
@@ -62,21 +71,21 @@ func NewInteractionServiceClientFromEnv() (*InteractionServiceClient, error) {
 	return newDefault(clientSet), nil
 }
 
-// FavoriteService 视频点赞RPC客户端实例
-func (c *InteractionServiceClient) FavoriteService() favorite.ServiceClient {
-	//构建客户端失败，返回错误信息
-	if c.favoriteService == nil {
-		c.l.Errorf("获取视频点赞客户端[favorite 服务]失败")
-		return nil
-	}
-	return c.favoriteService
-}
-
 // CommentService 视频评论RPC客户端
 func (c *InteractionServiceClient) CommentService() comment.ServiceClient {
 	if c.commentService == nil {
 		c.l.Errorf("获取视频评论客户端[comment 服务]失败")
 		return nil
 	}
+
 	return c.commentService
+}
+
+func (c *InteractionServiceClient) MessageService() message.ServiceClient {
+	if c.messageService == nil {
+		c.l.Errorf("获取消息客户端[message 服务]失败")
+		return nil
+	}
+
+	return c.messageService
 }

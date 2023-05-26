@@ -8,8 +8,8 @@ import (
 
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/ioc"
-	"github.com/Go-To-Byte/DouSheng/relation-service/client/rpc"
 	"github.com/Go-To-Byte/DouSheng/user-service/apps/relation"
+	"github.com/Go-To-Byte/DouSheng/user-service/client/rpc"
 )
 
 type Handler struct {
@@ -23,7 +23,7 @@ type Handler struct {
 func (h *Handler) Init() error {
 	h.l = zap.L().Named(relation.AppName)
 
-	client, err := rpc.NewRelationServiceClientFromCfg()
+	client, err := rpc.NewUserCenterClientFromCfg()
 	if err != nil {
 		return err
 	}

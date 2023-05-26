@@ -1,0 +1,28 @@
+[app]
+name = "douyin"
+
+[app.http]
+host = "192.168.23.1"
+port = "8080"
+
+[log]
+level = "debug"
+path_dir = "./logs"
+format = "text"
+to = "file"
+
+# 去发现用户服务
+[consul.discovers.user-service]
+discover_name = "user-service"
+address = "127.0.0.1:8500"
+
+# 去发现关系服务
+[consul.discovers.relation-service]
+discover_name = "relation-service"
+address = "127.0.0.1:8500"
+
+
+# 去发现互动服务
+[consul.discovers.interaction-service]
+discover_name = "interaction-service"
+address = "127.0.0.1:8500"

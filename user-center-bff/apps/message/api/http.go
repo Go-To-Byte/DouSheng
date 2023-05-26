@@ -9,7 +9,7 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/ioc"
 	"github.com/Go-To-Byte/DouSheng/interaction-service/apps/message"
-	"github.com/Go-To-Byte/DouSheng/message-service/client/rpc"
+	"github.com/Go-To-Byte/DouSheng/interaction-service/client/rpc"
 )
 
 type Handler struct {
@@ -23,7 +23,7 @@ type Handler struct {
 func (h *Handler) Init() error {
 	h.l = zap.L().Named(message.AppName)
 
-	client, err := rpc.NewMessageServiceClientFromCfg()
+	client, err := rpc.NewInteractionServiceClientFromConfig()
 	if err != nil {
 		return err
 	}
