@@ -1,0 +1,38 @@
+[app.grpc]
+host = "192.168.23.1"
+port = 8510
+
+[mysql]
+host = "127.0.0.1"
+port = "3306"
+username = "root"
+password = "root"
+database = "dou_sheng"
+
+[log]
+level = "debug"
+dir = "logs"
+format = "text"
+to = "stdout"
+
+# 注册本服务
+[consul.register]
+registry_name = "interaction-service"
+host = "127.0.0.1"
+port = 8500
+tags = ["互动服务", "interaction-service"]
+
+# 去发现api_rooter服务
+[consul.discovers.api-rooter]
+discover_name = "api-rooter"
+address = "127.0.0.1:8500"
+
+# 去发现用户服务
+[consul.discovers.user-service]
+discover_name = "user-service"
+address = "127.0.0.1:8500"
+
+# 去发现视频服务
+[consul.discovers.video-service]
+discover_name = "video-service"
+address = "127.0.0.1:8500"

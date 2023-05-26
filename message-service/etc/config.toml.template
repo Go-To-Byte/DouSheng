@@ -1,0 +1,33 @@
+[app.grpc]
+host = "192.168.23.1"
+port = 8509
+
+[mysql]
+host = "127.0.0.1"
+port = "3306"
+username = "root"
+password = "root"
+database = "dou_sheng"
+
+[log]
+level = "debug"
+dir = "logs"
+format = "text"
+to = "stdout"
+
+# 注册本服务
+[consul.register]
+registry_name = "message-service"
+host = "127.0.0.1"
+port = 8500
+tags = ["消息服务", "message-service"]
+
+# 用于发现ApiRooter服务
+[consul.discovers.api-rooter]
+discover_name = "api-rooter"
+address = "127.0.0.1:8500"
+
+# 用于发现用户中心服务
+[consul.discovers.user-service]
+discover_name = "user-service"
+address = "127.0.0.1:8500"

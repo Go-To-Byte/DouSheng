@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package dousheng.token;
+option go_package="github.com/Go-To-Byte/DouSheng/api-rooter/apps/token";
+
+service Service {
+  // 颁发 Token
+  rpc IssueToken(IssueTokenRequest) returns(Token) {}
+  // 验证Token （内部服务使用）
+  rpc ValidateToken(ValidateTokenRequest) returns(Token) {}
+  // 根据Token解析出 user_id
+  rpc GetUIDFromTk(ValidateTokenRequest) returns(UIDResponse);
+}
+
+// Token
+message Token {
+  // 唯一ID
+  // @gotags: json:"access_token" bson:"_id"
+  string access_token = 1;
+  // 颁发时间
+  // @gotags: json:"issue_at" bson:"issue_at"
+  int64 issue_at = 2;
+  // 颁发人
+  // @gotags: json:"issue_by" bson:"issue_by"
+  string issue_by = 3;
+  // 更新时间
+  // @gotags: json:"update_at" bson:"update_at"
+  int64 update_at = 4;
+  // 更新人
+  // @gotags: json:"update_by" bson:"update_by"
+  string update_by = 5;
+  // Access Token过期时间(绝对时间), 10分钟,  now() + 10分钟
+  // @gotags: json:"access_token_expired_at" bson:"access_token_expired_at"
+  int64 access_token_expired_at = 6;
+  // token过期了, 允许刷新
+  // @gotags: json:"refresh_token" bson:"refresh_token"
+  string refresh_token = 7;
+  // Access Token过期时间(绝对时间), 10分钟,  now() + 10分钟
+  // @gotags: json:"refresh_token_expired_at" bson:"refresh_token_expired_at"
+  int64 refresh_token_expired_at = 8;
+  // 用于传递额外信息
+  // @gotags: json:"meta" bson:"meta"
+  map<string,string> meta = 99;
+}
+
+message IssueTokenRequest {
+  // 颁发人名称
+  // @gotags: json:"username" bson:"username"
+  string username = 1;
+  // 颁发人ID
+  // @gotags: json:"user_id" bson:"user_id"
+  int64 user_id = 2;
+}
+
+message ValidateTokenRequest {
+  // access token
+  // @gotags: json:"access_token"
+  string access_token = 1;
+}
+
+message UIDResponse {
+  // access token
+  // @gotags: json:"user_id"
+  int64 user_id = 1;
+}
