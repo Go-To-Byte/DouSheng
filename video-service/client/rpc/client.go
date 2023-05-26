@@ -10,17 +10,22 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou-kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
 
+	"github.com/Go-To-Byte/DouSheng/video-service/apps/favorite"
 	"github.com/Go-To-Byte/DouSheng/video-service/apps/video"
 )
 
 // 视频服务 rpc 的 SDK
 
 var (
-	discoverName = "video-service"
+	discoverName = conf.C().Consul.Register.RegistryName
 )
 
+// VideoServiceClient 视频服务SDK
 type VideoServiceClient struct {
+	// 视频服务
 	videoService video.ServiceClient
+	// 点赞服务
+	favoriteService favorite.ServiceClient
 
 	l logger.Logger
 }
@@ -54,6 +59,7 @@ func NewVideoServiceClientFromEnv() (*VideoServiceClient, error) {
 		return nil,
 			exception.WithStatusMsgf("获取服务[%s]失败：%s", discoverName, err.Error())
 	}
+
 	return newDefault(clientSet), nil
 }
 
@@ -64,6 +70,8 @@ func newDefault(clientSet *client.ClientSet) *VideoServiceClient {
 
 		// Video 服务
 		videoService: video.NewServiceClient(conn),
+		// 视频服务
+		favoriteService: favorite.NewServiceClient(conn),
 	}
 }
 
@@ -73,4 +81,15 @@ func (c *VideoServiceClient) VideoService() video.ServiceClient {
 		return nil
 	}
 	return c.videoService
+}
+
+// FavoriteService 视频点赞RPC客户端实例
+func (c *VideoServiceClient) FavoriteService() favorite.ServiceClient {
+	// 构建客户端失败，返回错误信息
+	if c.favoriteService == nil {
+		c.l.Errorf("获取视频点赞客户端[favorite 服务]失败")
+		return nil
+	}
+
+	return c.favoriteService
 }

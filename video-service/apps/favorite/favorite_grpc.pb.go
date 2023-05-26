@@ -26,10 +26,8 @@ type ServiceClient interface {
 	FavoriteAction(ctx context.Context, in *FavoriteActionRequest, opts ...grpc.CallOption) (*FavoriteActionResponse, error)
 	// 获取喜欢列表
 	FavoriteList(ctx context.Context, in *FavoriteListRequest, opts ...grpc.CallOption) (*FavoriteListResponse, error)
-	// 获取 1、用户喜欢列表的数目 2、获取视频点赞数
-	FavoriteCount(ctx context.Context, in *FavoriteCountRequest, opts ...grpc.CallOption) (*FavoriteCountResponse, error)
-	// 获取视频点赞数量 map[videoId] = favorite_count + isFavorite
-	FavoriteCountMap(ctx context.Context, in *FavoriteMapRequest, opts ...grpc.CallOption) (*FavoriteMapResponse, error)
+	// 用户是否点赞
+	IsFavorite(ctx context.Context, in *IsFavoriteRequest, opts ...grpc.CallOption) (*IsFavoriteResponse, error)
 }
 
 type serviceClient struct {
@@ -58,18 +56,9 @@ func (c *serviceClient) FavoriteList(ctx context.Context, in *FavoriteListReques
 	return out, nil
 }
 
-func (c *serviceClient) FavoriteCount(ctx context.Context, in *FavoriteCountRequest, opts ...grpc.CallOption) (*FavoriteCountResponse, error) {
-	out := new(FavoriteCountResponse)
-	err := c.cc.Invoke(ctx, "/dousheng.interaction.favorite.Service/FavoriteCount", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) FavoriteCountMap(ctx context.Context, in *FavoriteMapRequest, opts ...grpc.CallOption) (*FavoriteMapResponse, error) {
-	out := new(FavoriteMapResponse)
-	err := c.cc.Invoke(ctx, "/dousheng.interaction.favorite.Service/FavoriteCountMap", in, out, opts...)
+func (c *serviceClient) IsFavorite(ctx context.Context, in *IsFavoriteRequest, opts ...grpc.CallOption) (*IsFavoriteResponse, error) {
+	out := new(IsFavoriteResponse)
+	err := c.cc.Invoke(ctx, "/dousheng.interaction.favorite.Service/IsFavorite", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,10 +73,8 @@ type ServiceServer interface {
 	FavoriteAction(context.Context, *FavoriteActionRequest) (*FavoriteActionResponse, error)
 	// 获取喜欢列表
 	FavoriteList(context.Context, *FavoriteListRequest) (*FavoriteListResponse, error)
-	// 获取 1、用户喜欢列表的数目 2、获取视频点赞数
-	FavoriteCount(context.Context, *FavoriteCountRequest) (*FavoriteCountResponse, error)
-	// 获取视频点赞数量 map[videoId] = favorite_count + isFavorite
-	FavoriteCountMap(context.Context, *FavoriteMapRequest) (*FavoriteMapResponse, error)
+	// 用户是否点赞
+	IsFavorite(context.Context, *IsFavoriteRequest) (*IsFavoriteResponse, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -101,11 +88,8 @@ func (UnimplementedServiceServer) FavoriteAction(context.Context, *FavoriteActio
 func (UnimplementedServiceServer) FavoriteList(context.Context, *FavoriteListRequest) (*FavoriteListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FavoriteList not implemented")
 }
-func (UnimplementedServiceServer) FavoriteCount(context.Context, *FavoriteCountRequest) (*FavoriteCountResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FavoriteCount not implemented")
-}
-func (UnimplementedServiceServer) FavoriteCountMap(context.Context, *FavoriteMapRequest) (*FavoriteMapResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FavoriteCountMap not implemented")
+func (UnimplementedServiceServer) IsFavorite(context.Context, *IsFavoriteRequest) (*IsFavoriteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsFavorite not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -156,38 +140,20 @@ func _Service_FavoriteList_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_FavoriteCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FavoriteCountRequest)
+func _Service_IsFavorite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsFavoriteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).FavoriteCount(ctx, in)
+		return srv.(ServiceServer).IsFavorite(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/dousheng.interaction.favorite.Service/FavoriteCount",
+		FullMethod: "/dousheng.interaction.favorite.Service/IsFavorite",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).FavoriteCount(ctx, req.(*FavoriteCountRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_FavoriteCountMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FavoriteMapRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).FavoriteCountMap(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/dousheng.interaction.favorite.Service/FavoriteCountMap",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).FavoriteCountMap(ctx, req.(*FavoriteMapRequest))
+		return srv.(ServiceServer).IsFavorite(ctx, req.(*IsFavoriteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -208,12 +174,8 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_FavoriteList_Handler,
 		},
 		{
-			MethodName: "FavoriteCount",
-			Handler:    _Service_FavoriteCount_Handler,
-		},
-		{
-			MethodName: "FavoriteCountMap",
-			Handler:    _Service_FavoriteCountMap_Handler,
+			MethodName: "IsFavorite",
+			Handler:    _Service_IsFavorite_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

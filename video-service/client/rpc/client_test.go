@@ -15,10 +15,11 @@ var (
 	videoService *rpc.VideoServiceClient
 )
 
+// TODO 编写 视频服务 SDK 的测试代码
+
 func TestPublishVideo(t *testing.T) {
 	request := video.NewPublishVideoRequest()
 	request.Title = "xxxx"
-	request.Token = "xxxx"
 	videoService.VideoService().PublishVideo(context.Background(), request)
 }
 
