@@ -105,15 +105,9 @@ func NewUserFriend(toUser *user.User) *UserFriend {
 	return &UserFriend{
 		Id:              toUser.Id,
 		Name:            toUser.Name,
-		FollowCount:     toUser.FollowCount,
-		FollowerCount:   toUser.FollowerCount,
-		IsFollow:        toUser.IsFollow,
 		Avatar:          toUser.Avatar,
 		BackgroundImage: toUser.BackgroundImage,
 		Signature:       toUser.Signature,
-		TotalFavorited:  toUser.TotalFavorited,
-		WorkCount:       toUser.WorkCount,
-		FavoriteCount:   toUser.FavoriteCount,
 
 		MsgType: 1,
 	}

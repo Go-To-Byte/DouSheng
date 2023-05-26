@@ -26,8 +26,6 @@ type ServiceClient interface {
 	FollowList(ctx context.Context, in *FollowListRequest, opts ...grpc.CallOption) (*FollowListResponse, error)
 	// 获取粉丝列表
 	FollowerList(ctx context.Context, in *FollowerListRequest, opts ...grpc.CallOption) (*FollowerListResponse, error)
-	// 获取 1、关注数量 2、粉丝数量
-	ListCount(ctx context.Context, in *ListCountRequest, opts ...grpc.CallOption) (*ListCountResponse, error)
 	// 获取好友列表
 	FriendList(ctx context.Context, in *FriendListRequest, opts ...grpc.CallOption) (*FriendListResponse, error)
 	// 关注操作-关注与取关
@@ -56,15 +54,6 @@ func (c *serviceClient) FollowList(ctx context.Context, in *FollowListRequest, o
 func (c *serviceClient) FollowerList(ctx context.Context, in *FollowerListRequest, opts ...grpc.CallOption) (*FollowerListResponse, error) {
 	out := new(FollowerListResponse)
 	err := c.cc.Invoke(ctx, "/dousheng.relation.Service/FollowerList", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) ListCount(ctx context.Context, in *ListCountRequest, opts ...grpc.CallOption) (*ListCountResponse, error) {
-	out := new(ListCountResponse)
-	err := c.cc.Invoke(ctx, "/dousheng.relation.Service/ListCount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -106,8 +95,6 @@ type ServiceServer interface {
 	FollowList(context.Context, *FollowListRequest) (*FollowListResponse, error)
 	// 获取粉丝列表
 	FollowerList(context.Context, *FollowerListRequest) (*FollowerListResponse, error)
-	// 获取 1、关注数量 2、粉丝数量
-	ListCount(context.Context, *ListCountRequest) (*ListCountResponse, error)
 	// 获取好友列表
 	FriendList(context.Context, *FriendListRequest) (*FriendListResponse, error)
 	// 关注操作-关注与取关
@@ -126,9 +113,6 @@ func (UnimplementedServiceServer) FollowList(context.Context, *FollowListRequest
 }
 func (UnimplementedServiceServer) FollowerList(context.Context, *FollowerListRequest) (*FollowerListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FollowerList not implemented")
-}
-func (UnimplementedServiceServer) ListCount(context.Context, *ListCountRequest) (*ListCountResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListCount not implemented")
 }
 func (UnimplementedServiceServer) FriendList(context.Context, *FriendListRequest) (*FriendListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FriendList not implemented")
@@ -184,24 +168,6 @@ func _Service_FollowerList_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).FollowerList(ctx, req.(*FollowerListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_ListCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListCountRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).ListCount(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/dousheng.relation.Service/ListCount",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).ListCount(ctx, req.(*ListCountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -274,10 +240,6 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FollowerList",
 			Handler:    _Service_FollowerList_Handler,
-		},
-		{
-			MethodName: "ListCount",
-			Handler:    _Service_ListCount_Handler,
 		},
 		{
 			MethodName: "FriendList",

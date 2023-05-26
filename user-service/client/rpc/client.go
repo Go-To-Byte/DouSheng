@@ -2,6 +2,7 @@
 package rpc
 
 import (
+	"github.com/Go-To-Byte/DouSheng/user-service/apps/relation"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"os"
@@ -16,18 +17,22 @@ import (
 // 用户中心 rpc 服务的 SDK
 
 var (
-	// 由自己服务的对外提供SDK
+	// 由自己服务的对外提供SDK，所以注册的名称是什么，就去发现什么服务
 	discoverName = conf.C().Consul.Register.RegistryName
 )
 
-type UserCenterClient struct {
+// UserServiceClient 用户服务的SDJ
+type UserServiceClient struct {
+	// 用户模块RPC服务
 	userService user.ServiceClient
+	// 关系服务RPC服务
+	relationService relation.ServiceClient
 
 	l logger.Logger
 }
 
 // NewUserCenterClientFromCfg 从配置文件读取注册中心配置
-func NewUserCenterClientFromCfg() (*UserCenterClient, error) {
+func NewUserCenterClientFromCfg() (*UserServiceClient, error) {
 	// 注册中心配置 [从配置文件中读取]
 	cfg := conf.C().Consul.Discovers[discoverName]
 
@@ -42,7 +47,7 @@ func NewUserCenterClientFromCfg() (*UserCenterClient, error) {
 }
 
 // NewUserCenterClientFromEnv 从环境变量读取注册中心配置
-func NewUserCenterClientFromEnv() (*UserCenterClient, error) {
+func NewUserCenterClientFromEnv() (*UserServiceClient, error) {
 	// 注册中心配置 [从环境变量文件中读取]
 
 	cfg := conf.NewDefaultDiscover()
@@ -60,20 +65,34 @@ func NewUserCenterClientFromEnv() (*UserCenterClient, error) {
 	return newDefault(clientSet), nil
 }
 
-func newDefault(clientSet *client.ClientSet) *UserCenterClient {
+func newDefault(clientSet *client.ClientSet) *UserServiceClient {
 	conn := clientSet.Conn()
-	return &UserCenterClient{
-		l: zap.L().Named("USER_CENTER_RPC"),
+	return &UserServiceClient{
+		l: zap.L().Named("USER_SERVICE_RPC"),
 
-		// User 服务
+		// User 模块
 		userService: user.NewServiceClient(conn),
+		// 关系 模块
+		relationService: relation.NewServiceClient(conn),
 	}
 }
 
-func (c *UserCenterClient) UserService() user.ServiceClient {
+// UserService 将服务端用户模块完整的接口暴露给外界调用，也可以做精细化控制
+func (c *UserServiceClient) UserService() user.ServiceClient {
 	if c.userService == nil {
 		c.l.Errorf("获取用户中心[Token Client]失败")
 		return nil
 	}
+
 	return c.userService
+}
+
+// RelationService 将服务端关系模块完整的接口暴露给外界调用，也可以做精细化控制
+func (c *UserServiceClient) RelationService() relation.ServiceClient {
+	if c.relationService == nil {
+		c.l.Errorf("获取用户中心[Token Client]失败")
+		return nil
+	}
+
+	return c.relationService
 }

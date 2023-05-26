@@ -41,7 +41,7 @@ message UserInfoRequest {
   int64 user_id = 1;
   // 登录用户ID
   // @gotags: json:"user_center_bff" validate:"required"
-  string login_user_id = 2;
+  int64 login_user_id = 2;
 }
 
 // 获取用户信息 的接口响应 model
