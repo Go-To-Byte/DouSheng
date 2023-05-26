@@ -49,7 +49,7 @@ func NewVideoPoWithSave(req *PublishVideoRequest) *VideoPo {
 		PlayUrl:   req.PlayUrl,
 		CoverUrl:  req.CoverUrl,
 		CreatedAt: time.Now().UnixMilli(),
-		AuthorId:  req.UserId,
+		AuthorId:  req.AuthorId,
 	}
 }
 
@@ -96,14 +96,4 @@ func (po *VideoPo) Po2vo() *Video {
 
 func NewGetVideoRequest() *GetVideoRequest {
 	return &GetVideoRequest{}
-}
-
-func NewPublishListCountRequest(userId int64) *PublishListCountRequest {
-	return &PublishListCountRequest{
-		UserId: userId,
-	}
-}
-
-func NewPublishListCountResponse() *PublishListCountResponse {
-	return &PublishListCountResponse{}
 }

@@ -8,8 +8,6 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou-kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/utils"
-	"github.com/Go-To-Byte/DouSheng/interaction-service/apps/favorite"
-
 	"github.com/Go-To-Byte/DouSheng/video-service/apps/video"
 )
 
@@ -76,35 +74,4 @@ func (s *videoServiceImpl) listFromUserId(ctx context.Context, userId int64) (
 	}
 
 	return set, nil
-}
-
-func (s *videoServiceImpl) getTotalCount(ctx context.Context, userId int64) (*video.PublishListCountResponse, error) {
-
-	pos := make([]*video.VideoPo, 0)
-	resp := video.NewPublishListCountResponse()
-	// 1、根据用户ID查询视频ID列表
-	db := s.db.WithContext(ctx).Select("id").
-		Where("author_id = ?", userId).Find(&pos)
-	if db.Error != nil {
-		return resp, db.Error
-	}
-
-	resp.PublishCount = int64(len(pos))
-	videoIds := make([]int64, len(pos))
-
-	for _, v := range pos {
-		videoIds = append(videoIds, v.Id)
-	}
-
-	// 2、根据视频列表，请求被favorite的总数
-	req := favorite.NewFavoriteCountRequest()
-	req.VideoIds = videoIds
-	countResp, err := s.favoriteService.FavoriteCount(ctx, req)
-	if err != nil {
-		return resp, err
-	}
-
-	resp.AcquireTotalFavorite = countResp.AcquireFavoriteCount
-
-	return resp, nil
 }
