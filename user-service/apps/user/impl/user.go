@@ -3,12 +3,10 @@ package impl
 
 import (
 	"context"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"sync"
-
 	"github.com/Go-To-Byte/DouSheng/dou-kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception/custom"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/Go-To-Byte/DouSheng/user-service/apps/user"
 )
@@ -45,8 +43,8 @@ func (s *userServiceImpl) Register(ctx context.Context, req *user.LoginAndRegist
 			constant.Code2Msg(constant.ERROR_SAVE))
 	}
 
-	// 4、颁发Token并返回
-	response := user.NewTokenResponse(insertRes.Id, s.token(ctx, insertRes))
+	// 4、Token不在这儿颁发
+	response := user.NewTokenResponse(insertRes.Id)
 
 	return response, nil
 }
@@ -75,8 +73,8 @@ func (s *userServiceImpl) Login(ctx context.Context, req *user.LoginAndRegisterR
 			constant.Code2Msg(constant.BAD_NAME_PASSWORD))
 	}
 
-	// 3、颁发Token 并返回
-	response := user.NewTokenResponse(po.Id, s.token(ctx, po))
+	// 3、Token不在这里颁发
+	response := user.NewTokenResponse(po.Id)
 
 	return response, nil
 }
@@ -90,23 +88,19 @@ func (s *userServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoReques
 			constant.Code2Msg(constant.ERROR_ARGS_VALIDATE))
 	}
 
-	response := user.NewUserInfoResponse()
-	response.User = user.NewDefaultUser()
-	// get user info, user += userInfo
-
 	userReq := newGetUserReq()
 	userReq.UserId = req.UserId
 	po, err := s.getUser(ctx, userReq)
+
 	if err != nil {
 		return nil, status.Error(codes.Unavailable,
 			constant.Code2Msg(constant.ERROR_ACQUIRE))
 	}
+
+	response := user.NewUserInfoResponse()
 	response.User = po.Po2vo()
 
-	// 将Token放入Ctx
-	tkCtx := context.WithValue(ctx, constant.REQUEST_TOKEN, req.Token)
-
-	return response, s.composeInfo(tkCtx, response.User)
+	return response, nil
 }
 
 func (s *userServiceImpl) UserMap(ctx context.Context, req *user.UserMapRequest) (*user.UserMapResponse, error) {
@@ -114,7 +108,6 @@ func (s *userServiceImpl) UserMap(ctx context.Context, req *user.UserMapRequest)
 	// 1、获取用户列表 []User
 	userPoRes, err := s.userList(ctx, req.UserIds)
 
-	// 这里为什么不把错误合并在一起返回，因为有可能这里已经报错了。就没必要往后面操作了
 	if err != nil {
 		switch e := err.(type) {
 		case *custom.Exception:
@@ -124,66 +117,11 @@ func (s *userServiceImpl) UserMap(ctx context.Context, req *user.UserMapRequest)
 		}
 	}
 
-	// 将Token放入Ctx
-	tkCtx := context.WithValue(ctx, constant.REQUEST_TOKEN, req.Token)
-
 	// 2、转换为 Map[UserId] = User
 	UserMap := make(map[int64]*user.User)
 	for _, po := range userPoRes {
-		vo := po.Po2vo()
-		err = s.composeInfo(tkCtx, vo)
-		if err != nil {
-			return nil, err
-		}
-		UserMap[vo.Id] = vo
+		UserMap[po.Id] = po.Po2vo()
 	}
 
 	return &user.UserMapResponse{UserMap: UserMap}, nil
-}
-
-func (s *userServiceImpl) composeInfo(ctx context.Context, uResp *user.User) error {
-
-	var (
-		wait = sync.WaitGroup{}
-		errs = make([]error, 0)
-	)
-
-	wait.Add(3)
-
-	// 组合 followListCount、followerListCount、isFollow
-	go func() {
-		defer wait.Done()
-
-		errs = append(errs, s.composeRelation(ctx, uResp)...)
-	}()
-
-	// 组合 publishCount
-	go func() {
-		defer wait.Done()
-
-		errs = append(errs, s.composeVideo(ctx, uResp)...)
-	}()
-
-	// 组合 favoriteCount
-	go func() {
-		defer wait.Done()
-
-		errs = append(errs, s.composeFavorite(ctx, uResp)...)
-	}()
-
-	wait.Wait()
-
-	// 查看后台调用时，是否有错误产生
-	for _, err := range errs {
-		if err != nil {
-			switch e := err.(type) {
-			case *custom.Exception:
-				return status.Error(codes.NotFound, e.Error())
-			default:
-				return status.Error(codes.Unknown, e.Error())
-			}
-		}
-	}
-
-	return nil
 }

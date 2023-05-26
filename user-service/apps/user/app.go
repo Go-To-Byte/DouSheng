@@ -1,4 +1,5 @@
 // @Author: Ciusyan 2023/1/25
+
 package user
 
 import (
@@ -32,10 +33,9 @@ func (r *UserMapRequest) Validate() error {
 	return validate.Struct(r)
 }
 
-func NewTokenResponse(id int64, token string) *TokenResponse {
+func NewTokenResponse(id int64) *TokenResponse {
 	return &TokenResponse{
 		UserId: id,
-		Token:  token,
 	}
 }
 

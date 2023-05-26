@@ -4,7 +4,6 @@ package impl
 import (
 	"context"
 	"fmt"
-	"github.com/Go-To-Byte/DouSheng/api-rooter/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
 
@@ -82,20 +81,4 @@ func (s *userServiceImpl) insert(ctx context.Context, user *user.UserPo) (*user.
 	}
 
 	return user, nil
-}
-
-func (s *userServiceImpl) token(ctx context.Context, po *user.UserPo) (accessToken string) {
-	// 颁发Token
-	tkReq := token.NewIssueTokenRequest(po)
-	tk, err := s.tokenService.IssueToken(ctx, tkReq)
-
-	// 若Token颁发失败，不要报错，打印日志即可
-	if err != nil {
-		accessToken = ""
-		s.l.Errorf("Token颁发失败：%s", err.Error())
-	} else {
-		accessToken = tk.AccessToken
-		s.l.Infof("Token颁发成功：%s", accessToken)
-	}
-	return
 }

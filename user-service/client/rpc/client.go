@@ -15,8 +15,9 @@ import (
 
 // 用户中心 rpc 服务的 SDK
 
-const (
-	discoverName = "user-service"
+var (
+	// 由自己服务的对外提供SDK
+	discoverName = conf.C().Consul.Register.RegistryName
 )
 
 type UserCenterClient struct {

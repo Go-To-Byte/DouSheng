@@ -2,13 +2,17 @@
 
 ## 一、提供的接口
 ### 1、注册 Register
-* [官方接口描述](https://bytedance.feishu.cn/docs/doccnKrCsU5Iac6eftnFBdsXTof#1bQwYM)
+* 参数：用户名 + 密码
+* 返回值：用户ID
 
 ### 2、登录 Login
-* [官方接口描述](https://bytedance.feishu.cn/docs/doccnKrCsU5Iac6eftnFBdsXTof#9UOUMJ)
+* 参数：用户名 + 密码
+* 返回值：用户ID
+
 
 ### 3、用户信息 UserInfo
-* [官方接口描述](https://bytedance.feishu.cn/docs/doccnKrCsU5Iac6eftnFBdsXTof#mWFx8s)
+* 参数：用户ID
+* 返回值：用户基本信息
 
 
 ## 二、文件目录结构
@@ -18,9 +22,6 @@
 ```
 user                    # 用户模块
 ├── app.go              # 此模块的名称、此模块model的方法[包括构造方法]
-├── http                # 对外暴露的HTTP服务
-│   ├── http.go         # UserHandler，需要放入IOC容器中
-│   └── user.go         # UserHandler接口所需要的方法
 ├── impl                # UserServiceImpl 用户模块 业务层 接口实现
 │   ├── dao.go          # 可以当作是持久层，这里并没有分那么干净（因为没必要）
 │   ├── impl.go         # 定义UserServiceImpl，注意需要加入 GRPC 所需的对象（否则不能作为GRPC接口）
