@@ -9,7 +9,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/hashicorp/consul/api v1.18.0 // indirect
 	github.com/infraboard/mcube v1.9.7
-	github.com/rs/xid v1.4.0
+	github.com/rs/xid v1.4.0 // indirect
 	github.com/spf13/cobra v1.6.1 // indirect
 	github.com/stretchr/testify v1.8.1
 	google.golang.org/grpc v1.52.3
@@ -17,12 +17,7 @@ require (
 	gorm.io/gorm v1.24.5
 )
 
-require (
-	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/interaction_service v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230304044904-09aa5bc18d4c
-)
+require github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529153606-3a2a60f103e0
 
 require (
 	github.com/armon/go-metrics v0.4.1 // indirect

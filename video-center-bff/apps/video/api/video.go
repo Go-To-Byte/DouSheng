@@ -3,11 +3,11 @@ package api
 
 import (
 	"context"
-	"github.com/Go-To-Byte/DouSheng/auth-service/apps/token"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
 
+	"github.com/Go-To-Byte/DouSheng/auth-service/apps/token"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/constant"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception/custom"

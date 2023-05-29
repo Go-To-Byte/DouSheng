@@ -5,9 +5,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/Go-To-Byte/DouSheng/auth-service/common/utils"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/constant"
-	"github.com/Go-To-Byte/DouSheng/user-service/apps/user"
-	"github.com/Go-To-Byte/DouSheng/user-service/common/utils"
 )
 
 const (
@@ -55,13 +54,6 @@ func (t *Token) Extend(expiredDuration time.Duration) *Token {
 	t.UpdateBy = t.IssueBy
 
 	return t
-}
-
-func NewIssueTokenRequest(po *user.UserPo) *IssueTokenRequest {
-	return &IssueTokenRequest{
-		Username: po.Username,
-		UserId:   po.Id,
-	}
 }
 
 func NewValidateTokenRequest(ak string) *ValidateTokenRequest {

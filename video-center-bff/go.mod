@@ -12,12 +12,10 @@ require (
 )
 
 require (
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/interaction_service v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/message_service v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/relation_service v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230304044904-09aa5bc18d4c
+	github.com/Go-To-Byte/DouSheng/auth-service v0.0.0-20230529153606-3a2a60f103e0
+	github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529153606-3a2a60f103e0
+	github.com/Go-To-Byte/DouSheng/interaction-service v0.0.0-20230529153606-3a2a60f103e0
+	github.com/Go-To-Byte/DouSheng/video-service v0.0.0-20230529153606-3a2a60f103e0
 )
 
 require (

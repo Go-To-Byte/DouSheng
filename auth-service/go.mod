@@ -4,24 +4,22 @@ go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
-	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible
-	github.com/gin-gonic/gin v1.8.2 // indirect
-	github.com/go-playground/validator/v10 v10.11.2
+	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible // indirect
+	github.com/gin-gonic/gin v1.8.2
+	github.com/go-playground/validator/v10 v10.11.2 // indirect
 	github.com/hashicorp/consul/api v1.18.0 // indirect
 	github.com/infraboard/mcube v1.9.7
-	github.com/rs/xid v1.4.0
+	github.com/rs/xid v1.4.0 // indirect
 	github.com/spf13/cobra v1.6.1 // indirect
 	github.com/stretchr/testify v1.8.1
 	google.golang.org/grpc v1.52.3
 	google.golang.org/protobuf v1.28.1
-	gorm.io/gorm v1.24.5
+	gorm.io/gorm v1.24.5 // indirect
 )
 
 require (
-	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/interaction_service v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/user_center v0.0.0-20230304044904-09aa5bc18d4c
+	github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529153606-3a2a60f103e0
+	go.mongodb.org/mongo-driver v1.11.1
 )
 
 require (
@@ -68,7 +66,6 @@ require (
 	github.com/xdg-go/scram v1.1.1 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	go.mongodb.org/mongo-driver v1.11.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.20.0 // indirect

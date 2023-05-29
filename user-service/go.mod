@@ -13,13 +13,7 @@ require (
 	gorm.io/gorm v1.24.5
 )
 
-require (
-	github.com/Go-To-Byte/DouSheng/api_rooter v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/dou_kit v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/interaction_service v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/relation_service v0.0.0-20230304044904-09aa5bc18d4c
-	github.com/Go-To-Byte/DouSheng/video_service v0.0.0-20230304044904-09aa5bc18d4c
-)
+require github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529153606-3a2a60f103e0
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect

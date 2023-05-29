@@ -9,11 +9,10 @@ import (
 
 	"github.com/Go-To-Byte/DouSheng/dou-kit/conf"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/ioc"
-	"github.com/Go-To-Byte/DouSheng/user-service/apps/user"
 
 	"github.com/Go-To-Byte/DouSheng/auth-service/apps/token"
 	// 驱动加载所有需要放入IOC的实例
-	_ "github.com/Go-To-Byte/DouSheng/video-center-bff/common/all"
+	_ "github.com/Go-To-Byte/DouSheng/auth-service/common/all"
 )
 
 var (
@@ -23,10 +22,11 @@ var (
 func TestIssueToken(t *testing.T) {
 	should := assert.New(t)
 
-	po := user.NewDefaultUserPo()
-	po.Username = "xxxx"
 	// 颁发
-	req := token.NewIssueTokenRequest(po)
+	req := &token.IssueTokenRequest{
+		Username: "xxx",
+		UserId:   2,
+	}
 	iTk, err := service.IssueToken(context.Background(), req)
 
 	if should.NoError(err) {
