@@ -3,13 +3,13 @@
 package protocol
 
 import (
-	"github.com/Go-To-Byte/DouSheng/dou-kit/cmd"
-	"github.com/Go-To-Byte/DouSheng/dou-kit/ioc"
-	"github.com/Go-To-Byte/DouSheng/dou-kit/protocol"
 	"github.com/gin-gonic/gin"
 
 	authRpc "github.com/Go-To-Byte/DouSheng/auth-service/client/rpc"
+	"github.com/Go-To-Byte/DouSheng/dou-kit/cmd"
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
+	"github.com/Go-To-Byte/DouSheng/dou-kit/ioc"
+	"github.com/Go-To-Byte/DouSheng/dou-kit/protocol"
 )
 
 // 获取路由中间件

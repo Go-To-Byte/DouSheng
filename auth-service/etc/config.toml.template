@@ -1,0 +1,24 @@
+[app.grpc]
+host = "192.168.23.1"
+port = 8505
+
+
+# mongodb配置，用于token的一道缓存
+[mongodb]
+hosts = ["127.0.0.1:27017"]
+username = "apirooter"
+password = "123456"
+database = "apirooter"
+
+[log]
+level = "debug"
+dir = "logs"
+format = "text"
+to = "stdout"
+
+# 注册本服务
+[consul.register]
+registry_name = "auth-service"
+host = "127.0.0.1"
+port = 8500
+tags = ["认证服务", "auth-service"]

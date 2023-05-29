@@ -16,9 +16,9 @@ import (
 
 // 用户中心 rpc 服务的 SDK
 
-var (
+const (
 	// 由自己服务的对外提供SDK，所以注册的名称是什么，就去发现什么服务
-	discoverName = conf.C().Consul.Register.RegistryName
+	discoverName = "user-service"
 )
 
 // UserServiceClient 用户服务的SDJ

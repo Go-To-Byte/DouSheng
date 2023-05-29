@@ -3,10 +3,10 @@ package all
 
 // 在这里统一自动注册IOC
 import (
-	_ "github.com/Go-To-Byte/DouSheng/api-rooter/apps/message/api"
-	_ "github.com/Go-To-Byte/DouSheng/api-rooter/apps/relation/api"
-	_ "github.com/Go-To-Byte/DouSheng/api-rooter/apps/user/api"
+	_ "github.com/Go-To-Byte/DouSheng/user-center-bff/apps/message/api"
+	_ "github.com/Go-To-Byte/DouSheng/user-center-bff/apps/relation/api"
+	_ "github.com/Go-To-Byte/DouSheng/user-center-bff/apps/user/api"
 
 	// 加载切面对象
-	_ "github.com/Go-To-Byte/DouSheng/api-rooter/protocol"
+	_ "github.com/Go-To-Byte/DouSheng/user-center-bff/protocol"
 )

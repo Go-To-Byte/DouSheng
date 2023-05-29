@@ -16,13 +16,12 @@ to = "file"
 discover_name = "user-service"
 address = "127.0.0.1:8500"
 
-# 去发现关系服务
-[consul.discovers.relation-service]
-discover_name = "relation-service"
-address = "127.0.0.1:8500"
-
-
 # 去发现互动服务
 [consul.discovers.interaction-service]
 discover_name = "interaction-service"
+address = "127.0.0.1:8500"
+
+# 去发现认证服务
+[consul.discovers.auth-service]
+discover_name = "auth-service"
 address = "127.0.0.1:8500"

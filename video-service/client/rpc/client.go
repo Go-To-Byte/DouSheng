@@ -16,8 +16,8 @@ import (
 
 // 视频服务 rpc 的 SDK
 
-var (
-	discoverName = conf.C().Consul.Register.RegistryName
+const (
+	discoverName = "video-service"
 )
 
 // VideoServiceClient 视频服务SDK

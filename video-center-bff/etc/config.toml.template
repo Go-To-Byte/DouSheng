@@ -1,0 +1,63 @@
+[app]
+name = "douyin"
+
+[app.http]
+host = "192.168.23.1"
+port = "8080"
+
+[app.grpc]
+host = "192.168.23.1"
+port = 8505
+
+[log]
+level = "debug"
+path_dir = "./logs"
+format = "text"
+to = "file"
+
+# 注册本服务
+[consul.register]
+registry_name = "api-rooter"
+host = "127.0.0.1"
+port = 8500
+tags = ["API路由", "api-rooter"]
+
+# 去发现用户服务
+[consul.discovers.user-service]
+discover_name = "user-service"
+address = "127.0.0.1:8500"
+
+# 去发现视频服务
+[consul.discovers.video-service]
+discover_name = "video-service"
+address = "127.0.0.1:8500"
+
+# 去发现关系服务
+[consul.discovers.relation-service]
+discover_name = "relation-service"
+address = "127.0.0.1:8500"
+
+# 去发现消息服务
+[consul.discovers.message-service]
+discover_name = "message-service"
+address = "127.0.0.1:8500"
+
+# 去发现互动服务
+[consul.discovers.interaction-service]
+discover_name = "interaction-service"
+address = "127.0.0.1:8500"
+
+# 去发现认证服务
+[consul.discovers.auth-service]
+discover_name = "auth-service"
+address = "127.0.0.1:8500"
+
+# 阿里云oss配置
+[aliyun]
+endpoint = "oss endpoint"
+access_key = "your access key"
+access_secret = "your access secret"
+bucket = "yore bucket"
+video_dir = "upload video file path"
+image_dir = "upload image file path"
+cover_style = "video/snapshot,t_300,f_jpg,m_fast" # 用于截取封面的样式

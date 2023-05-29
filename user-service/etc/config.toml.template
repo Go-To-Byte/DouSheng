@@ -21,7 +21,3 @@ host = "127.0.0.1"
 port = 8500
 tags = ["用户服务", "user-service"]
 
-# 去发现 api_rooter 服务
-[consul.discovers.api-rooter]
-discover_name = "api-rooter"
-address = "127.0.0.1:8500"

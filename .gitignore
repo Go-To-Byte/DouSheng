@@ -17,7 +17,6 @@
 
 */etc/config.toml
 */etc/unit_test.env
-*/client/config.go
 */logs
 
 */dist

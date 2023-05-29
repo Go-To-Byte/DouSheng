@@ -1,0 +1,44 @@
+// @Author: Ciusyan 2023/2/9
+package rpc_test
+
+import (
+	"context"
+	"github.com/Go-To-Byte/DouSheng/auth-service/apps/token"
+	"github.com/stretchr/testify/assert"
+	"testing"
+
+	"github.com/Go-To-Byte/DouSheng/dou-kit/conf"
+
+	"github.com/Go-To-Byte/DouSheng/auth-service/client/rpc"
+)
+
+var (
+	apiRooter *rpc.AuthServiceClient
+)
+
+func TestAuthCenter(t *testing.T) {
+	should := assert.New(t)
+
+	tokenReq := token.NewValidateTokenRequest("YkCotWjNZO7f6Axz4h06aQpx")
+	// 这里主要是为了获取 用户ID
+	validatedToken, err := apiRooter.TokenService().ValidateToken(context.Background(), tokenReq)
+	if should.NoError(err) {
+		t.Log(validatedToken)
+	}
+
+}
+
+func init() {
+	// 需要先加载配置
+	if err := conf.LoadConfigFromEnv(); err != nil {
+		panic(err)
+	}
+
+	// 获取用户中心的客户端[从环境变量中获取配置]
+	// 获取的配置去执行 kit 库中的 client.NewConfig(consulCfg)
+	center, err := rpc.NewAuthServiceClientFromEnv()
+	if err != nil {
+		panic(err)
+	}
+	apiRooter = center
+}

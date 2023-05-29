@@ -3,7 +3,6 @@
 package rpc
 
 import (
-	"github.com/Go-To-Byte/DouSheng/interaction-service/apps/message"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"os"
@@ -13,11 +12,12 @@ import (
 	"github.com/Go-To-Byte/DouSheng/dou-kit/exception"
 
 	"github.com/Go-To-Byte/DouSheng/interaction-service/apps/comment"
+	"github.com/Go-To-Byte/DouSheng/interaction-service/apps/message"
 )
 
 // 视频互动服务
-var (
-	discoverName = conf.C().Consul.Register.RegistryName
+const (
+	discoverName = "interaction-service"
 )
 
 // InteractionServiceClient 互动服务SDK
@@ -50,7 +50,7 @@ func NewInteractionServiceClientFromConfig() (*InteractionServiceClient, error) 
 
 	clientSet, err := client.NewClientSet(cfg)
 	if err != nil {
-		return nil, exception.WithStatusMsgf("获取视频互动服务[%s]失败：%s", cfg.DiscoverName, err.Error())
+		return nil, exception.WithStatusMsgf("获取互动服务[%s]失败：%s", cfg.DiscoverName, err.Error())
 	}
 	return newDefault(clientSet), nil
 }
@@ -66,7 +66,7 @@ func NewInteractionServiceClientFromEnv() (*InteractionServiceClient, error) {
 
 	if err != nil {
 		return nil,
-			exception.WithStatusMsgf("获取视频互动服务[%s]失败：%s", discoverName, err.Error())
+			exception.WithStatusMsgf("获取互动服务[%s]失败：%s", discoverName, err.Error())
 	}
 	return newDefault(clientSet), nil
 }
