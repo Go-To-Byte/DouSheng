@@ -31,8 +31,8 @@ type UserServiceClient struct {
 	l logger.Logger
 }
 
-// NewUserCenterClientFromCfg 从配置文件读取注册中心配置
-func NewUserCenterClientFromCfg() (*UserServiceClient, error) {
+// NewUserServiceClientFromCfg 从配置文件读取注册中心配置
+func NewUserServiceClientFromCfg() (*UserServiceClient, error) {
 	// 注册中心配置 [从配置文件中读取]
 	cfg := conf.C().Consul.Discovers[discoverName]
 
@@ -46,8 +46,8 @@ func NewUserCenterClientFromCfg() (*UserServiceClient, error) {
 	return newDefault(clientSet), nil
 }
 
-// NewUserCenterClientFromEnv 从环境变量读取注册中心配置
-func NewUserCenterClientFromEnv() (*UserServiceClient, error) {
+// NewUserServiceClientFromEnv 从环境变量读取注册中心配置
+func NewUserServiceClientFromEnv() (*UserServiceClient, error) {
 	// 注册中心配置 [从环境变量文件中读取]
 
 	cfg := conf.NewDefaultDiscover()

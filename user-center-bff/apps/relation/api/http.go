@@ -23,7 +23,7 @@ type Handler struct {
 func (h *Handler) Init() error {
 	h.l = zap.L().Named(relation.AppName)
 
-	client, err := rpc.NewUserCenterClientFromCfg()
+	client, err := rpc.NewUserServiceClientFromCfg()
 	if err != nil {
 		return err
 	}

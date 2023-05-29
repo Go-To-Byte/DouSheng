@@ -34,7 +34,7 @@ func (h *Handler) RegistryWithMiddle(r gin.IRoutes) {
 // Init 初始化Handler对象
 func (h *Handler) Init() error {
 	// 从user_center拿到它对外提供的client，用这个Client去GRPC的调用用户中心的SDK
-	client, err := rpc.NewUserCenterClientFromCfg()
+	client, err := rpc.NewUserServiceClientFromCfg()
 
 	if err != nil {
 		return err

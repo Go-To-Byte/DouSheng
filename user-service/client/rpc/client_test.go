@@ -40,7 +40,7 @@ func init() {
 
 	// 获取用户中心的客户端[从环境变量中获取配置]
 	// 获取的配置去执行 kit 库中的 client.NewConfig(consulCfg)
-	service, err := rpc.NewUserCenterClientFromEnv()
+	service, err := rpc.NewUserServiceClientFromEnv()
 	if err != nil {
 		panic(err)
 	}
