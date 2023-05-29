@@ -3,8 +3,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak=
 github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
-github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529153606-3a2a60f103e0 h1:9R+QsGe29z4+435hYmjJVKDnA/mwixfxdrAZySIdCZQ=
-github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529153606-3a2a60f103e0/go.mod h1:VtIxsZK4Fuy0YTNtofnBFmK0Q1l85r1n9pcIhi2WdpU=
+github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529162538-8c4fe332b56e h1:ew7Zed+bk8XWl3PcwvKeuS33B/hapCB0vEi63TSbxKc=
+github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529162538-8c4fe332b56e/go.mod h1:VtIxsZK4Fuy0YTNtofnBFmK0Q1l85r1n9pcIhi2WdpU=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=

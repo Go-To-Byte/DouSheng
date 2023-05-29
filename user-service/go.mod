@@ -13,7 +13,7 @@ require (
 	gorm.io/gorm v1.24.5
 )
 
-require github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529153606-3a2a60f103e0
+require github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529162538-8c4fe332b56e
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect

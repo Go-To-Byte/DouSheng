@@ -12,15 +12,13 @@ require (
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/spf13/cobra v1.6.1 // indirect
 	github.com/stretchr/testify v1.8.1
+	go.mongodb.org/mongo-driver v1.11.1
 	google.golang.org/grpc v1.52.3
 	google.golang.org/protobuf v1.28.1
 	gorm.io/gorm v1.24.5 // indirect
 )
 
-require (
-	github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529153606-3a2a60f103e0
-	go.mongodb.org/mongo-driver v1.11.1
-)
+require github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529162538-8c4fe332b56e
 
 require (
 	github.com/armon/go-metrics v0.4.1 // indirect

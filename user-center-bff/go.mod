@@ -11,10 +11,10 @@ require (
 )
 
 require (
-	github.com/Go-To-Byte/DouSheng/auth-service v0.0.0-20230529153606-3a2a60f103e0
-	github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529153606-3a2a60f103e0
-	github.com/Go-To-Byte/DouSheng/interaction-service v0.0.0-20230529153606-3a2a60f103e0
-	github.com/Go-To-Byte/DouSheng/user-service v0.0.0-20230529153606-3a2a60f103e0
+	github.com/Go-To-Byte/DouSheng/auth-service v0.0.0-20230529162538-8c4fe332b56e
+	github.com/Go-To-Byte/DouSheng/dou-kit v0.0.0-20230529162538-8c4fe332b56e
+	github.com/Go-To-Byte/DouSheng/interaction-service v0.0.0-20230529162538-8c4fe332b56e
+	github.com/Go-To-Byte/DouSheng/user-service v0.0.0-20230529162538-8c4fe332b56e
 )
 
 require (
